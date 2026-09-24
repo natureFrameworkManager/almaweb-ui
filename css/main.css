@@ -85,6 +85,9 @@
 .btn.slim {
     @apply py-1 px-2;
 }
+.btn.slim.material-symbols {
+    @apply text-[16px];
+}
 .btn.slim span.material-symbols {
     @apply text-[16px];
 }
@@ -154,11 +157,12 @@ body > div.filter-options {
     @apply col-1 row-start-1 row-end-3;
     @apply flex flex-col px-1 py-2;
 }
-body > main:not(#calendar) {
+body > main:not(#calendar):not(#tree) {
     @apply col-2 row-2;
     @apply flex flex-col px-2 py-2;
 }
-body > main#calendar {
+body > main#calendar,
+body > main#tree {
     @apply col-start-1 col-end-3 row-2;
     @apply flex flex-col px-2 py-2;
 }
@@ -217,4 +221,17 @@ main > .card-grid > .card > span {
 }
 main > .card-grid > .card > button {
     @apply w-fit col-2;
+}
+
+main#tree {
+    @apply flex flex-col gap-y-4;
+}
+main#tree > .levels, main#tree > .opened-levels {
+    @apply grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-y-2 gap-x-2;
+}
+main#tree > .opened-levels > .opened-level {
+    @apply col-1 border border-border rounded-md ps-1 flex flex-row items-center justify-between;
+}
+main#tree > .levels > .level {
+    @apply border border-border rounded-md p-2 flex flex-row items-center justify-between;
 }
