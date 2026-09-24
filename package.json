@@ -1,35 +1,34 @@
 {
-  "name": "almaweb-ui",
-  "private": true,
-  "version": "0.0.0",
-  "description": "",
-  "type": "module",
-  "scripts": {
-    "lint": "eslint .",
-    "format": "prettier --write \"./**/*.{html,css,js,ts}\"",
-    "format:check": "prettier --check \"./**/*.{html,css,js,ts}\"",
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-  },
-  "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@tailwindcss/cli": "^4.3.0",
-    "eslint": "^10.10.0",
-    "globals": "^17.12.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-jsdoc": "^64.3.5",
-    "fullcalendar": "^7.1.0",
-    "prettier": "^3.9.6",
-    "prettier-plugin-tailwindcss": "^0.8.1",
-    "@tailwindcss/vite": "^4.3.3",
-    "@types/node": "^26.6.2",
-    "tailwindcss": "^4.3.3",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.59.3",
-    "vite": "^8.3.0"
-  }
+    "name": "almaweb-ui",
+    "private": true,
+    "version": "0.0.0",
+    "description": "",
+    "type": "module",
+    "scripts": {
+        "lint": "eslint .",
+        "format": "prettier --write \"./**/*.{html,css,js,ts}\"",
+        "format:check": "prettier --check \"./**/*.{html,css,js,ts}\"",
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "@tailwindcss/cli": "^4.3.0",
+        "eslint": "^10.10.0",
+        "globals": "^17.12.0",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-jsdoc": "^64.3.5",
+        "fullcalendar": "^7.1.0",
+        "prettier": "^3.9.6",
+        "prettier-plugin-tailwindcss": "^0.8.1",
+        "@tailwindcss/vite": "^4.3.3",
+        "@types/node": "^26.6.2",
+        "tailwindcss": "^4.3.3",
+        "typescript": "^5.9.3",
+        "typescript-eslint": "^8.59.3",
+        "vite": "^8.3.0"
+    }
 }
