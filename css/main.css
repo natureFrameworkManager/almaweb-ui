@@ -203,17 +203,31 @@ main > header > div.multi-level-sort {
     @apply bg-surface text-on-surface;
 }
 main > ul {
-    @apply list-none p-0 m-0;
+    @apply list-none p-0 m-0 overflow-y-auto;
 }
 main > ul > li {
     @apply border-b border-border last:border-b-0 p-2;
-    @apply grid grid-cols-[auto_auto_auto_auto] grid-rows-[auto_auto] items-center gap-x-2;
+    @apply grid grid-cols-[auto_auto_auto_auto] grid-rows-[auto_auto] items-center gap-x-2 gap-y-1;
 }
 main > ul > li > h1 {
-    @apply col-1 row-1 text-xl font-bold;
+    @apply col-1 row-1 text-lg font-bold text-wrap;
 }
 main > ul > li > h2 {
-    @apply col-1 row-2 text-lg font-semibold;
+    @apply col-1 row-2 flex flex-col h-full font-semibold;
+}
+main > ul > li > div.module-info-container {
+    @apply col-2 flex flex-row flex-nowrap gap-2 overflow-x-auto;
+}
+main > ul > li span.module-info {
+    @apply border border-border rounded-full py-1 px-2 w-fit;
+    @apply text-sm bg-primary/20;
+    @apply text-nowrap
+}
+main > ul > li span.module-info.module-course-types {
+    @apply row-1 col-3;
+}
+main > ul > li span.module-info.module-exam-types {
+    @apply row-2 col-3;
 }
 main > ul > li > button {
     @apply col-4 row-start-1 row-end-3 justify-self-end;
