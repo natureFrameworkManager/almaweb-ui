@@ -54,6 +54,49 @@
                 <input id="search-input" type="text" placeholder="&quot;Statistik&quot;, &quot;10-20-1455&quot;, &quot;Informatik&quot;" />
                 <label for="search-input">Suche nach Modulen</label>
             </div>
+            <div class="filter-group">
+                <div class="input-container slim">
+                    <select id="filter-semester">
+                        <option>Alle Semester</option>
+                        <option>Wintersemester</option>
+                        <option>Sommersemester</option>
+                    </select>
+                    <label for="filter-semester">Semester</label>
+                </div>
+                <div class="input-container slim">
+                    <select id="filter-faculty">
+                        <option>Alle Fachbereiche</option>
+                        <option>Informatik</option>
+                        <option>Mathematik</option>
+                        <option>Physik</option>
+                    </select>
+                    <label for="filter-faculty">Fachbereich</label>
+                </div>
+                <div class="input-container slim">
+                    <select id="filter-lp">
+                        <option>Beliebige LP</option>
+                        <option>1-3 LP</option>
+                        <option>4-6 LP</option>
+                        <option>7+ LP</option>
+                    </select>
+                    <label for="filter-lp">Leistungspunkte</label>
+                </div>
+                <div class="checkbox-list">
+                    <label class="checkbox-item">
+                        <input type="checkbox" checked />
+                        <span>Nur verfügbare Module</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" />
+                        <span>Nur gemerkte Module</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" />
+                        <span>Prüfungsanmeldung offen</span>
+                    </label>
+                </div>
+                <button class="btn slim">Filter zurücksetzen</button>
+            </div>
         </div>
         <main>
             <header>

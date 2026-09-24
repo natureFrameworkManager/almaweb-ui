@@ -102,7 +102,7 @@
     @apply pe-4;
 }
 .input-container label {
-    @apply text-on-surface text-label-medium;
+    @apply text-on-surface text-label-medium ps-2 pt-0.5;
 }
 .input-container.slim input,
 .input-container.slim textarea,
@@ -155,7 +155,22 @@ body > header > div.save-slot-options {
 body > div.filter-options {
     @apply border-r border-border;
     @apply col-1 row-start-1 row-end-3;
-    @apply flex flex-col px-1 py-2;
+    @apply flex flex-col gap-y-4 px-1 py-2;
+}
+body > div.filter-options > div.filter-group {
+    @apply flex flex-col gap-y-2;
+}
+body > div.filter-options > div.filter-group > h3 {
+    @apply text-title-small font-semibold;
+}
+body > div.filter-options > div.filter-group > div.checkbox-list {
+    @apply flex flex-col gap-y-1;
+}
+body > div.filter-options > div.filter-group > div.checkbox-list > label.checkbox-item {
+    @apply flex flex-row items-center gap-x-2 cursor-pointer;
+}
+body > div.filter-options > div.filter-group > div.checkbox-list > label.checkbox-item > input[type="checkbox"] {
+    @apply accent-primary w-4 h-4;
 }
 body > main:not(#calendar):not(#tree) {
     @apply col-2 row-2;
