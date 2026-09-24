@@ -46,4 +46,4 @@ function initCal() {
     calendarInstance.render();
 }
 
-initCal();
+// initCal();
