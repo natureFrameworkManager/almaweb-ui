@@ -69,6 +69,7 @@
     @apply first:rounded-s-full last:rounded-e-full p-1 first:ps-2 last:pe-2;
     @apply bg-primary text-on-primary;
     @apply hover:bg-primary/80;
+    @apply border-e border-on-primary last:border-e-0;
 }
 .switcher .active {
     @apply bg-secondary text-on-secondary;
@@ -108,17 +109,17 @@
 body {
     @apply min-h-screen;
     @apply bg-background text-body-medium leading-[1.2] text-on-background;
-    @apply grid grid-cols-[330px_auto] grid-rows-[96px_auto];
+    @apply grid grid-cols-[330px_auto] grid-rows-[max-content_auto];
 }
 
 body > header {
     @apply border-b border-border;
-    @apply col-2 row-1 pe-2;
-    @apply grid grid-cols-[auto_auto_auto_auto] grid-rows-[auto_auto];
+    @apply col-2 row-1 pe-2 pb-2 pt-3;
+    @apply grid grid-cols-[max-content_max-content_auto] grid-rows-[max-content_max-content] gap-y-2;
 }
 body > header > nav {
     @apply flex flex-row row-span-2 col-1 items-end;
-    @apply px-2 pb-2;
+    @apply px-2;
 }
 body > header > nav > item {
     @apply cursor-pointer text-2xl px-2;
@@ -129,11 +130,11 @@ body > header > nav > item.active {
     @apply border-b-2 border-primary;
 }
 body > header > div.view-switcher {
-    @apply flex flex-row row-span-2 col-start-2 col-end-3 items-end;
-    @apply px-2 pb-3;
+    @apply flex flex-row row-2 col-2 items-end;
+    @apply px-2 pb-1;
 }
 body > header > div.additional-controls {
-    @apply flex flex-row items-center gap-x-2 row-1 col-start-3 col-end-5 justify-end;
+    @apply flex flex-row items-center gap-x-2 row-1 col-start-2 col-end-4 justify-end;
 }
 body > header > div.additional-controls > div.last-updated-con {
     @apply flex flex-row items-center gap-x-2 flex-nowrap text-nowrap;
@@ -145,7 +146,7 @@ body > header > div.additional-controls > div.dark-mode-toggle {
     @apply text-[16px];
 }
 body > header > div.save-slot-options {
-    @apply flex flex-row gap-x-2 row-2 col-4 items-center justify-end;
+    @apply flex flex-row gap-x-2 row-2 col-3 items-center justify-end pb-1;
 }
 body > div.filter-options {
     @apply border-r border-border;
