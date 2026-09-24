@@ -55,7 +55,7 @@
                 <label for="search-input">Suche nach Modulen</label>
             </div>
         </div>
-        <main>
+        <main style="display:none;">
             <header>
                 <div class="type-switcher">
                     <span class="active">Module</span>
@@ -87,7 +87,7 @@
                     <button class="btn material-symbols">save</button>
                 </li>
             </ul>
-            <div class="card-grid">
+            <div class="card-grid" style="display:none;">
                 <div class="card">
                     <h1>Module Title</h1>
                     <h2>Module Number</h2>
@@ -118,6 +118,7 @@
                 </div>
             </div>
         </main>
+        <main id="calendar"></main>
         <script
             type="module"
             src="ts/main.ts"

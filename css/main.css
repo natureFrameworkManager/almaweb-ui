@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "fonts.css";
+@import "calendar-override.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -153,8 +154,12 @@ body > div.filter-options {
     @apply col-1 row-start-1 row-end-3;
     @apply flex flex-col px-1 py-2;
 }
-body > main {
+body > main:not(#calendar) {
     @apply col-2 row-2;
+    @apply flex flex-col px-2 py-2;
+}
+body > main#calendar {
+    @apply col-start-1 col-end-3 row-2;
     @apply flex flex-col px-2 py-2;
 }
 

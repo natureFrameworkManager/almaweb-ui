@@ -1,0 +1,104 @@
+/* Currently the original monarch theme is used, but this file can be used to override the colors of the theme. */
+:root {
+    /* primary */
+    --fc-monarch-primary: #294d9d;
+    --fc-monarch-primary-foreground: #ffffff;
+    --fc-monarch-primary-over: #7461ae;
+    --fc-monarch-primary-down: #8272b7;
+
+    /* secondary */
+    --fc-monarch-secondary: #e4017b;
+    --fc-monarch-secondary-foreground: #4f378b;
+    --fc-monarch-secondary-over: #ddd1f1;
+    --fc-monarch-secondary-down: #d0c4e3;
+
+    /* tertiary */
+    --fc-monarch-tertiary: #895264;
+    --fc-monarch-tertiary-foreground: #ffffff;
+    --fc-monarch-tertiary-over: #956272;
+    --fc-monarch-tertiary-down: #a17381;
+
+    /* calendar content */
+    --fc-monarch-event: var(--fc-monarch-primary);
+    --fc-monarch-event-contrast: var(--fc-monarch-primary-foreground);
+    --fc-monarch-highlight: #eaddff4d;
+    --fc-monarch-now: #b3261e;
+
+    /* controls */
+    --fc-monarch-selected: #294d9d;
+    --fc-monarch-selected-foreground: #ffffff;
+    --fc-monarch-selected-over: #294d9ddd;
+    --fc-monarch-selected-down: #7f798c;
+    --fc-monarch-outline: #ff9dbb;
+
+    /* popover */
+    --fc-monarch-popover: var(--fc-monarch-background);
+
+    /* neutral backgrounds */
+    --fc-monarch-background: #ffffff;
+    --fc-monarch-faint: #79697b1a;
+    --fc-monarch-muted: #79697b26;
+    --fc-monarch-strong: #79697b4d;
+    --fc-monarch-stronger: #79697b59;
+    --fc-monarch-strongest: #79697b66;
+
+    /* neutral foregrounds */
+    --fc-monarch-foreground: #000000;
+    --fc-monarch-faint-foreground: #bebebe;
+    --fc-monarch-muted-foreground: #8d8d8d;
+
+    /* neutral borders */
+    --fc-monarch-border: #79747e;
+    --fc-monarch-strong-border: #bcbabe;
+}
+
+@media not print {
+    [data-color-scheme="dark"] {
+        /* primary */
+        --fc-monarch-primary: #50a3f1;
+        --fc-monarch-primary-foreground: #381e72;
+        --fc-monarch-primary-over: #d5c3ff;
+        --fc-monarch-primary-down: #d9caff;
+
+        /* secondary */
+        --fc-monarch-secondary: #f872b1;
+        --fc-monarch-secondary-foreground: #eaddff;
+        --fc-monarch-secondary-over: #564191;
+        --fc-monarch-secondary-down: #5e4b97;
+
+        /* tertiary */
+        --fc-monarch-tertiary: #efb8c8;
+        --fc-monarch-tertiary-foreground: #492532;
+        --fc-monarch-tertiary-over: #f1bfcd;
+        --fc-monarch-tertiary-down: #f3c6d3;
+
+        /* calendar content */
+        --fc-monarch-event: var(--fc-monarch-primary);
+        --fc-monarch-event-contrast: var(--fc-monarch-primary-foreground);
+        --fc-monarch-highlight: #4f378b4d;
+        --fc-monarch-now: #f2b8b5;
+
+        /* controls */
+        --fc-monarch-selected: #50a3f1;
+        --fc-monarch-selected-foreground: #332d41;
+        --fc-monarch-selected-over: #50a3f1dd;
+        --fc-monarch-selected-down: #d6cee3;
+        --fc-monarch-outline: #ff8a9e;
+
+        /* popover */
+        --fc-monarch-popover: rgb(26 17 15);
+        --fc-monarch-popover-foreground: rgb(241 223 218);
+
+        /* neutral backgrounds */
+        --fc-monarch-background: #121212;
+
+        /* neutral foregrounds */
+        --fc-monarch-foreground: #ffffff;
+        --fc-monarch-faint-foreground: #898989;
+        --fc-monarch-muted-foreground: #b0b0b0;
+
+        /* neutral borders */
+        --fc-monarch-border: #323036;
+        --fc-monarch-strong-border: #615d67;
+    }
+}
