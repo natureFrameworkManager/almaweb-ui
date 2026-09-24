@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --font-sans:
+        "Atkinson Hyperlegible", ui-sans-serif, system-ui, -apple-system, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --color-background: #ffffff;
+    --color-surface: #ffffff;
+    --color-surface-filled: #ffffff;
+    --color-border: #79747e;
+    --color-backdrop: #c2c2c2d3;
+    --color-error: #b3261e;
+    --color-primary: #294d9d; /* "Bellis Blue" */
+    --color-secondary: #e4017b; /* "Bellis Pink" */
+
+    --color-on-background: #000000;
+    --color-on-surface: #000000;
+    --color-on-error: #ffffff;
+    --color-on-primary: #ffffff;
+    --color-on-secondary: #ffffff;
+
+    /* Typography */
+    --text-body-large: 16px;
+    --text-body-medium: 14px;
+    --text-body-small: 12px;
+    --text-headline-large: 32px;
+    --text-headline-medium: 28px;
+    --text-headline-small: 24px;
+    --text-title-large: 22px;
+    --text-title-medium: 16px;
+    --text-title-small: 14px;
+    --text-label-large: 14px;
+    --text-label-medium: 12px;
+    --text-label-small: 11px;
+    --text-display-large: 57px;
+    --text-display-medium: 45px;
+    --text-display-small: 36px;
+}
+
+@layer theme {
+    :root,
+    :host {
+        @variant dark {
+            --color-background: #121212;
+            --color-surface: #ffffff1f;
+            --color-surface-filled: #2e2e2e;
+            --color-border: #938f99;
+            --color-backdrop: #000000a6;
+            --color-error: #f07e7a;
+            --color-primary: #50a3f1;
+            --color-secondary: #f872b1;
+            --color-on-background: #ffffff;
+            --color-on-surface: #ffffff;
+            --color-on-error: #000000;
+            --color-on-primary: #000000;
+            --color-on-secondary: #000000;
+        }
+    }
+}
+
+body {
+    @apply bg-background text-body-medium leading-[1.2] text-on-background;
+}

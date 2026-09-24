@@ -12,7 +12,7 @@ export default [
         ignores: ["dist/**", "node_modules", "esling.config.mjs", "css/css.css"],
     },
     {
-        files: ["js/**/*.js"],
+        files: ["ts/**/*.ts"],
         settings: {
             jsdoc: {
                 preferredTypes: {
