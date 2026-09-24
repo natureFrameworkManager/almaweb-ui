@@ -61,6 +61,135 @@
     }
 }
 
+.switcher {
+    @apply flex flex-row items-center;
+    @apply cursor-pointer;
+}
+.switcher span {
+    @apply first:rounded-s-full last:rounded-e-full p-1 first:ps-2 last:pe-2;
+    @apply bg-primary text-on-primary;
+    @apply hover:bg-primary/80;
+}
+.switcher .active {
+    @apply bg-secondary text-on-secondary;
+}
+
+.btn {
+    @apply cursor-pointer;
+    @apply inline-flex items-center justify-center gap-x-2;
+    @apply bg-primary text-on-primary rounded h-fit py-2 px-3;
+    @apply hover:bg-primary/80;
+}
+.btn.slim {
+    @apply py-1 px-2;
+}
+.btn.slim span.material-symbols {
+    @apply text-[16px];
+}
+
+.input-container {
+    @apply flex flex-col;
+}
+.input-container input, .input-container textarea, .input-container select {
+    @apply border border-border rounded-md py-2 px-3 bg-surface text-on-surface;
+}
+.input-container select {
+    @apply pe-4;
+}
+.input-container label {
+    @apply text-on-surface text-label-medium;
+}
+.input-container.slim input,
+.input-container.slim textarea,
+.input-container.slim select {
+    @apply py-1 px-2;
+}
+
 body {
+    @apply min-h-screen;
     @apply bg-background text-body-medium leading-[1.2] text-on-background;
+    @apply grid grid-cols-[330px_auto] grid-rows-[96px_auto];
+}
+
+body > header {
+    @apply border-b border-border;
+    @apply col-2 row-1 pe-2;
+    @apply grid grid-cols-[auto_auto_auto_auto] grid-rows-[auto_auto];
+}
+body > header > nav {
+    @apply flex flex-row row-span-2 col-1 items-end;
+    @apply px-2 pb-2;
+}
+body > header > nav > item {
+    @apply cursor-pointer text-2xl px-2;
+    @apply border-b-2 border-transparent;
+    @apply hover:border-primary;
+}
+body > header > nav > item.active {
+    @apply border-b-2 border-primary;
+}
+body > header > div.view-switcher {
+    @apply flex flex-row row-span-2 col-start-2 col-end-3 items-end;
+    @apply px-2 pb-3;
+}
+body > header > div.additional-controls {
+    @apply flex flex-row items-center gap-x-2 row-1 col-start-3 col-end-5 justify-end;
+}
+body > header > div.additional-controls > div.last-updated-con {
+    @apply flex flex-row items-center gap-x-2 flex-nowrap text-nowrap;
+}
+body > header > div.additional-controls > div.last-updated-con > span.material-symbols {
+    @apply text-[16px];
+}
+body > header > div.additional-controls > div.dark-mode-toggle {
+    @apply text-[16px];
+}
+body > header > div.save-slot-options {
+    @apply flex flex-row gap-x-2 row-2 col-4 items-center justify-end;
+}
+body > div.filter-options {
+    @apply border-r border-border;
+    @apply col-1 row-start-1 row-end-3;
+    @apply flex flex-col px-1 py-2;
+}
+body > main {
+    @apply col-2 row-2;
+    @apply flex flex-col px-2 py-2;
+}
+
+main > header {
+    @apply flex flex-row items-end justify-between mb-4;
+}
+main > header > div.type-switcher {
+    @apply flex flex-row items-end;
+}
+main > header > div.type-switcher > span {
+    @apply cursor-pointer text-lg px-2;
+    @apply border-b-2 border-transparent;
+    @apply hover:border-primary;
+}
+main > header > div.type-switcher > span.active {
+    @apply border-b-2 border-primary;
+}
+main > header > div.multi-level-sort {
+    @apply cursor-pointer;
+    @apply border border-border;
+    @apply rounded-md py-1 px-2; 
+    @apply bg-surface text-on-surface;
+}
+main > ul {
+    @apply list-none p-0 m-0;
+}
+main > ul > li {
+    @apply border-b border-border last:border-b-0 p-2;
+    @apply grid grid-cols-[auto_auto_auto_auto] grid-rows-[auto_auto] items-center gap-x-2;
+}
+main > ul > li > h1 {
+    @apply col-1 row-1 text-xl font-bold;
+}
+main > ul > li > h2 {
+    @apply col-1 row-2 text-lg font-semibold;
+}
+main > ul > li > button {
+    @apply col-4 row-start-1 row-end-3 justify-self-end;
 }

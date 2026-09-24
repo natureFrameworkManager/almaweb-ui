@@ -12,6 +12,82 @@
         <title>Document</title>
     </head>
     <body>
+        <header>
+            <nav class="display-changer1">
+                <item class="active">Liste</item>
+                <item>Kacheln</item>
+                <item>Kalender</item>
+                <item>Navigationsbaum</item>
+            </nav>
+            <div class="view-switcher switcher">
+                <span class="active">Einzeln</span>
+                <span>Geteilt</span>
+                <span>Vergleichen</span>
+            </div>
+            <div class="additional-controls">
+                <div class="last-updated-con"><span class="material-symbols">autorenew</span><span>10:12 20.06.2024</span></div>
+                <div class="language-switcher switcher">
+                    <span class="active">DE</span>
+                    <span>EN</span>
+                </div>
+                <div class="dark-mode-toggle switcher material-symbols">
+                    <span class="active">desktop_windows</span>
+                    <span>dark_mode</span>
+                    <span>light_mode</span>
+                </div>
+                <button class="btn slim">Teilen</button>
+                <button class="btn slim">Export</button>
+            </div>
+            <div class="save-slot-options">
+                <div class="input-container slim">
+                    <select class="save-slot-selector">
+                        <option>Option 1</option>
+                        <option>Option 2</option>
+                        <option>Option 3</option>
+                    </select>
+                </div>
+                <button class="btn slim">Slot <span class="material-symbols">settings</span></button>
+            </div>
+        </header>
+        <div class="filter-options">
+            <div class="input-container">
+                <input id="search-input" type="text" placeholder="&quot;Statistik&quot;, &quot;10-20-1455&quot;, &quot;Informatik&quot;" />
+                <label for="search-input">Suche nach Modulen</label>
+            </div>
+        </div>
+        <main>
+            <header>
+                <div class="type-switcher">
+                    <span class="active">Module</span>
+                    <span>Kurse</span>
+                    <span>Veranstaltungen</span>
+                    <span>Prüfungen</span>
+                    <span>Mitarbeitende</span>
+                    <span>Räumlichkeiten</span>
+                </div>
+                <div class="multi-level-sort">
+                    <span>Sortieren nach</span>
+                </div>
+            </header>
+            <ul>
+                <li>
+                    <h1>Module Title</h1>
+                    <h2>Module Number</h2>
+                    <span>3 LP</span>
+                    <span>2 Kurse</span>
+
+                    <button class="btn">Save to Slot</button>
+                </li>
+                <li>
+                    <h1>Module Title</h1>
+                    <h2>Module Number</h2>
+                    <span>3 LP</span>
+                    <span>2 Kurse</span>
+
+                    <button class="btn">Save to Slot</button>
+                </li>
+            </ul>
+        </main>
         <script
             type="module"
             src="ts/main.ts"
