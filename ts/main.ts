@@ -50,7 +50,7 @@ function initCal() {
 }
 
 function displayModuleList(modules: Module[]) {
-    const moduleListElement = document.querySelector("#module-list") as HTMLElement | null;
+    const moduleListElement = document.querySelector("ul#module-list") as HTMLElement | null;
     if (!moduleListElement) {
         throw new Error(`Module list element with ID "module-list" not found.`);
     }
@@ -59,6 +59,7 @@ function displayModuleList(modules: Module[]) {
     modules.sort((a, b) => a.name.localeCompare(b.name));
     modules.forEach(module => {
         const moduleItem = document.createElement("li");
+        moduleItem.className = "module-list-item";
 
         const moduleName = document.createElement("h1");
         moduleName.textContent = module.name;
@@ -128,7 +129,7 @@ function displayModuleList(modules: Module[]) {
 }
 
 function displayModuleCards(modules: Module[]) {
-    const moduleListElement = document.querySelector("#module-card-grid") as HTMLElement | null;
+    const moduleListElement = document.querySelector("div#module-card-grid") as HTMLElement | null;
     if (!moduleListElement) {
         throw new Error(`Module list element with ID "module-card-grid" not found.`);
     }
@@ -199,7 +200,7 @@ function displayTree(modules: Module[]) {
     const level = getTreeLevel(treeData, openedLevels);
 
     const openedLevelsContainer = document.createElement("div");
-    openedLevelsContainer.className = "opened-levels";
+    openedLevelsContainer.id = "opened-levels";
     openedLevels.forEach(level => {
         const levelElement = document.createElement("div");
         levelElement.className = "opened-level";
@@ -215,7 +216,7 @@ function displayTree(modules: Module[]) {
     treeContainer.appendChild(openedLevelsContainer);
 
     const levelsContainer = document.createElement("div");
-    levelsContainer.className = "levels";
+    levelsContainer.id = "levels";
     // Display the current tree level based on the opened levels
     // Case 1: Object keys represent sub-levels in the tree
     // Case 2: Leaf nodes contain module IDs
@@ -299,7 +300,7 @@ function switchView(view: "list" | "cards" | "calendar" | "tree") {
     calendarView.style.display = view === "calendar" ? "" : "none";
     treeView.style.display = view === "tree" ? "" : "none";
 
-    const mainContainer = document.querySelector("main:not(#calendar):not(#tree)") as HTMLElement;
+    const mainContainer = document.querySelector("main#list-card-view") as HTMLElement;
     if (view !== "list" && view !== "cards" && mainContainer) {
         mainContainer.style.display = "none";
     } else if (mainContainer) {
@@ -307,7 +308,7 @@ function switchView(view: "list" | "cards" | "calendar" | "tree") {
     }
 }
 
-document.querySelectorAll("body > header > nav.display-changer1 item").forEach(item => {
+document.querySelectorAll("body > header > nav#display-changer1 > item").forEach(item => {
     item.addEventListener("click", () => {
         const view = item.getAttribute("data-view") as "list" | "cards" | "calendar" | "tree";
         item.parentElement?.querySelectorAll("item").forEach(sibling => sibling.classList.remove("active"));

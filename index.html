@@ -12,35 +12,41 @@
         <title>Document</title>
     </head>
     <body>
-        <header>
-            <nav class="display-changer1">
+        <header id="top-header">
+            <nav id="display-changer2">
                 <item class="active" data-view="list">Liste</item>
                 <item data-view="cards">Kacheln</item>
                 <item data-view="calendar">Kalender</item>
                 <item data-view="tree">Navigationsbaum</item>
             </nav>
-            <div class="view-switcher switcher">
-                <span class="active">Einzeln</span>
-                <span>Geteilt</span>
-                <span>Vergleichen</span>
+            <nav id="display-changer1">
+                <item class="active" data-view="list">Liste</item>
+                <item data-view="cards">Kacheln</item>
+                <item data-view="calendar">Kalender</item>
+                <item data-view="tree">Navigationsbaum</item>
+            </nav>
+            <div id="view-switcher" class="switcher">
+                <span data-view="single" class="active">Einzeln</span>
+                <span data-view="split">Geteilt</span>
+                <span data-view="compare">Vergleichen</span>
             </div>
-            <div class="additional-controls">
-                <div class="last-updated-con">
-                    <span class="material-symbols">autorenew</span><span>10:12 20.06.2024</span>
+            <div id="additional-controls">
+                <div id="last-updated-con">
+                    <span class="material-symbols">autorenew</span><span id="last-updated-timestamp">10:12 20.06.2024</span>
                 </div>
-                <div class="language-switcher switcher">
-                    <span class="active">DE</span>
-                    <span>EN</span>
+                <div class="switcher" id="language-switcher">
+                    <span data-lang="de" class="active">DE</span>
+                    <span data-lang="en">EN</span>
                 </div>
-                <div class="dark-mode-toggle switcher material-symbols">
-                    <span class="active">desktop_windows</span>
-                    <span>dark_mode</span>
-                    <span>light_mode</span>
+                <div class="switcher material-symbols" id="dark-mode-toggle">
+                    <span data-mode="system" class="active">desktop_windows</span>
+                    <span data-mode="dark">dark_mode</span>
+                    <span data-mode="light">light_mode</span>
                 </div>
-                <button class="btn slim">Teilen</button>
-                <button class="btn slim">Export</button>
+                <button id="share-button" class="btn slim">Teilen</button>
+                <button id="export-button" class="btn slim">Export</button>
             </div>
-            <div class="save-slot-options">
+            <div id="save-slot-options">
                 <div class="input-container slim">
                     <select class="save-slot-selector">
                         <option>Option 1</option>
@@ -53,7 +59,7 @@
                 </button>
             </div>
         </header>
-        <div class="filter-options">
+        <div id="filter-options">
             <div class="input-container">
                 <input
                     id="search-input"
@@ -109,262 +115,22 @@
                 <button class="btn slim">Filter zurücksetzen</button>
             </div>
         </div>
-        <main>
-            <header>
-                <div class="type-switcher">
-                    <span class="active">Module</span>
-                    <span>Kurse</span>
-                    <span>Veranstaltungen</span>
-                    <span>Prüfungen</span>
-                    <span>Mitarbeitende</span>
-                    <span>Räumlichkeiten</span>
+        <main id="list-card-view">
+            <header id="list-card-view-header">
+                <div id="type-switcher">
+                    <span data-view="modules" class="active">Module</span>
+                    <span data-view="courses">Kurse</span>
+                    <span data-view="events">Veranstaltungen</span>
+                    <span data-view="exams">Prüfungen</span>
+                    <span data-view="staff">Mitarbeitende</span>
+                    <span data-view="locations">Räumlichkeiten</span>
                 </div>
-                <div class="multi-level-sort">
+                <div id="multi-level-sort">
                     <span>Sortieren nach</span>
                 </div>
             </header>
-            <ul id="module-list" style="display: none;">>
-                <li>
-                    <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
-                    <h2 class="module-number">10-201-2011</h2>
-                    <div class="module-info-container">
-                        <span class="module-info module-credits">3 LP</span>
-                        <span class="module-info module-duration">1 Semester</span>
-                        <span class="module-info module-frequency">jedes Wintersemester</span>
-                        <span class="module-info module-language">Deutsch</span>
-                    </div>
-                    <div class="module-info-container">
-                        <span class="module-info module-faculty">Informatik</span>
-                        <span class="module-info module-path"
-                            >Informatik (Bachelor of Science) > Pflichtmodule</span
-                        >
-                    </div>
-                    <span class="module-info module-course-types">Vorlesung, Übung, Seminar</span>
-                    <span class="module-info module-exam-types">Klausur, Hausarbeit</span>
-
-                    <button class="btn material-symbols">save</button>
-                </li>
-                <li>
-                    <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
-                    <h2 class="module-number">10-201-2011</h2>
-                    <div class="module-info-container">
-                        <span class="module-info module-credits">3 LP</span>
-                        <span class="module-info module-duration">1 Semester</span>
-                        <span class="module-info module-frequency">jedes Wintersemester</span>
-                        <span class="module-info module-language">Deutsch</span>
-                    </div>
-                    <div class="module-info-container">
-                        <span class="module-info module-faculty">Informatik</span>
-                        <span class="module-info module-path"
-                            >Informatik (Bachelor of Science) > Pflichtmodule</span
-                        >
-                    </div>
-                    <span class="module-info module-course-types">Vorlesung, Übung, Seminar</span>
-                    <span class="module-info module-exam-types">Klausur, Hausarbeit</span>
-
-                    <button class="btn material-symbols">save</button>
-                </li>
-                <li>
-                    <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
-                    <h2 class="module-number">10-201-2011</h2>
-                    <div class="module-info-container">
-                        <span class="module-info module-credits">3 LP</span>
-                        <span class="module-info module-duration">1 Semester</span>
-                        <span class="module-info module-frequency">jedes Wintersemester</span>
-                        <span class="module-info module-language">Deutsch</span>
-                    </div>
-                    <div class="module-info-container">
-                        <span class="module-info module-faculty">Informatik</span>
-                        <span class="module-info module-path"
-                            >Informatik (Bachelor of Science) > Pflichtmodule</span
-                        >
-                    </div>
-                    <span class="module-info module-course-types">Vorlesung, Übung, Seminar</span>
-                    <span class="module-info module-exam-types">Klausur, Hausarbeit</span>
-
-                    <button class="btn material-symbols">save</button>
-                </li>
-                <li>
-                    <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
-                    <h2 class="module-number">10-201-2011</h2>
-                    <div class="module-info-container">
-                        <span class="module-info module-credits">3 LP</span>
-                        <span class="module-info module-duration">1 Semester</span>
-                        <span class="module-info module-frequency">jedes Wintersemester</span>
-                        <span class="module-info module-language">Deutsch</span>
-                    </div>
-                    <div class="module-info-container">
-                        <span class="module-info module-faculty">Informatik</span>
-                        <span class="module-info module-path"
-                            >Informatik (Bachelor of Science) > Pflichtmodule</span
-                        >
-                    </div>
-                    <span class="module-info module-course-types">Vorlesung, Übung, Seminar</span>
-                    <span class="module-info module-exam-types">Klausur, Hausarbeit</span>
-
-                    <button class="btn material-symbols">save</button>
-                </li>
-                <li>
-                    <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
-                    <h2 class="module-number">10-201-2011</h2>
-                    <div class="module-info-container">
-                        <span class="module-info module-credits">3 LP</span>
-                        <span class="module-info module-duration">1 Semester</span>
-                        <span class="module-info module-frequency">jedes Wintersemester</span>
-                        <span class="module-info module-language">Deutsch</span>
-                    </div>
-                    <div class="module-info-container">
-                        <span class="module-info module-faculty">Informatik</span>
-                        <span class="module-info module-path"
-                            >Informatik (Bachelor of Science) > Pflichtmodule</span
-                        >
-                    </div>
-                    <span class="module-info module-course-types">Vorlesung, Übung, Seminar</span>
-                    <span class="module-info module-exam-types">Klausur, Hausarbeit</span>
-
-                    <button class="btn material-symbols">save</button>
-                </li>
-                <li>
-                    <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
-                    <h2 class="module-number">10-201-2011</h2>
-                    <div class="module-info-container">
-                        <span class="module-info module-credits">3 LP</span>
-                        <span class="module-info module-duration">1 Semester</span>
-                        <span class="module-info module-frequency">jedes Wintersemester</span>
-                        <span class="module-info module-language">Deutsch</span>
-                    </div>
-                    <div class="module-info-container">
-                        <span class="module-info module-faculty">Informatik</span>
-                        <span class="module-info module-path"
-                            >Informatik (Bachelor of Science) > Pflichtmodule</span
-                        >
-                    </div>
-                    <span class="module-info module-course-types">Vorlesung, Übung, Seminar</span>
-                    <span class="module-info module-exam-types">Klausur, Hausarbeit</span>
-
-                    <button class="btn material-symbols">save</button>
-                </li>
-                <li>
-                    <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
-                    <h2 class="module-number">10-201-2011</h2>
-                    <div class="module-info-container">
-                        <span class="module-info module-credits">3 LP</span>
-                        <span class="module-info module-duration">1 Semester</span>
-                        <span class="module-info module-frequency">jedes Wintersemester</span>
-                        <span class="module-info module-language">Deutsch</span>
-                    </div>
-                    <div class="module-info-container">
-                        <span class="module-info module-faculty">Informatik</span>
-                        <span class="module-info module-path"
-                            >Informatik (Bachelor of Science) > Pflichtmodule</span
-                        >
-                    </div>
-                    <span class="module-info module-course-types">Vorlesung, Übung, Seminar</span>
-                    <span class="module-info module-exam-types">Klausur, Hausarbeit</span>
-
-                    <button class="btn material-symbols">save</button>
-                </li>
-                <li>
-                    <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
-                    <h2 class="module-number">10-201-2011</h2>
-                    <div class="module-info-container">
-                        <span class="module-info module-credits">3 LP</span>
-                        <span class="module-info module-duration">1 Semester</span>
-                        <span class="module-info module-frequency">jedes Wintersemester</span>
-                        <span class="module-info module-language">Deutsch</span>
-                    </div>
-                    <div class="module-info-container">
-                        <span class="module-info module-faculty">Informatik</span>
-                        <span class="module-info module-path"
-                            >Informatik (Bachelor of Science) > Pflichtmodule</span
-                        >
-                    </div>
-                    <span class="module-info module-course-types">Vorlesung, Übung, Seminar</span>
-                    <span class="module-info module-exam-types">Klausur, Hausarbeit</span>
-
-                    <button class="btn material-symbols">save</button>
-                </li>
-                <li>
-                    <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
-                    <h2 class="module-number">10-201-2011</h2>
-                    <div class="module-info-container">
-                        <span class="module-info module-credits">3 LP</span>
-                        <span class="module-info module-duration">1 Semester</span>
-                        <span class="module-info module-frequency">jedes Wintersemester</span>
-                        <span class="module-info module-language">Deutsch</span>
-                    </div>
-                    <div class="module-info-container">
-                        <span class="module-info module-faculty">Informatik</span>
-                        <span class="module-info module-path"
-                            >Informatik (Bachelor of Science) > Pflichtmodule</span
-                        >
-                    </div>
-                    <span class="module-info module-course-types">Vorlesung, Übung, Seminar</span>
-                    <span class="module-info module-exam-types">Klausur, Hausarbeit</span>
-
-                    <button class="btn material-symbols">save</button>
-                </li>
-                <li>
-                    <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
-                    <h2 class="module-number">10-201-2011</h2>
-                    <div class="module-info-container">
-                        <span class="module-info module-credits">3 LP</span>
-                        <span class="module-info module-duration">1 Semester</span>
-                        <span class="module-info module-frequency">jedes Wintersemester</span>
-                        <span class="module-info module-language">Deutsch</span>
-                    </div>
-                    <div class="module-info-container">
-                        <span class="module-info module-faculty">Informatik</span>
-                        <span class="module-info module-path"
-                            >Informatik (Bachelor of Science) > Pflichtmodule</span
-                        >
-                    </div>
-                    <span class="module-info module-course-types">Vorlesung, Übung, Seminar</span>
-                    <span class="module-info module-exam-types">Klausur, Hausarbeit</span>
-
-                    <button class="btn material-symbols">save</button>
-                </li>
-                <li>
-                    <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
-                    <h2 class="module-number">10-201-2011</h2>
-                    <div class="module-info-container">
-                        <span class="module-info module-credits">3 LP</span>
-                        <span class="module-info module-duration">1 Semester</span>
-                        <span class="module-info module-frequency">jedes Wintersemester</span>
-                        <span class="module-info module-language">Deutsch</span>
-                    </div>
-                    <div class="module-info-container">
-                        <span class="module-info module-faculty">Informatik</span>
-                        <span class="module-info module-path"
-                            >Informatik (Bachelor of Science) > Pflichtmodule</span
-                        >
-                    </div>
-                    <span class="module-info module-course-types">Vorlesung, Übung, Seminar</span>
-                    <span class="module-info module-exam-types">Klausur, Hausarbeit</span>
-
-                    <button class="btn material-symbols">save</button>
-                </li>
-                <li>
-                    <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
-                    <h2 class="module-number">10-201-2011</h2>
-                    <div class="module-info-container">
-                        <span class="module-info module-credits">3 LP</span>
-                        <span class="module-info module-duration">1 Semester</span>
-                        <span class="module-info module-frequency">jedes Wintersemester</span>
-                        <span class="module-info module-language">Deutsch</span>
-                    </div>
-                    <div class="module-info-container">
-                        <span class="module-info module-faculty">Informatik</span>
-                        <span class="module-info module-path"
-                            >Informatik (Bachelor of Science) > Pflichtmodule</span
-                        >
-                    </div>
-                    <span class="module-info module-course-types">Vorlesung, Übung, Seminar</span>
-                    <span class="module-info module-exam-types">Klausur, Hausarbeit</span>
-
-                    <button class="btn material-symbols">save</button>
-                </li>
-                <li>
+            <ul id="module-list" style="display: none;">
+                <li class="module-list-item">
                     <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
                     <h2 class="module-number">10-201-2011</h2>
                     <div class="module-info-container">
@@ -398,78 +164,6 @@
                         <button class="btn material-symbols">save</button>
                     </div>
                 </div>
-                <div class="card">
-                    <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
-                    <h2 class="module-number">10-201-2011</h2>
-                    <span class="module-info module-credits">3 LP</span>
-                    <span class="module-info module-duration">1 Semester</span>
-                    <span class="module-info module-faculty">Informatik</span>
-                    <span class="module-info module-path">Pflichtmodule</span>
-                    <div class="module-btn-con">
-                        <button class="btn">Mehr Details</button>
-                        <button class="btn material-symbols">save</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
-                    <h2 class="module-number">10-201-2011</h2>
-                    <span class="module-info module-credits">3 LP</span>
-                    <span class="module-info module-duration">1 Semester</span>
-                    <span class="module-info module-faculty">Informatik</span>
-                    <span class="module-info module-path">Pflichtmodule</span>
-                    <div class="module-btn-con">
-                        <button class="btn">Mehr Details</button>
-                        <button class="btn material-symbols">save</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
-                    <h2 class="module-number">10-201-2011</h2>
-                    <span class="module-info module-credits">3 LP</span>
-                    <span class="module-info module-duration">1 Semester</span>
-                    <span class="module-info module-faculty">Informatik</span>
-                    <span class="module-info module-path">Pflichtmodule</span>
-                    <div class="module-btn-con">
-                        <button class="btn">Mehr Details</button>
-                        <button class="btn material-symbols">save</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
-                    <h2 class="module-number">10-201-2011</h2>
-                    <span class="module-info module-credits">3 LP</span>
-                    <span class="module-info module-duration">1 Semester</span>
-                    <span class="module-info module-faculty">Informatik</span>
-                    <span class="module-info module-path">Pflichtmodule</span>
-                    <div class="module-btn-con">
-                        <button class="btn">Mehr Details</button>
-                        <button class="btn material-symbols">save</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
-                    <h2 class="module-number">10-201-2011</h2>
-                    <span class="module-info module-credits">3 LP</span>
-                    <span class="module-info module-duration">1 Semester</span>
-                    <span class="module-info module-faculty">Informatik</span>
-                    <span class="module-info module-path">Pflichtmodule</span>
-                    <div class="module-btn-con">
-                        <button class="btn">Mehr Details</button>
-                        <button class="btn material-symbols">save</button>
-                    </div>
-                </div>
-                <div class="card">
-                    <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
-                    <h2 class="module-number">10-201-2011</h2>
-                    <span class="module-info module-credits">3 LP</span>
-                    <span class="module-info module-duration">1 Semester</span>
-                    <span class="module-info module-faculty">Informatik</span>
-                    <span class="module-info module-path">Pflichtmodule</span>
-                    <div class="module-btn-con">
-                        <button class="btn">Mehr Details</button>
-                        <button class="btn material-symbols">save</button>
-                    </div>
-                </div>
             </div>
         </main>
         <main
@@ -480,63 +174,15 @@
             id="tree"
             style="display: none"
         >
-            <div class="opened-levels">
+            <div id="opened-levels">
                 <div class="opened-level">
                     <span>Wurzel</span>
                     <button class="btn slim material-symbols">reply_all</button>
                 </div>
-                <div class="opened-level">
-                    <span>10 - Fachschaft Informatik</span>
-                    <button class="btn slim material-symbols">reply_all</button>
-                </div>
-                <div class="opened-level">
-                    <span>Informatik</span>
-                    <button class="btn slim material-symbols">reply_all</button>
-                </div>
-                <div class="opened-level">
-                    <span>Bachelor</span>
-                    <button class="btn slim material-symbols">reply_all</button>
-                </div>
             </div>
-            <div class="levels">
+            <div id="levels">
                 <div class="level">
                     <span>Analysis</span>
-                    <button class="btn slim material-symbols">keyboard_double_arrow_right</button>
-                </div>
-                <div class="level">
-                    <span>Algebra</span>
-                    <button class="btn slim material-symbols">keyboard_double_arrow_right</button>
-                </div>
-                <div class="level">
-                    <span>Geometry</span>
-                    <button class="btn slim material-symbols">keyboard_double_arrow_right</button>
-                </div>
-                <div class="level">
-                    <span>Geometry</span>
-                    <button class="btn slim material-symbols">keyboard_double_arrow_right</button>
-                </div>
-                <div class="level">
-                    <span>Geometry</span>
-                    <button class="btn slim material-symbols">keyboard_double_arrow_right</button>
-                </div>
-                <div class="level">
-                    <span>Geometry</span>
-                    <button class="btn slim material-symbols">keyboard_double_arrow_right</button>
-                </div>
-                <div class="level">
-                    <span>Geometry</span>
-                    <button class="btn slim material-symbols">keyboard_double_arrow_right</button>
-                </div>
-                <div class="level">
-                    <span>Geometry</span>
-                    <button class="btn slim material-symbols">keyboard_double_arrow_right</button>
-                </div>
-                <div class="level">
-                    <span>Geometry</span>
-                    <button class="btn slim material-symbols">keyboard_double_arrow_right</button>
-                </div>
-                <div class="level">
-                    <span>Geometry</span>
                     <button class="btn slim material-symbols">keyboard_double_arrow_right</button>
                 </div>
             </div>
