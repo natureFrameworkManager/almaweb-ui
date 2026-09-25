@@ -124,8 +124,14 @@ header#top-header {
     @apply grid grid-cols-[max-content_max-content_auto] grid-rows-[max-content_max-content] gap-y-2;
 }
 header#top-header > nav {
-    @apply col-1 row-span-2 flex flex-row items-end;
+    @apply flex flex-row items-end;
     @apply px-2;
+}
+header#top-header > nav#display-changer1 {
+    @apply col-1 row-2 ;
+}
+header#top-header > nav#display-changer2 {
+    @apply col-1 row-1 ;
 }
 header#top-header > nav > item {
     @apply cursor-pointer px-2 text-2xl;
