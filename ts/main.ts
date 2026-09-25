@@ -182,6 +182,65 @@ function displayModuleCards(modules: Module[]) {
     });
 }
 
+function displayTree(modules: Module[]) {
+    const treeContainer = document.querySelector("main#tree") as HTMLElement;
+    if (!treeContainer) {
+        console.error("Tree view container is missing.");
+        return;
+    }
+    const treeData = computeTreeData(modules);
+    console.log(treeData);
+    
+    treeContainer.innerHTML = "";
+
+    // show opened levels
+    // Fallback:
+    const openedLevels = ["Root", "SoSe 2025", "01 - Theologische Fakultät"];
+    const level = getTreeLevel(treeData, openedLevels);
+
+    const openedLevelsContainer = document.createElement("div");
+    openedLevelsContainer.className = "opened-levels";
+    openedLevels.forEach(level => {
+        const levelElement = document.createElement("div");
+        levelElement.className = "opened-level";
+        const levelElementTitle = document.createElement("span");
+        levelElementTitle.textContent = level === "Root" ? "Wurzel" : level;
+        levelElement.appendChild(levelElementTitle);
+        const levelButton = document.createElement("button");
+        levelButton.className = "btn slim material-symbols";
+        levelButton.textContent = "reply_all";
+        levelElement.appendChild(levelButton);
+        openedLevelsContainer.appendChild(levelElement);
+    });
+    treeContainer.appendChild(openedLevelsContainer);
+
+    const levelsContainer = document.createElement("div");
+    levelsContainer.className = "levels";
+    // Display the current tree level based on the opened levels
+    // Case 1: Object keys represent sub-levels in the tree
+    // Case 2: Leaf nodes contain module IDs
+    if (Object.keys(level).includes("_modules")) {
+        const moduleIds = level._modules ?? [];
+        console.log("Modules at this level:", moduleIds);
+    } else {
+        const subLevels = Object.keys(level).filter(key => key !== "_modules");
+        const subLevelElements = subLevels.map(subLevel => {
+            const subLevelElement = document.createElement("div");
+            subLevelElement.className = "level";
+            const subLevelTitle = document.createElement("span");
+            subLevelTitle.textContent = subLevel;
+            subLevelElement.appendChild(subLevelTitle);
+            const subLevelButton = document.createElement("button");
+            subLevelButton.className = "btn slim material-symbols";
+            subLevelButton.textContent = "keyboard_double_arrow_right";
+            subLevelElement.appendChild(subLevelButton);
+            return subLevelElement;
+        });
+        subLevelElements.forEach(el => levelsContainer.appendChild(el));
+    }
+    treeContainer.appendChild(levelsContainer);
+}
+
 function normalizePath(path: string[][], faculty: string): string[][] {
     return path.map(el => {
         if (el.find(segment => segment === faculty)) {
@@ -192,6 +251,36 @@ function normalizePath(path: string[][], faculty: string): string[][] {
         }
         return el;
     });
+}
+
+function getTreeLevel(tree: Record<string, TreeNode>, path: string[]): Record<string, TreeNode> {
+    return path.reduce<Record<string, TreeNode>>((currentLevel, segment) => {
+        if (!currentLevel[segment]) {
+            currentLevel[segment] = {};
+        }
+        return currentLevel[segment] as TreeNode;
+    }, tree);
+}
+
+type TreeNode = {
+    [key: string]: TreeNode | Module["id"][];
+    _modules?: Module["id"][];
+};
+
+function computeTreeData(modules: Module[]): Record<string, TreeNode> {
+    const tree: Record<string, TreeNode> = {};
+    modules.forEach(module => {
+        module.path.forEach(path => {
+            const lastNode = path.reduce<TreeNode>((currentLevel, segment) => {
+                if (!currentLevel[segment]) {
+                    currentLevel[segment] = {};
+                }
+                return currentLevel[segment] as TreeNode;
+            }, tree);
+            lastNode._modules = [...(lastNode._modules ?? []), module.id];
+        });
+    });
+    return tree;
 }
 
 function switchView(view: "list" | "cards" | "calendar" | "tree") {
@@ -226,12 +315,14 @@ document.querySelectorAll("body > header > nav.display-changer1 item").forEach(i
         switchView(view);
     });
 });
+switchView("list");
 
 // initCal();
 getModules().then(modules => {
     console.log(modules);
     displayModuleList(modules.items);
     displayModuleCards(modules.items);
+    displayTree(modules.items);
 }).catch(error => {
     console.error("Failed to fetch modules:", error);
 });
