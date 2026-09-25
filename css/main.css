@@ -67,7 +67,7 @@
     @apply cursor-pointer;
 }
 .switcher span {
-    @apply first:rounded-s-full last:rounded-e-full p-1 first:ps-2 last:pe-2;
+    @apply p-1 first:rounded-s-full first:ps-2 last:rounded-e-full last:pe-2;
     @apply bg-primary text-on-primary;
     @apply hover:bg-primary/80;
     @apply border-e border-on-primary last:border-e-0;
@@ -79,11 +79,11 @@
 .btn {
     @apply cursor-pointer;
     @apply inline-flex items-center justify-center gap-x-2;
-    @apply bg-primary text-on-primary rounded h-fit py-2 px-3;
+    @apply h-fit rounded bg-primary px-3 py-2 text-on-primary;
     @apply hover:bg-primary/80;
 }
 .btn.slim {
-    @apply py-1 px-2;
+    @apply px-2 py-1;
 }
 .btn.slim.material-symbols {
     @apply text-[16px];
@@ -95,19 +95,21 @@
 .input-container {
     @apply flex flex-col;
 }
-.input-container input, .input-container textarea, .input-container select {
-    @apply border border-border rounded-md py-2 px-3 bg-surface text-on-surface;
+.input-container input,
+.input-container textarea,
+.input-container select {
+    @apply rounded-md border border-border bg-surface px-3 py-2 text-on-surface;
 }
 .input-container select {
     @apply pe-4;
 }
 .input-container label {
-    @apply text-on-surface text-label-medium ps-2 pt-0.5;
+    @apply ps-2 pt-0.5 text-label-medium text-on-surface;
 }
 .input-container.slim input,
 .input-container.slim textarea,
 .input-container.slim select {
-    @apply py-1 px-2;
+    @apply px-2 py-1;
 }
 
 body {
@@ -118,15 +120,15 @@ body {
 
 body > header {
     @apply border-b border-border;
-    @apply col-2 row-1 pe-2 pb-2 pt-3;
+    @apply col-2 row-1 pe-2 pt-3 pb-2;
     @apply grid grid-cols-[max-content_max-content_auto] grid-rows-[max-content_max-content] gap-y-2;
 }
 body > header > nav {
-    @apply flex flex-row row-span-2 col-1 items-end;
+    @apply col-1 row-span-2 flex flex-row items-end;
     @apply px-2;
 }
 body > header > nav > item {
-    @apply cursor-pointer text-2xl px-2;
+    @apply cursor-pointer px-2 text-2xl;
     @apply border-b-2 border-transparent;
     @apply hover:border-primary;
 }
@@ -134,14 +136,14 @@ body > header > nav > item.active {
     @apply border-b-2 border-primary;
 }
 body > header > div.view-switcher {
-    @apply flex flex-row row-2 col-2 items-end;
+    @apply col-2 row-2 flex flex-row items-end;
     @apply px-2 pb-1;
 }
 body > header > div.additional-controls {
-    @apply flex flex-row items-center gap-x-2 row-1 col-start-2 col-end-4 justify-end;
+    @apply col-start-2 col-end-4 row-1 flex flex-row items-center justify-end gap-x-2;
 }
 body > header > div.additional-controls > div.last-updated-con {
-    @apply flex flex-row items-center gap-x-2 flex-nowrap text-nowrap;
+    @apply flex flex-row flex-nowrap items-center gap-x-2 text-nowrap;
 }
 body > header > div.additional-controls > div.last-updated-con > span.material-symbols {
     @apply text-[16px];
@@ -150,7 +152,7 @@ body > header > div.additional-controls > div.dark-mode-toggle {
     @apply text-[16px];
 }
 body > header > div.save-slot-options {
-    @apply flex flex-row gap-x-2 row-2 col-3 items-center justify-end pb-1;
+    @apply col-3 row-2 flex flex-row items-center justify-end gap-x-2 pb-1;
 }
 body > div.filter-options {
     @apply border-r border-border;
@@ -167,10 +169,15 @@ body > div.filter-options > div.filter-group > div.checkbox-list {
     @apply flex flex-col gap-y-1;
 }
 body > div.filter-options > div.filter-group > div.checkbox-list > label.checkbox-item {
-    @apply flex flex-row items-center gap-x-2 cursor-pointer;
+    @apply flex cursor-pointer flex-row items-center gap-x-2;
 }
-body > div.filter-options > div.filter-group > div.checkbox-list > label.checkbox-item > input[type="checkbox"] {
-    @apply accent-primary w-4 h-4;
+body
+    > div.filter-options
+    > div.filter-group
+    > div.checkbox-list
+    > label.checkbox-item
+    > input[type="checkbox"] {
+    @apply h-4 w-4 accent-primary;
 }
 body > main:not(#calendar):not(#tree) {
     @apply col-2 row-2;
@@ -183,13 +190,13 @@ body > main#tree {
 }
 
 main > header {
-    @apply flex flex-row items-end justify-between mb-4;
+    @apply mb-4 flex flex-row items-end justify-between;
 }
 main > header > div.type-switcher {
     @apply flex flex-row items-end;
 }
 main > header > div.type-switcher > span {
-    @apply cursor-pointer text-lg px-2;
+    @apply cursor-pointer px-2 text-lg;
     @apply border-b-2 border-transparent;
     @apply hover:border-primary;
 }
@@ -199,35 +206,35 @@ main > header > div.type-switcher > span.active {
 main > header > div.multi-level-sort {
     @apply cursor-pointer;
     @apply border border-border;
-    @apply rounded-md py-1 px-2; 
+    @apply rounded-md px-2 py-1;
     @apply bg-surface text-on-surface;
 }
 main > ul {
-    @apply list-none p-0 m-0 overflow-y-auto;
+    @apply m-0 list-none overflow-y-auto p-0;
 }
 main > ul > li {
-    @apply border-b border-border last:border-b-0 p-2;
+    @apply border-b border-border p-2 last:border-b-0;
     @apply grid grid-cols-[auto_auto_auto_auto] grid-rows-[auto_auto] items-center gap-x-2 gap-y-1;
 }
 main > ul > li > h1 {
     @apply col-1 row-1 text-lg font-bold text-wrap;
 }
 main > ul > li > h2 {
-    @apply col-1 row-2 flex flex-col h-full font-semibold;
+    @apply col-1 row-2 flex h-full flex-col font-semibold;
 }
 main > ul > li > div.module-info-container {
     @apply col-2 flex flex-row flex-nowrap gap-2 overflow-x-auto;
 }
 main > ul > li span.module-info {
-    @apply border border-border rounded-full py-1 px-2 w-fit;
-    @apply text-sm bg-primary/20;
-    @apply text-nowrap
+    @apply w-fit rounded-full border border-border px-2 py-1;
+    @apply bg-primary/20 text-sm;
+    @apply text-nowrap;
 }
 main > ul > li span.module-info.module-course-types {
-    @apply row-1 col-3;
+    @apply col-3 row-1;
 }
 main > ul > li span.module-info.module-exam-types {
-    @apply row-2 col-3;
+    @apply col-3 row-2;
 }
 main > ul > li > button {
     @apply col-4 row-start-1 row-end-3 justify-self-end;
@@ -236,39 +243,40 @@ main > .card-grid {
     @apply grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-2;
 }
 main > .card-grid > .card {
-    @apply border border-border px-2 pt-1 pb-2 rounded-md;
+    @apply rounded-md border border-border px-2 pt-1 pb-2;
     @apply grid grid-cols-[auto_auto] gap-x-1 gap-y-1;
 }
 main > .card-grid > .card > h1 {
-    @apply text-lg leading-tight font-bold col-span-2 text-wrap;
+    @apply col-span-2 text-lg leading-tight font-bold text-wrap;
 }
 main > .card-grid > .card > h2 {
-    @apply font-semibold col-span-2 flex flex-col h-full mb-2;
+    @apply col-span-2 mb-2 flex h-full flex-col font-semibold;
 }
 main > .card-grid > .card > div.module-info-container {
     @apply col-1 flex flex-row flex-wrap gap-2;
 }
 main > .card-grid > .card span.module-info {
-    @apply border border-border rounded py-1 px-2 w-fit h-fit;
-    @apply text-sm bg-primary/20;
-    @apply text-wrap
+    @apply h-fit w-fit rounded border border-border px-2 py-1;
+    @apply bg-primary/20 text-sm;
+    @apply text-wrap;
 }
 main > .card-grid > .card > div.module-btn-con {
-    @apply col-start-1 col-end-3 flex items-center justify-between gap-x-1 mt-2;
+    @apply col-start-1 col-end-3 mt-2 flex items-center justify-between gap-x-1;
 }
 main > .card-grid > .card > div.module-btn-con > button {
-    @apply first:w-full h-full;
+    @apply h-full first:w-full;
 }
 
 main#tree {
     @apply flex flex-col gap-y-4;
 }
-main#tree > .levels, main#tree > .opened-levels {
-    @apply grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-y-2 gap-x-2;
+main#tree > .levels,
+main#tree > .opened-levels {
+    @apply grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-x-2 gap-y-2;
 }
 main#tree > .opened-levels > .opened-level {
-    @apply col-1 border border-border rounded-md ps-1 flex flex-row items-center justify-between;
+    @apply col-1 flex flex-row items-center justify-between rounded-md border border-border ps-1;
 }
 main#tree > .levels > .level {
-    @apply border border-border rounded-md p-2 flex flex-row items-center justify-between;
+    @apply flex flex-row items-center justify-between rounded-md border border-border p-2;
 }

@@ -20,7 +20,7 @@ function initCal() {
     if (!calendarElement) {
         throw new Error(`Calendar element with ID "${calendarElementId}" not found.`);
     }
-    
+
     calendarInstance = new Calendar(calendarElement, {
         initialView: "listMonth",
         locale: "de",
