@@ -1,6 +1,6 @@
 @import "tailwindcss";
-@import "fonts.css";
-@import "calendar-override.css";
+@import "./fonts.css";
+@import "./calendar-override.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
