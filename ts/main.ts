@@ -194,6 +194,39 @@ function normalizePath(path: string[][], faculty: string): string[][] {
     });
 }
 
+function switchView(view: "list" | "cards" | "calendar" | "tree") {
+    const listView = document.querySelector("ul#module-list") as HTMLUListElement;
+    const cardView = document.querySelector("div#module-card-grid") as HTMLDivElement;
+    const calendarView = document.querySelector("main#calendar") as HTMLElement;
+    const treeView = document.querySelector("main#tree") as HTMLElement;
+
+    if (!listView || !cardView || !calendarView || !treeView) {
+        console.error("One or more view elements are missing.");
+        return;
+    }
+
+    listView.style.display = view === "list" ? "" : "none";
+    cardView.style.display = view === "cards" ? "" : "none";
+    calendarView.style.display = view === "calendar" ? "" : "none";
+    treeView.style.display = view === "tree" ? "" : "none";
+
+    const mainContainer = document.querySelector("main:not(#calendar):not(#tree)") as HTMLElement;
+    if (view !== "list" && view !== "cards" && mainContainer) {
+        mainContainer.style.display = "none";
+    } else if (mainContainer) {
+        mainContainer.style.display = "";
+    }
+}
+
+document.querySelectorAll("body > header > nav.display-changer1 item").forEach(item => {
+    item.addEventListener("click", () => {
+        const view = item.getAttribute("data-view") as "list" | "cards" | "calendar" | "tree";
+        item.parentElement?.querySelectorAll("item").forEach(sibling => sibling.classList.remove("active"));
+        item.classList.add("active");
+        switchView(view);
+    });
+});
+
 // initCal();
 getModules().then(modules => {
     console.log(modules);
