@@ -6,7 +6,7 @@ export interface Module {
     duration_semesters: number;
     credits: number;
     frequency: string;
-    path: string[][]; 
+    path: string[][];
     faculty: {
         name: string;
     };

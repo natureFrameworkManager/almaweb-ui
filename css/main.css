@@ -8,15 +8,16 @@
     --font-sans:
         "Atkinson Hyperlegible", ui-sans-serif, system-ui, -apple-system, sans-serif,
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --font-header: "Geomini", ui-sans-serif, system-ui, -apple-system, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-header:
+        "Geomini", ui-sans-serif, system-ui, -apple-system, sans-serif, "Apple Color Emoji",
+        "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
     --color-border: #ac93ec;
     --color-text: #0c051a;
     --color-background: #f2eefc;
     --color-primary: #33197b;
     --color-secondary: #e19c6b;
-    --color-accent: #b4be27; 
+    --color-accent: #b4be27;
 
     /* Typography */
     --text-body-large: 16px;
@@ -60,11 +61,11 @@
     @apply bg-primary text-background;
     @apply hover:bg-primary/80;
     @apply border-e border-primary last:border-e-0;
-    @apply h-full flex items-center;
+    @apply flex h-full items-center;
 }
 .switcher .active {
     @apply bg-accent text-text dark:text-background;
-    @apply hover:bg-accent/80
+    @apply hover:bg-accent/80;
 }
 
 .btn {
@@ -96,7 +97,7 @@
     @apply pe-4;
 }
 .input-container select[multiple] option:checked {
-    @apply bg-primary text-background ps-1;
+    @apply bg-primary ps-1 text-background;
 }
 .input-container label {
     @apply ps-2 pb-0.5 text-label-medium text-text;
@@ -111,7 +112,7 @@
 }
 .input-container.range div::before {
     content: "-";
-    @apply text-text col-2 row-1;
+    @apply col-2 row-1 text-text;
 }
 .input-container.range div input:first-of-type {
     @apply col-1 row-1;
@@ -179,7 +180,7 @@ div#filter-options {
     @apply border-r border-border;
     @apply col-1 row-start-1 row-end-3;
     @apply flex flex-col;
-    @apply min-h-0 max-h-screen overflow-y-auto;
+    @apply max-h-screen min-h-0 overflow-y-auto;
     @apply bg-primary/5;
 }
 div#filter-options details.filter-group summary {
@@ -204,7 +205,7 @@ div#filter-options details.filter-group summary span.material-symbols {
     @apply text-[20px];
 }
 div#filter-options details.filter-group div.filter-group-content {
-    @apply flex flex-col gap-y-2 pb-3 px-1;
+    @apply flex flex-col gap-y-2 px-1 pb-3;
 }
 div#filter-options details.filter-group div.checkbox-list {
     @apply flex flex-col gap-y-1;
@@ -220,11 +221,11 @@ div#filter-options
     @apply h-4 w-4 accent-primary;
 }
 main.list-card-view {
-    @apply flex min-h-0 min-w-0 max-w-full flex-col overflow-y-auto overflow-x-hidden px-2 py-2;
+    @apply flex min-h-0 max-w-full min-w-0 flex-col overflow-x-hidden overflow-y-auto px-2 py-2;
 }
 main.calendar,
 main.tree {
-    @apply flex min-h-0 min-w-0 max-w-full flex-col overflow-y-auto overflow-x-hidden px-2 py-2;
+    @apply flex min-h-0 max-w-full min-w-0 flex-col overflow-x-hidden overflow-y-auto px-2 py-2;
 }
 main#list-card-view1,
 main#calendar1,
@@ -269,12 +270,18 @@ header.list-card-view-header div.multi-level-sort {
 .type-content {
     display: none;
 }
-main.list-card-view:has(.type-switcher span.active[data-view="modules"]) .type-content[data-type="modules"],
-main.list-card-view:has(.type-switcher span.active[data-view="courses"]) .type-content[data-type="courses"],
-main.list-card-view:has(.type-switcher span.active[data-view="events"]) .type-content[data-type="events"],
-main.list-card-view:has(.type-switcher span.active[data-view="exams"]) .type-content[data-type="exams"],
-main.list-card-view:has(.type-switcher span.active[data-view="staff"]) .type-content[data-type="staff"],
-main.list-card-view:has(.type-switcher span.active[data-view="locations"]) .type-content[data-type="locations"] {
+main.list-card-view:has(.type-switcher span.active[data-view="modules"])
+    .type-content[data-type="modules"],
+main.list-card-view:has(.type-switcher span.active[data-view="courses"])
+    .type-content[data-type="courses"],
+main.list-card-view:has(.type-switcher span.active[data-view="events"])
+    .type-content[data-type="events"],
+main.list-card-view:has(.type-switcher span.active[data-view="exams"])
+    .type-content[data-type="exams"],
+main.list-card-view:has(.type-switcher span.active[data-view="staff"])
+    .type-content[data-type="staff"],
+main.list-card-view:has(.type-switcher span.active[data-view="locations"])
+    .type-content[data-type="locations"] {
     display: contents;
 }
 
@@ -285,13 +292,19 @@ main.list-card-view:has(.type-switcher span.active[data-view="locations"]) .type
 body:has(#display-changer1 item.active[data-view="cards"]) #list-card-view1 .type-content .list {
     display: none;
 }
-body:has(#display-changer1 item.active[data-view="cards"]) #list-card-view1 .type-content .card-grid {
+body:has(#display-changer1 item.active[data-view="cards"])
+    #list-card-view1
+    .type-content
+    .card-grid {
     display: grid;
 }
 body:has(#display-changer2 item.active[data-view="cards"]) #list-card-view2 .type-content .list {
     display: none;
 }
-body:has(#display-changer2 item.active[data-view="cards"]) #list-card-view2 .type-content .card-grid {
+body:has(#display-changer2 item.active[data-view="cards"])
+    #list-card-view2
+    .type-content
+    .card-grid {
     display: grid;
 }
 
@@ -313,7 +326,7 @@ ul.list li.list-item div.info-container {
 }
 ul.list li.list-item span.info {
     @apply w-fit rounded-full border border-border px-2 py-1;
-    @apply bg-primary/5 dark:bg-primary/15 text-sm;
+    @apply bg-primary/5 text-sm dark:bg-primary/15;
     @apply text-nowrap;
 }
 ul.list li.list-item button {
@@ -337,7 +350,7 @@ div.card-grid div.card div.info-container {
 }
 div.card-grid div.card span.info {
     @apply h-fit w-fit rounded border border-border px-2 py-1;
-    @apply bg-primary/5 dark:bg-primary/15 text-sm;
+    @apply bg-primary/5 text-sm dark:bg-primary/15;
     @apply text-wrap;
 }
 div.card-grid div.card div.btn-con {

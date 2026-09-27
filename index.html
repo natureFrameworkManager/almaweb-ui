@@ -14,19 +14,34 @@
     <body>
         <header id="top-header">
             <nav id="display-changer2">
-                <item class="active" data-view="list">Liste</item>
+                <item
+                    class="active"
+                    data-view="list"
+                    >Liste</item
+                >
                 <item data-view="cards">Kacheln</item>
                 <item data-view="calendar">Kalender</item>
                 <item data-view="tree">Navigationsbaum</item>
             </nav>
             <nav id="display-changer1">
-                <item class="active" data-view="list">Liste</item>
+                <item
+                    class="active"
+                    data-view="list"
+                    >Liste</item
+                >
                 <item data-view="cards">Kacheln</item>
                 <item data-view="calendar">Kalender</item>
                 <item data-view="tree">Navigationsbaum</item>
             </nav>
-            <div id="view-switcher" class="switcher">
-                <span data-view="single" class="active">Einzeln</span>
+            <div
+                id="view-switcher"
+                class="switcher"
+            >
+                <span
+                    data-view="single"
+                    class="active"
+                    >Einzeln</span
+                >
                 <span data-view="split">Geteilt</span>
                 <span data-view="compare">Vergleichen</span>
             </div>
@@ -34,17 +49,41 @@
                 <div id="last-updated-con">
                     Datenstand:<span id="last-updated-timestamp">10:12 20.06.2024</span>
                 </div>
-                <div class="switcher" id="language-switcher">
-                    <span data-lang="de" class="active">DE</span>
+                <div
+                    class="switcher"
+                    id="language-switcher"
+                >
+                    <span
+                        data-lang="de"
+                        class="active"
+                        >DE</span
+                    >
                     <span data-lang="en">EN</span>
                 </div>
-                <div class="switcher material-symbols" id="dark-mode-toggle">
-                    <span data-mode="system" class="active">desktop_windows</span>
+                <div
+                    class="switcher material-symbols"
+                    id="dark-mode-toggle"
+                >
+                    <span
+                        data-mode="system"
+                        class="active"
+                        >desktop_windows</span
+                    >
                     <span data-mode="dark">dark_mode</span>
                     <span data-mode="light">light_mode</span>
                 </div>
-                <button id="share-button" class="btn"><span class="material-symbols">share</span>Teilen</button>
-                <button id="export-button" class="btn"><span class="material-symbols">file_download</span>Export</button>
+                <button
+                    id="share-button"
+                    class="btn"
+                >
+                    <span class="material-symbols">share</span>Teilen
+                </button>
+                <button
+                    id="export-button"
+                    class="btn"
+                >
+                    <span class="material-symbols">file_download</span>Export
+                </button>
             </div>
             <div id="save-slot-options">
                 <div class="input-container">
@@ -60,11 +99,17 @@
             </div>
         </header>
         <div id="filter-options">
-            <details class="filter-group" open>
+            <details
+                class="filter-group"
+                open
+            >
                 <summary><span class="material-symbols">globe</span>Globale Filter</summary>
                 <div class="filter-group-content">
                     <div class="input-container slim">
-                        <select id="filter-semester" multiple>
+                        <select
+                            id="filter-semester"
+                            multiple
+                        >
                             <option>Alle Semester</option>
                             <option>WiSe 2026/27</option>
                             <option>SoSe 2026</option>
@@ -77,7 +122,10 @@
                     </div>
                 </div>
             </details>
-            <details class="filter-group" open>
+            <details
+                class="filter-group"
+                open
+            >
                 <summary><span class="material-symbols">extension</span>Modulfilter</summary>
                 <div class="filter-group-content">
                     <div class="input-container">
@@ -97,7 +145,10 @@
                         <label for="search-input-number">Modulnummer</label>
                     </div>
                     <div class="input-container slim">
-                        <select id="filter-faculty" multiple>
+                        <select
+                            id="filter-faculty"
+                            multiple
+                        >
                             <option>Alle Fakultäten</option>
                             <option>10 - Informatik</option>
                             <option>20 - Mathematik</option>
@@ -106,7 +157,11 @@
                         <label for="filter-faculty">Fakultät</label>
                     </div>
                     <div class="input-container slim">
-                        <input type="text" id="filter-responsible-person" placeholder='"Max Mustermann"'>
+                        <input
+                            type="text"
+                            id="filter-responsible-person"
+                            placeholder='"Max Mustermann"'
+                        />
                         <label for="filter-responsible-person">Verantwortliche Person</label>
                     </div>
                     <div class="input-container range slim">
@@ -140,7 +195,10 @@
                         <label for="filter-duration">Semesterdauer</label>
                     </div>
                     <div class="input-container slim">
-                        <select id="filter-language" multiple>
+                        <select
+                            id="filter-language"
+                            multiple
+                        >
                             <option>Alle Sprachen</option>
                             <option>Deutsch</option>
                             <option>Englisch</option>
@@ -150,7 +208,10 @@
                     </div>
                 </div>
             </details>
-            <details class="filter-group" open>
+            <details
+                class="filter-group"
+                open
+            >
                 <summary><span class="material-symbols">book</span>Kurse</summary>
                 <div class="filter-group-content">
                     <div class="input-container">
@@ -170,7 +231,10 @@
                         <label for="search-input-number">Kursnummer</label>
                     </div>
                     <div class="input-container slim">
-                        <select id="filter-type" multiple>
+                        <select
+                            id="filter-type"
+                            multiple
+                        >
                             <option>Alle Typen</option>
                             <option>Vorlesung</option>
                             <option>Übung</option>
@@ -179,7 +243,10 @@
                         <label for="filter-type">Kurstyp</label>
                     </div>
                     <div class="input-container slim">
-                        <select id="filter-instructors" multiple>
+                        <select
+                            id="filter-instructors"
+                            multiple
+                        >
                             <option>Alle Dozenten</option>
                             <option>Max Mustermann</option>
                             <option>Erika Musterfrau</option>
@@ -204,7 +271,10 @@
                     </div>
                 </div>
             </details>
-            <details class="filter-group" open>
+            <details
+                class="filter-group"
+                open
+            >
                 <summary><span class="material-symbols">event</span>Veranstaltungen</summary>
                 <div class="filter-group-content">
                     <div class="input-container range slim">
@@ -253,7 +323,7 @@
                         <label for="filter-course-times">Datumszeitraum</label>
                     </div>
                     <div class="input-container slim">
-                        <select id="filter-buildings" >
+                        <select id="filter-buildings">
                             <option>Alle Gebäude</option>
                             <option>Gebäude A</option>
                             <option>Gebäude B</option>
@@ -263,11 +333,17 @@
                     </div>
                 </div>
             </details>
-            <details class="filter-group" open>
+            <details
+                class="filter-group"
+                open
+            >
                 <summary><span class="material-symbols">history_edu</span>Prüfungen</summary>
                 <div class="filter-group-content">
                     <div class="input-container slim">
-                        <select id="filter-examtypes" multiple>
+                        <select
+                            id="filter-examtypes"
+                            multiple
+                        >
                             <option>Alle Prüfungsarten</option>
                             <option>Klausur</option>
                             <option>Hausarbeit</option>
@@ -321,7 +397,10 @@
                         <label for="filter-course-times">Datumszeitraum</label>
                     </div>
                     <div class="input-container slim">
-                        <select id="filter-buildings" multiple>
+                        <select
+                            id="filter-buildings"
+                            multiple
+                        >
                             <option>Alle Gebäude</option>
                             <option>Gebäude A</option>
                             <option>Gebäude B</option>
@@ -330,11 +409,18 @@
                         <label for="filter-buildings">Gebäude</label>
                     </div>
                     <div class="input-container slim">
-                        <input type="checkbox" id="filter-exam-required" /> <!-- Try-State: Either, Required, Not Required -->
+                        <input
+                            type="checkbox"
+                            id="filter-exam-required"
+                        />
+                        <!-- Try-State: Either, Required, Not Required -->
                         <label for="filter-exam-required">Prüfung erforderlich</label>
                     </div>
                     <div class="input-container slim">
-                        <select id="filter-staff" multiple>
+                        <select
+                            id="filter-staff"
+                            multiple
+                        >
                             <option>Alle Prüfer</option>
                             <option>Prüfer A</option>
                             <option>Prüfer B</option>
@@ -345,22 +431,44 @@
                 </div>
             </details>
         </div>
-        <main class="list-card-view" id="list-card-view1">
-            <header class="list-card-view-header" id="list-card-view-header1">
-                <div class="type-switcher" id="type-switcher1">
-                    <span data-view="modules" class="active">Module</span>
+        <main
+            class="list-card-view"
+            id="list-card-view1"
+        >
+            <header
+                class="list-card-view-header"
+                id="list-card-view-header1"
+            >
+                <div
+                    class="type-switcher"
+                    id="type-switcher1"
+                >
+                    <span
+                        data-view="modules"
+                        class="active"
+                        >Module</span
+                    >
                     <span data-view="courses">Kurse</span>
                     <span data-view="events">Veranstaltungen</span>
                     <span data-view="exams">Prüfungen</span>
                     <span data-view="staff">Mitarbeitende</span>
                     <span data-view="locations">Räumlichkeiten</span>
                 </div>
-                <div class="multi-level-sort" id="multi-level-sort1">
+                <div
+                    class="multi-level-sort"
+                    id="multi-level-sort1"
+                >
                     <span>Sortieren nach</span>
                 </div>
             </header>
-            <div class="type-content" data-type="modules">
-                <ul class="list" id="module-list1">
+            <div
+                class="type-content"
+                data-type="modules"
+            >
+                <ul
+                    class="list"
+                    id="module-list1"
+                >
                     <li class="list-item">
                         <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
                         <h2 class="module-number">10-201-2011</h2>
@@ -370,14 +478,19 @@
                             <span class="info module-frequency">jedes Wintersemester</span>
                             <span class="info module-language">Deutsch</span>
                             <span class="info module-faculty">Informatik</span>
-                            <span class="info module-path">Informatik (Bachelor of Science) > Pflichtmodule</span>
+                            <span class="info module-path"
+                                >Informatik (Bachelor of Science) > Pflichtmodule</span
+                            >
                             <span class="info module-course-types">Vorlesung, Übung, Seminar</span>
                             <span class="info module-exam-types">Klausur, Hausarbeit</span>
                         </div>
                         <button class="btn material-symbols">save</button>
                     </li>
                 </ul>
-                <div class="card-grid" id="module-card-grid1">
+                <div
+                    class="card-grid"
+                    id="module-card-grid1"
+                >
                     <div class="card">
                         <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
                         <h2 class="module-number">10-201-2011</h2>
@@ -394,8 +507,14 @@
                     </div>
                 </div>
             </div>
-            <div class="type-content" data-type="courses">
-                <ul class="list" id="course-list1">
+            <div
+                class="type-content"
+                data-type="courses"
+            >
+                <ul
+                    class="list"
+                    id="course-list1"
+                >
                     <li class="list-item">
                         <h1 class="course-name">Algorithmen und Datenstrukturen 1 - Vorlesung</h1>
                         <h2 class="course-number">10-201-2011-V01</h2>
@@ -409,7 +528,10 @@
                         <button class="btn material-symbols">save</button>
                     </li>
                 </ul>
-                <div class="card-grid" id="course-card-grid1">
+                <div
+                    class="card-grid"
+                    id="course-card-grid1"
+                >
                     <div class="card">
                         <h1 class="course-name">Algorithmen und Datenstrukturen 1 - Vorlesung</h1>
                         <h2 class="course-number">10-201-2011-V01</h2>
@@ -425,8 +547,14 @@
                     </div>
                 </div>
             </div>
-            <div class="type-content" data-type="events">
-                <ul class="list" id="event-list1">
+            <div
+                class="type-content"
+                data-type="events"
+            >
+                <ul
+                    class="list"
+                    id="event-list1"
+                >
                     <li class="list-item">
                         <h1 class="event-name">Algorithmen und Datenstrukturen 1 - Vorlesung</h1>
                         <h2 class="event-number">10-201-2011-V01-01</h2>
@@ -439,7 +567,10 @@
                         <button class="btn material-symbols">save</button>
                     </li>
                 </ul>
-                <div class="card-grid" id="event-card-grid1">
+                <div
+                    class="card-grid"
+                    id="event-card-grid1"
+                >
                     <div class="card">
                         <h1 class="event-name">Algorithmen und Datenstrukturen 1 - Vorlesung</h1>
                         <h2 class="event-number">10-201-2011-V01-01</h2>
@@ -455,8 +586,14 @@
                     </div>
                 </div>
             </div>
-            <div class="type-content" data-type="exams">
-                <ul class="list" id="exam-list1">
+            <div
+                class="type-content"
+                data-type="exams"
+            >
+                <ul
+                    class="list"
+                    id="exam-list1"
+                >
                     <li class="list-item">
                         <h1 class="exam-name">Algorithmen und Datenstrukturen 1 - Klausur</h1>
                         <div class="info-container">
@@ -468,7 +605,10 @@
                         <button class="btn material-symbols">save</button>
                     </li>
                 </ul>
-                <div class="card-grid" id="exam-card-grid1">
+                <div
+                    class="card-grid"
+                    id="exam-card-grid1"
+                >
                     <div class="card">
                         <h1 class="exam-name">Algorithmen und Datenstrukturen 1 - Klausur</h1>
                         <div class="info-container">
@@ -483,14 +623,23 @@
                     </div>
                 </div>
             </div>
-            <div class="type-content" data-type="staff">
-                <ul class="list" id="staff-list1">
+            <div
+                class="type-content"
+                data-type="staff"
+            >
+                <ul
+                    class="list"
+                    id="staff-list1"
+                >
                     <li class="list-item">
                         <h1 class="staff-name">Max Mustermann</h1>
                         <button class="btn material-symbols">save</button>
                     </li>
                 </ul>
-                <div class="card-grid" id="staff-card-grid1">
+                <div
+                    class="card-grid"
+                    id="staff-card-grid1"
+                >
                     <div class="card">
                         <h1 class="staff-name">Max Mustermann</h1>
                         <div class="btn-con">
@@ -500,8 +649,14 @@
                     </div>
                 </div>
             </div>
-            <div class="type-content" data-type="locations">
-                <ul class="list" id="location-list1">
+            <div
+                class="type-content"
+                data-type="locations"
+            >
+                <ul
+                    class="list"
+                    id="location-list1"
+                >
                     <li class="list-item">
                         <h1 class="location-name">Hörsaal 1</h1>
                         <h2 class="location-number">HS1</h2>
@@ -514,192 +669,10 @@
                         <button class="btn material-symbols">save</button>
                     </li>
                 </ul>
-                <div class="card-grid" id="location-card-grid1">
-                    <div class="card">
-                        <h1 class="location-name">Hörsaal 1</h1>
-                        <h2 class="location-number">HS1</h2>
-                        <div class="info-container">
-                            <span class="info location-type">Hörsaal</span>
-                            <span class="info location-seats">120 Plätze</span>
-                        </div>
-                        <div class="btn-con">
-                            <button class="btn">Mehr Details</button>
-                            <button class="btn material-symbols">save</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-        <main class="list-card-view" id="list-card-view2">
-            <header class="list-card-view-header" id="list-card-view-header2">
-                <div class="type-switcher" id="type-switcher2">
-                    <span data-view="modules" class="active">Module</span>
-                    <span data-view="courses">Kurse</span>
-                    <span data-view="events">Veranstaltungen</span>
-                    <span data-view="exams">Prüfungen</span>
-                    <span data-view="staff">Mitarbeitende</span>
-                    <span data-view="locations">Räumlichkeiten</span>
-                </div>
-                <div class="multi-level-sort" id="multi-level-sort2">
-                    <span>Sortieren nach</span>
-                </div>
-            </header>
-            <div class="type-content" data-type="modules">
-                <ul class="list" id="module-list2">
-                    <li class="list-item">
-                        <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
-                        <h2 class="module-number">10-201-2011</h2>
-                        <div class="info-container">
-                            <span class="info module-credits">3 LP</span>
-                            <span class="info module-duration">1 Semester</span>
-                            <span class="info module-frequency">jedes Wintersemester</span>
-                            <span class="info module-language">Deutsch</span>
-                            <span class="info module-faculty">Informatik</span>
-                            <span class="info module-path">Informatik (Bachelor of Science) > Pflichtmodule</span>
-                            <span class="info module-course-types">Vorlesung, Übung, Seminar</span>
-                            <span class="info module-exam-types">Klausur, Hausarbeit</span>
-                        </div>
-                        <button class="btn material-symbols">save</button>
-                    </li>
-                </ul>
-                <div class="card-grid" id="module-card-grid2">
-                    <div class="card">
-                        <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
-                        <h2 class="module-number">10-201-2011</h2>
-                        <div class="info-container">
-                            <span class="info module-credits">3 LP</span>
-                            <span class="info module-duration">1 Semester</span>
-                            <span class="info module-faculty">Informatik</span>
-                            <span class="info module-path">Pflichtmodule</span>
-                        </div>
-                        <div class="btn-con">
-                            <button class="btn">Mehr Details</button>
-                            <button class="btn material-symbols">save</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="type-content" data-type="courses">
-                <ul class="list" id="course-list2">
-                    <li class="list-item">
-                        <h1 class="course-name">Algorithmen und Datenstrukturen 1 - Vorlesung</h1>
-                        <h2 class="course-number">10-201-2011-V01</h2>
-                        <div class="info-container">
-                            <span class="info course-type">Vorlesung</span>
-                            <span class="info course-weekday">Montag</span>
-                            <span class="info course-weekly-hours">2 SWS</span>
-                            <span class="info course-language">Deutsch</span>
-                            <span class="info course-staff">Max Mustermann</span>
-                        </div>
-                        <button class="btn material-symbols">save</button>
-                    </li>
-                </ul>
-                <div class="card-grid" id="course-card-grid2">
-                    <div class="card">
-                        <h1 class="course-name">Algorithmen und Datenstrukturen 1 - Vorlesung</h1>
-                        <h2 class="course-number">10-201-2011-V01</h2>
-                        <div class="info-container">
-                            <span class="info course-type">Vorlesung</span>
-                            <span class="info course-weekday">Montag</span>
-                            <span class="info course-weekly-hours">2 SWS</span>
-                        </div>
-                        <div class="btn-con">
-                            <button class="btn">Mehr Details</button>
-                            <button class="btn material-symbols">save</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="type-content" data-type="events">
-                <ul class="list" id="event-list2">
-                    <li class="list-item">
-                        <h1 class="event-name">Algorithmen und Datenstrukturen 1 - Vorlesung</h1>
-                        <h2 class="event-number">10-201-2011-V01-01</h2>
-                        <div class="info-container">
-                            <span class="info event-date">21.10.2026</span>
-                            <span class="info event-time">08:15 - 09:45</span>
-                            <span class="info event-location">Hörsaal 1 (Gebäude A)</span>
-                            <span class="info event-staff">Max Mustermann</span>
-                        </div>
-                        <button class="btn material-symbols">save</button>
-                    </li>
-                </ul>
-                <div class="card-grid" id="event-card-grid2">
-                    <div class="card">
-                        <h1 class="event-name">Algorithmen und Datenstrukturen 1 - Vorlesung</h1>
-                        <h2 class="event-number">10-201-2011-V01-01</h2>
-                        <div class="info-container">
-                            <span class="info event-date">21.10.2026</span>
-                            <span class="info event-time">08:15 - 09:45</span>
-                            <span class="info event-location">Hörsaal 1</span>
-                        </div>
-                        <div class="btn-con">
-                            <button class="btn">Mehr Details</button>
-                            <button class="btn material-symbols">save</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="type-content" data-type="exams">
-                <ul class="list" id="exam-list2">
-                    <li class="list-item">
-                        <h1 class="exam-name">Algorithmen und Datenstrukturen 1 - Klausur</h1>
-                        <div class="info-container">
-                            <span class="info exam-date">15.02.2027</span>
-                            <span class="info exam-time">10:00 - 12:00</span>
-                            <span class="info exam-required">Erforderlich</span>
-                            <span class="info exam-staff">Prüfer A</span>
-                        </div>
-                        <button class="btn material-symbols">save</button>
-                    </li>
-                </ul>
-                <div class="card-grid" id="exam-card-grid2">
-                    <div class="card">
-                        <h1 class="exam-name">Algorithmen und Datenstrukturen 1 - Klausur</h1>
-                        <div class="info-container">
-                            <span class="info exam-date">15.02.2027</span>
-                            <span class="info exam-time">10:00 - 12:00</span>
-                            <span class="info exam-required">Erforderlich</span>
-                        </div>
-                        <div class="btn-con">
-                            <button class="btn">Mehr Details</button>
-                            <button class="btn material-symbols">save</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="type-content" data-type="staff">
-                <ul class="list" id="staff-list2">
-                    <li class="list-item">
-                        <h1 class="staff-name">Max Mustermann</h1>
-                        <button class="btn material-symbols">save</button>
-                    </li>
-                </ul>
-                <div class="card-grid" id="staff-card-grid2">
-                    <div class="card">
-                        <h1 class="staff-name">Max Mustermann</h1>
-                        <div class="btn-con">
-                            <button class="btn">Mehr Details</button>
-                            <button class="btn material-symbols">save</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="type-content" data-type="locations">
-                <ul class="list" id="location-list2">
-                    <li class="list-item">
-                        <h1 class="location-name">Hörsaal 1</h1>
-                        <h2 class="location-number">HS1</h2>
-                        <div class="info-container">
-                            <span class="info location-type">Hörsaal</span>
-                            <span class="info location-seats">120 Plätze</span>
-                            <span class="info location-accessibility">Barrierefrei</span>
-                            <span class="info location-building">Gebäude A - Musterstraße 1</span>
-                        </div>
-                        <button class="btn material-symbols">save</button>
-                    </li>
-                </ul>
-                <div class="card-grid" id="location-card-grid2">
+                <div
+                    class="card-grid"
+                    id="location-card-grid1"
+                >
                     <div class="card">
                         <h1 class="location-name">Hörsaal 1</h1>
                         <h2 class="location-number">HS1</h2>
@@ -716,27 +689,290 @@
             </div>
         </main>
         <main
-        class="calendar"
+            class="list-card-view"
+            id="list-card-view2"
+        >
+            <header
+                class="list-card-view-header"
+                id="list-card-view-header2"
+            >
+                <div
+                    class="type-switcher"
+                    id="type-switcher2"
+                >
+                    <span
+                        data-view="modules"
+                        class="active"
+                        >Module</span
+                    >
+                    <span data-view="courses">Kurse</span>
+                    <span data-view="events">Veranstaltungen</span>
+                    <span data-view="exams">Prüfungen</span>
+                    <span data-view="staff">Mitarbeitende</span>
+                    <span data-view="locations">Räumlichkeiten</span>
+                </div>
+                <div
+                    class="multi-level-sort"
+                    id="multi-level-sort2"
+                >
+                    <span>Sortieren nach</span>
+                </div>
+            </header>
+            <div
+                class="type-content"
+                data-type="modules"
+            >
+                <ul
+                    class="list"
+                    id="module-list2"
+                >
+                    <li class="list-item">
+                        <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
+                        <h2 class="module-number">10-201-2011</h2>
+                        <div class="info-container">
+                            <span class="info module-credits">3 LP</span>
+                            <span class="info module-duration">1 Semester</span>
+                            <span class="info module-frequency">jedes Wintersemester</span>
+                            <span class="info module-language">Deutsch</span>
+                            <span class="info module-faculty">Informatik</span>
+                            <span class="info module-path"
+                                >Informatik (Bachelor of Science) > Pflichtmodule</span
+                            >
+                            <span class="info module-course-types">Vorlesung, Übung, Seminar</span>
+                            <span class="info module-exam-types">Klausur, Hausarbeit</span>
+                        </div>
+                        <button class="btn material-symbols">save</button>
+                    </li>
+                </ul>
+                <div
+                    class="card-grid"
+                    id="module-card-grid2"
+                >
+                    <div class="card">
+                        <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
+                        <h2 class="module-number">10-201-2011</h2>
+                        <div class="info-container">
+                            <span class="info module-credits">3 LP</span>
+                            <span class="info module-duration">1 Semester</span>
+                            <span class="info module-faculty">Informatik</span>
+                            <span class="info module-path">Pflichtmodule</span>
+                        </div>
+                        <div class="btn-con">
+                            <button class="btn">Mehr Details</button>
+                            <button class="btn material-symbols">save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="type-content"
+                data-type="courses"
+            >
+                <ul
+                    class="list"
+                    id="course-list2"
+                >
+                    <li class="list-item">
+                        <h1 class="course-name">Algorithmen und Datenstrukturen 1 - Vorlesung</h1>
+                        <h2 class="course-number">10-201-2011-V01</h2>
+                        <div class="info-container">
+                            <span class="info course-type">Vorlesung</span>
+                            <span class="info course-weekday">Montag</span>
+                            <span class="info course-weekly-hours">2 SWS</span>
+                            <span class="info course-language">Deutsch</span>
+                            <span class="info course-staff">Max Mustermann</span>
+                        </div>
+                        <button class="btn material-symbols">save</button>
+                    </li>
+                </ul>
+                <div
+                    class="card-grid"
+                    id="course-card-grid2"
+                >
+                    <div class="card">
+                        <h1 class="course-name">Algorithmen und Datenstrukturen 1 - Vorlesung</h1>
+                        <h2 class="course-number">10-201-2011-V01</h2>
+                        <div class="info-container">
+                            <span class="info course-type">Vorlesung</span>
+                            <span class="info course-weekday">Montag</span>
+                            <span class="info course-weekly-hours">2 SWS</span>
+                        </div>
+                        <div class="btn-con">
+                            <button class="btn">Mehr Details</button>
+                            <button class="btn material-symbols">save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="type-content"
+                data-type="events"
+            >
+                <ul
+                    class="list"
+                    id="event-list2"
+                >
+                    <li class="list-item">
+                        <h1 class="event-name">Algorithmen und Datenstrukturen 1 - Vorlesung</h1>
+                        <h2 class="event-number">10-201-2011-V01-01</h2>
+                        <div class="info-container">
+                            <span class="info event-date">21.10.2026</span>
+                            <span class="info event-time">08:15 - 09:45</span>
+                            <span class="info event-location">Hörsaal 1 (Gebäude A)</span>
+                            <span class="info event-staff">Max Mustermann</span>
+                        </div>
+                        <button class="btn material-symbols">save</button>
+                    </li>
+                </ul>
+                <div
+                    class="card-grid"
+                    id="event-card-grid2"
+                >
+                    <div class="card">
+                        <h1 class="event-name">Algorithmen und Datenstrukturen 1 - Vorlesung</h1>
+                        <h2 class="event-number">10-201-2011-V01-01</h2>
+                        <div class="info-container">
+                            <span class="info event-date">21.10.2026</span>
+                            <span class="info event-time">08:15 - 09:45</span>
+                            <span class="info event-location">Hörsaal 1</span>
+                        </div>
+                        <div class="btn-con">
+                            <button class="btn">Mehr Details</button>
+                            <button class="btn material-symbols">save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="type-content"
+                data-type="exams"
+            >
+                <ul
+                    class="list"
+                    id="exam-list2"
+                >
+                    <li class="list-item">
+                        <h1 class="exam-name">Algorithmen und Datenstrukturen 1 - Klausur</h1>
+                        <div class="info-container">
+                            <span class="info exam-date">15.02.2027</span>
+                            <span class="info exam-time">10:00 - 12:00</span>
+                            <span class="info exam-required">Erforderlich</span>
+                            <span class="info exam-staff">Prüfer A</span>
+                        </div>
+                        <button class="btn material-symbols">save</button>
+                    </li>
+                </ul>
+                <div
+                    class="card-grid"
+                    id="exam-card-grid2"
+                >
+                    <div class="card">
+                        <h1 class="exam-name">Algorithmen und Datenstrukturen 1 - Klausur</h1>
+                        <div class="info-container">
+                            <span class="info exam-date">15.02.2027</span>
+                            <span class="info exam-time">10:00 - 12:00</span>
+                            <span class="info exam-required">Erforderlich</span>
+                        </div>
+                        <div class="btn-con">
+                            <button class="btn">Mehr Details</button>
+                            <button class="btn material-symbols">save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="type-content"
+                data-type="staff"
+            >
+                <ul
+                    class="list"
+                    id="staff-list2"
+                >
+                    <li class="list-item">
+                        <h1 class="staff-name">Max Mustermann</h1>
+                        <button class="btn material-symbols">save</button>
+                    </li>
+                </ul>
+                <div
+                    class="card-grid"
+                    id="staff-card-grid2"
+                >
+                    <div class="card">
+                        <h1 class="staff-name">Max Mustermann</h1>
+                        <div class="btn-con">
+                            <button class="btn">Mehr Details</button>
+                            <button class="btn material-symbols">save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="type-content"
+                data-type="locations"
+            >
+                <ul
+                    class="list"
+                    id="location-list2"
+                >
+                    <li class="list-item">
+                        <h1 class="location-name">Hörsaal 1</h1>
+                        <h2 class="location-number">HS1</h2>
+                        <div class="info-container">
+                            <span class="info location-type">Hörsaal</span>
+                            <span class="info location-seats">120 Plätze</span>
+                            <span class="info location-accessibility">Barrierefrei</span>
+                            <span class="info location-building">Gebäude A - Musterstraße 1</span>
+                        </div>
+                        <button class="btn material-symbols">save</button>
+                    </li>
+                </ul>
+                <div
+                    class="card-grid"
+                    id="location-card-grid2"
+                >
+                    <div class="card">
+                        <h1 class="location-name">Hörsaal 1</h1>
+                        <h2 class="location-number">HS1</h2>
+                        <div class="info-container">
+                            <span class="info location-type">Hörsaal</span>
+                            <span class="info location-seats">120 Plätze</span>
+                        </div>
+                        <div class="btn-con">
+                            <button class="btn">Mehr Details</button>
+                            <button class="btn material-symbols">save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <main
+            class="calendar"
             id="calendar1"
             style="display: none"
         ></main>
         <main
-        class="calendar"
+            class="calendar"
             id="calendar2"
             style="display: none"
         ></main>
         <main
-        class="tree"
+            class="tree"
             id="tree1"
             style="display: none"
         >
-            <div class="opened-levels" id="opened-levels1">
+            <div
+                class="opened-levels"
+                id="opened-levels1"
+            >
                 <div class="opened-level">
                     <span>Wurzel</span>
                     <button class="btn slim material-symbols">reply_all</button>
                 </div>
             </div>
-            <div class="levels" id="levels1">
+            <div
+                class="levels"
+                id="levels1"
+            >
                 <div class="level">
                     <span>Analysis</span>
                     <button class="btn slim material-symbols">keyboard_double_arrow_right</button>
@@ -744,24 +980,33 @@
             </div>
         </main>
         <main
-        class="tree"
+            class="tree"
             id="tree2"
             style="display: none"
         >
-            <div class="opened-levels" id="opened-levels2">
+            <div
+                class="opened-levels"
+                id="opened-levels2"
+            >
                 <div class="opened-level">
                     <span>Wurzel</span>
                     <button class="btn slim material-symbols">reply_all</button>
                 </div>
             </div>
-            <div class="levels" id="levels2">
+            <div
+                class="levels"
+                id="levels2"
+            >
                 <div class="level">
                     <span>Analysis</span>
                     <button class="btn slim material-symbols">keyboard_double_arrow_right</button>
                 </div>
             </div>
         </main>
-        <main id="compare" style="display: none;">
+        <main
+            id="compare"
+            style="display: none"
+        >
             <h1>Compare Save slots</h1>
         </main>
         <script
