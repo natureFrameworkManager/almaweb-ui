@@ -8,6 +8,8 @@
     --font-sans:
         "Atkinson Hyperlegible", ui-sans-serif, system-ui, -apple-system, sans-serif,
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-header: "Geomini", ui-sans-serif, system-ui, -apple-system, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --color-background: #ffffff;
     --color-surface: #ffffff;
     --color-surface-filled: #ffffff;
