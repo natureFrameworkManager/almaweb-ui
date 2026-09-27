@@ -15,8 +15,40 @@ import type { Module, Course, Event, Exam, Staff, Location } from "./api/types";
 import { getCourses, getEvents, getExams, getModules, getStaff, getLocations } from "./api/api";
 
 const calendarElementId = "calendar";
+const THEME_STORAGE_KEY = "almaweb-theme";
+
+type ThemeMode = "system" | "dark" | "light";
 
 let calendarInstance = null;
+
+function isThemeMode(value: string | null): value is ThemeMode {
+    return value === "system" || value === "dark" || value === "light";
+}
+
+function applyTheme(theme: ThemeMode) {
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = theme === "dark" || (theme === "system" && prefersDark);
+    document.documentElement.classList.toggle("dark", isDark);
+}
+
+function handleThemeChange(theme: string) {
+    if (!isThemeMode(theme)) {
+        return;
+    }
+
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+    applyTheme(theme);
+}
+
+function initTheme() {
+    const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+    const theme = isThemeMode(storedTheme) ? storedTheme : "system";
+
+    document.querySelectorAll("#dark-mode-toggle > *").forEach(item => {
+        item.classList.toggle("active", item.getAttribute("data-mode") === theme);
+    });
+    handleThemeChange(theme);
+}
 
 function initCal() {
     const calendarElement = document.querySelector(`#${calendarElementId}`) as HTMLElement | null;
@@ -396,18 +428,19 @@ function switchViewMode(mode: "single" | "split" | "compare") {
 }
 
 // Marks the clicked item as active (and its siblings as inactive) within a single switcher nav
-function wireSwitcher(navSelector: string, onSelect?: (view: string) => void) {
+function wireSwitcher(navSelector: string, onSelect?: (view: string) => void, dataAttribute = "data-view") {
     document.querySelectorAll(`${navSelector} > *`).forEach(item => {
         item.addEventListener("click", () => {
             item.parentElement?.querySelectorAll(":scope > *").forEach(sibling => sibling.classList.remove("active"));
             item.classList.add("active");
-            onSelect?.(item.getAttribute("data-view") ?? "");
+            onSelect?.(item.getAttribute(dataAttribute) ?? "");
         });
     });
 }
 
 wireSwitcher("#display-changer1", view => switchMainView(1, view));
 wireSwitcher("#display-changer2", view => switchMainView(2, view));
+wireSwitcher("#dark-mode-toggle", handleThemeChange, "data-mode");
 wireSwitcher("#view-switcher", view => {
     if (view === "single" || view === "split" || view === "compare") {
         switchViewMode(view);
@@ -415,6 +448,7 @@ wireSwitcher("#view-switcher", view => {
 });
 wireSwitcher("#type-switcher1");
 wireSwitcher("#type-switcher2");
+initTheme();
 switchViewMode("single");
 switchMainView(1, "list");
 switchMainView(2, "list");
