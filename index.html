@@ -106,19 +106,40 @@
                 <summary><span class="material-symbols">globe</span>Globale Filter</summary>
                 <div class="filter-group-content">
                     <div class="input-container slim">
-                        <select
+                        <div
+                            class="checkbox-list"
                             id="filter-semester"
-                            multiple
                         >
-                            <option>Alle Semester</option>
-                            <option>WiSe 2026/27</option>
-                            <option>SoSe 2026</option>
-                            <option>WiSe 2025/26</option>
-                            <option>SoSe 2025</option>
-                            <option>WiSe 2024/25</option>
-                            <option>SoSe 2024</option>
-                        </select>
-                        <label for="filter-semester">Semester</label>
+                            <label class="checkbox-item" for="filter-semester-alle">
+                                <input type="checkbox" id="filter-semester-alle" />
+                                <span>Alle Semester</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-semester-wise-2026-27">
+                                <input type="checkbox" id="filter-semester-wise-2026-27" />
+                                <span>WiSe 2026/27</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-semester-sose-2026">
+                                <input type="checkbox" id="filter-semester-sose-2026" />
+                                <span>SoSe 2026</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-semester-wise-2025-26">
+                                <input type="checkbox" id="filter-semester-wise-2025-26" />
+                                <span>WiSe 2025/26</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-semester-sose-2025">
+                                <input type="checkbox" id="filter-semester-sose-2025" />
+                                <span>SoSe 2025</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-semester-wise-2024-25">
+                                <input type="checkbox" id="filter-semester-wise-2024-25" />
+                                <span>WiSe 2024/25</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-semester-sose-2024">
+                                <input type="checkbox" id="filter-semester-sose-2024" />
+                                <span>SoSe 2024</span>
+                            </label>
+                        </div>
+                        <label>Semester</label>
                     </div>
                 </div>
             </details>
@@ -130,31 +151,43 @@
                 <div class="filter-group-content">
                     <div class="input-container">
                         <input
-                            id="search-input"
+                            id="search-input-module"
                             type="text"
                             placeholder='"Statistik"'
                         />
-                        <label for="search-input">Modulname</label>
+                        <label for="search-input-module">Modulname</label>
                     </div>
                     <div class="input-container">
                         <input
-                            id="search-input-number"
+                            id="search-input-module-number"
                             type="text"
                             placeholder='"10-200-4045"'
                         />
-                        <label for="search-input-number">Modulnummer</label>
+                        <label for="search-input-module-number">Modulnummer</label>
                     </div>
                     <div class="input-container slim">
-                        <select
+                        <div
+                            class="checkbox-list"
                             id="filter-faculty"
-                            multiple
                         >
-                            <option>Alle Fakultäten</option>
-                            <option>10 - Informatik</option>
-                            <option>20 - Mathematik</option>
-                            <option>30 - Physik</option>
-                        </select>
-                        <label for="filter-faculty">Fakultät</label>
+                            <label class="checkbox-item" for="filter-faculty-alle">
+                                <input type="checkbox" id="filter-faculty-alle" />
+                                <span>Alle Fakultäten</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-faculty-10">
+                                <input type="checkbox" id="filter-faculty-10" />
+                                <span>10 - Informatik</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-faculty-20">
+                                <input type="checkbox" id="filter-faculty-20" />
+                                <span>20 - Mathematik</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-faculty-30">
+                                <input type="checkbox" id="filter-faculty-30" />
+                                <span>30 - Physik</span>
+                            </label>
+                        </div>
+                        <label>Fakultät</label>
                     </div>
                     <div class="input-container slim">
                         <input
@@ -177,7 +210,7 @@
                                 min="0"
                             />
                         </div>
-                        <label for="filter-lp">Leistungspunkte</label>
+                        <label>Leistungspunkte</label>
                     </div>
                     <div class="input-container range slim">
                         <div>
@@ -192,19 +225,31 @@
                                 min="0"
                             />
                         </div>
-                        <label for="filter-duration">Semesterdauer</label>
+                        <label>Semesterdauer</label>
                     </div>
                     <div class="input-container slim">
-                        <select
+                        <div
+                            class="checkbox-list"
                             id="filter-language"
-                            multiple
                         >
-                            <option>Alle Sprachen</option>
-                            <option>Deutsch</option>
-                            <option>Englisch</option>
-                            <option>Französisch</option>
-                        </select>
-                        <label for="filter-language">Sprache</label>
+                            <label class="checkbox-item" for="filter-language-alle">
+                                <input type="checkbox" id="filter-language-alle" />
+                                <span>Alle Sprachen</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-language-de">
+                                <input type="checkbox" id="filter-language-de" />
+                                <span>Deutsch</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-language-en">
+                                <input type="checkbox" id="filter-language-en" />
+                                <span>Englisch</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-language-fr">
+                                <input type="checkbox" id="filter-language-fr" />
+                                <span>Französisch</span>
+                            </label>
+                        </div>
+                        <label>Sprache</label>
                     </div>
                 </div>
             </details>
@@ -216,43 +261,67 @@
                 <div class="filter-group-content">
                     <div class="input-container">
                         <input
-                            id="search-input"
+                            id="search-input-course"
                             type="text"
                             placeholder='"Statistik"'
                         />
-                        <label for="search-input">Kursname</label>
+                        <label for="search-input-course">Kursname</label>
                     </div>
                     <div class="input-container">
                         <input
-                            id="search-input-number"
+                            id="search-input-course-number"
                             type="text"
                             placeholder='"10-200-4045-V01"'
                         />
-                        <label for="search-input-number">Kursnummer</label>
+                        <label for="search-input-course-number">Kursnummer</label>
                     </div>
                     <div class="input-container slim">
-                        <select
+                        <div
+                            class="checkbox-list"
                             id="filter-type"
-                            multiple
                         >
-                            <option>Alle Typen</option>
-                            <option>Vorlesung</option>
-                            <option>Übung</option>
-                            <option>Seminar</option>
-                        </select>
-                        <label for="filter-type">Kurstyp</label>
+                            <label class="checkbox-item" for="filter-type-all">
+                                <input type="checkbox" id="filter-type-all" />
+                                <span>Alle Typen</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-type-lecture">
+                                <input type="checkbox" id="filter-type-lecture" />
+                                <span>Vorlesung</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-type-exercise">
+                                <input type="checkbox" id="filter-type-exercise" />
+                                <span>Übung</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-type-seminar">
+                                <input type="checkbox" id="filter-type-seminar" />
+                                <span>Seminar</span>
+                            </label>
+                        </div>
+                        <label>Kurstyp</label>
                     </div>
                     <div class="input-container slim">
-                        <select
+                        <div
+                            class="checkbox-list"
                             id="filter-instructors"
-                            multiple
                         >
-                            <option>Alle Dozenten</option>
-                            <option>Max Mustermann</option>
-                            <option>Erika Musterfrau</option>
-                            <option>John Doe</option>
-                        </select>
-                        <label for="filter-instructors">Dozenten in Kursen</label>
+                            <label class="checkbox-item" for="filter-instructors-all">
+                                <input type="checkbox" id="filter-instructors-all" />
+                                <span>Alle Dozenten</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-instructors-max-mustermann">
+                                <input type="checkbox" id="filter-instructors-max-mustermann" />
+                                <span>Max Mustermann</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-instructors-erika-musterfrau">
+                                <input type="checkbox" id="filter-instructors-erika-musterfrau" />
+                                <span>Erika Musterfrau</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-instructors-john-doe">
+                                <input type="checkbox" id="filter-instructors-john-doe" />
+                                <span>John Doe</span>
+                            </label>
+                        </div>
+                        <label>Dozenten in Kursen</label>
                     </div>
                     <div class="input-container range slim">
                         <div>
@@ -267,7 +336,7 @@
                                 min="0"
                             />
                         </div>
-                        <label for="filter-weekly-hours">Wochenstunden</label>
+                        <label>Wochenstunden</label>
                     </div>
                 </div>
             </details>
@@ -290,7 +359,7 @@
                                 min="0"
                             />
                         </div>
-                        <label for="filter-course-times">Start-Uhrzeit</label>
+                        <label>Start-Uhrzeit</label>
                     </div>
                     <div class="input-container range slim">
                         <div>
@@ -305,7 +374,7 @@
                                 min="0"
                             />
                         </div>
-                        <label for="filter-course-times">End-Uhrzeit</label>
+                        <label>End-Uhrzeit</label>
                     </div>
                     <div class="input-container range slim">
                         <div>
@@ -320,7 +389,7 @@
                                 min="2024-01-01"
                             />
                         </div>
-                        <label for="filter-course-times">Datumszeitraum</label>
+                        <label>Datumszeitraum</label>
                     </div>
                     <div class="input-container slim">
                         <select id="filter-buildings">
@@ -340,16 +409,28 @@
                 <summary><span class="material-symbols">history_edu</span>Prüfungen</summary>
                 <div class="filter-group-content">
                     <div class="input-container slim">
-                        <select
+                        <div
+                            class="checkbox-list"
                             id="filter-examtypes"
-                            multiple
                         >
-                            <option>Alle Prüfungsarten</option>
-                            <option>Klausur</option>
-                            <option>Hausarbeit</option>
-                            <option>Mündliche Prüfung</option>
-                        </select>
-                        <label for="filter-examtypes">Prüfungsarten</label>
+                            <label class="checkbox-item" for="filter-examtypes-all">
+                                <input type="checkbox" id="filter-examtypes-all" />
+                                <span>Alle Prüfungsarten</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-examtypes-klausur">
+                                <input type="checkbox" id="filter-examtypes-klausur" />
+                                <span>Klausur</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-examtypes-hausarbeit">
+                                <input type="checkbox" id="filter-examtypes-hausarbeit" />
+                                <span>Hausarbeit</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-examtypes-muendliche-pruefung">
+                                <input type="checkbox" id="filter-examtypes-muendliche-pruefung" />
+                                <span>Mündliche Prüfung</span>
+                            </label>
+                        </div>
+                        <label>Prüfungsarten</label>
                     </div>
                     <div class="input-container range slim">
                         <div>
@@ -364,7 +445,7 @@
                                 min="0"
                             />
                         </div>
-                        <label for="filter-course-times">Start-Uhrzeit</label>
+                        <label>Start-Uhrzeit</label>
                     </div>
                     <div class="input-container range slim">
                         <div>
@@ -379,7 +460,7 @@
                                 min="0"
                             />
                         </div>
-                        <label for="filter-course-times">End-Uhrzeit</label>
+                        <label>End-Uhrzeit</label>
                     </div>
                     <div class="input-container range slim">
                         <div>
@@ -394,19 +475,31 @@
                                 min="2024-01-01"
                             />
                         </div>
-                        <label for="filter-course-times">Datumszeitraum</label>
+                        <label>Datumszeitraum</label>
                     </div>
                     <div class="input-container slim">
-                        <select
+                        <div
+                            class="checkbox-list"
                             id="filter-buildings"
-                            multiple
                         >
-                            <option>Alle Gebäude</option>
-                            <option>Gebäude A</option>
-                            <option>Gebäude B</option>
-                            <option>Gebäude C</option>
-                        </select>
-                        <label for="filter-buildings">Gebäude</label>
+                            <label class="checkbox-item" for="filter-buildings-all">
+                                <input type="checkbox" id="filter-buildings-all" />
+                                <span>Alle Gebäude</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-buildings-a">
+                                <input type="checkbox" id="filter-buildings-a" />
+                                <span>Gebäude A</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-buildings-b">
+                                <input type="checkbox" id="filter-buildings-b" />
+                                <span>Gebäude B</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-buildings-c">
+                                <input type="checkbox" id="filter-buildings-c" />
+                                <span>Gebäude C</span>
+                            </label>
+                        </div>
+                        <label>Gebäude</label>
                     </div>
                     <div class="input-container slim">
                         <input
@@ -417,16 +510,28 @@
                         <label for="filter-exam-required">Prüfung erforderlich</label>
                     </div>
                     <div class="input-container slim">
-                        <select
+                        <div
+                            class="checkbox-list"
                             id="filter-staff"
-                            multiple
                         >
-                            <option>Alle Prüfer</option>
-                            <option>Prüfer A</option>
-                            <option>Prüfer B</option>
-                            <option>Prüfer C</option>
-                        </select>
-                        <label for="filter-staff">Prüfer</label>
+                            <label class="checkbox-item" for="filter-staff-all">
+                                <input type="checkbox" id="filter-staff-all" />
+                                <span>Alle Prüfer</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-staff-a">
+                                <input type="checkbox" id="filter-staff-a" />
+                                <span>Prüfer A</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-staff-b">
+                                <input type="checkbox" id="filter-staff-b" />
+                                <span>Prüfer B</span>
+                            </label>
+                            <label class="checkbox-item" for="filter-staff-c">
+                                <input type="checkbox" id="filter-staff-c" />
+                                <span>Prüfer C</span>
+                            </label>
+                        </div>
+                        <label>Prüfer</label>
                     </div>
                 </div>
             </details>

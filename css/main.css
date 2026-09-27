@@ -96,11 +96,11 @@
 .input-container select {
     @apply pe-4;
 }
-.input-container select[multiple] option:checked {
-    @apply bg-primary ps-1 text-background;
-}
-.input-container label {
+.input-container > label {
     @apply ps-2 pb-0.5 text-label-medium text-text;
+}
+.input-container label[for] {
+    @apply cursor-pointer;
 }
 .input-container.slim input,
 .input-container.slim textarea,
@@ -119,6 +119,26 @@
 }
 .input-container.range div input:last-of-type {
     @apply col-3 row-1;
+}
+.input-container div.checkbox-list {
+    @apply rounded-md border border-border bg-transparent px-3 py-2 text-text;
+    @apply w-full;
+    @apply flex max-h-24 flex-col gap-y-1 overflow-y-auto pe-1;
+}
+.input-container div.checkbox-list label.checkbox-item {
+    @apply flex cursor-pointer flex-row items-center gap-x-2;
+}
+.input-container div.checkbox-list label.checkbox-item input[type="checkbox"] {
+    @apply h-4 w-4 accent-primary;
+}
+.input-container:has(input[type="checkbox"]):not(:has(div.checkbox-list)) {
+    @apply flex flex-row gap-x-3 items-center ps-3;
+}
+.input-container:has(input[type="checkbox"]):not(:has(div.checkbox-list)) > label {
+    @apply text-body-medium text-text ps-0 pb-0;
+}
+.input-container > input[type="checkbox"] {
+    @apply h-4 w-4 accent-primary;
 }
 
 body {
@@ -207,19 +227,7 @@ div#filter-options details.filter-group summary span.material-symbols {
 div#filter-options details.filter-group div.filter-group-content {
     @apply flex flex-col gap-y-2 px-1 pb-3;
 }
-div#filter-options details.filter-group div.checkbox-list {
-    @apply flex flex-col gap-y-1;
-}
-div#filter-options details.filter-group div.checkbox-list label.checkbox-item {
-    @apply flex cursor-pointer flex-row items-center gap-x-2;
-}
-div#filter-options
-    details.filter-group
-    div.checkbox-list
-    label.checkbox-item
-    input[type="checkbox"] {
-    @apply h-4 w-4 accent-primary;
-}
+
 main.list-card-view {
     @apply flex min-h-0 max-w-full min-w-0 flex-col overflow-x-hidden overflow-y-auto px-2 py-2;
 }
