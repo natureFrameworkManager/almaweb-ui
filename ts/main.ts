@@ -12,7 +12,7 @@ import "fullcalendar/themes/monarch/palettes/purple.css";
 import "fullcalendar/themes/monarch/theme.css";
 
 import type { Module } from "./api/types";
-import { getModules } from "./api/api";
+import { getCourses, getEvents, getExams, getModules } from "./api/api";
 
 const calendarElementId = "calendar";
 
@@ -328,3 +328,20 @@ getModules().then(modules => {
     console.error("Failed to fetch modules:", error);
 });
 
+getCourses().then(courses => {
+    console.log(courses);
+}).catch(error => {
+    console.error("Failed to fetch courses:", error);
+});
+
+getExams().then(exams => {
+    console.log(exams);
+}).catch(error => {
+    console.error("Failed to fetch exams:", error);
+});
+
+getEvents().then(events => {
+    console.log(events);
+}).catch(error => {
+    console.error("Failed to fetch events:", error);
+});
