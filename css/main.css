@@ -225,7 +225,10 @@ main.list-card-view {
 }
 main.calendar,
 main.tree {
-    @apply flex min-h-0 max-w-full min-w-0 flex-col overflow-x-hidden overflow-y-auto px-2 py-2;
+    @apply flex min-h-0 max-w-full min-w-0 flex-col overflow-hidden px-2 py-2;
+}
+main.calendar .calendar-container {
+    @apply h-full min-h-0 min-w-0 w-full flex-1;
 }
 main#list-card-view1,
 main#calendar1,

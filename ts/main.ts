@@ -74,6 +74,7 @@ function initCal(elementId: string): Calendar {
     }
 
     const calendar = new Calendar(calendarElement, {
+        height: "100%",
         initialView: "listMonth",
         locale: "de",
         eventMaxStack: 4,
@@ -742,7 +743,7 @@ switchViewMode("single");
 switchMainView(1, "list");
 switchMainView(2, "list");
 
-const calendars = [initCal("calendar1"), initCal("calendar2")];
+const calendars = [initCal("calendar-container1"), initCal("calendar-container2")];
 getModules()
     .then((modules) => {
         renderEntities(
