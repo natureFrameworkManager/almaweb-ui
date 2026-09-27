@@ -1,0 +1,112 @@
+/* ==========================================================================
+   mockup/css/components-controls.css
+   ========================================================================== */
+
+/* Form Controls & Fields */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.field-label {
+    font-size: var(--text-label);
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.input, .select {
+    width: 100%;
+    padding: 6px 10px;
+    font-family: inherit;
+    font-size: var(--text-body-sm);
+    color: var(--color-text);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    transition: border-color var(--duration-fast);
+}
+.input:focus, .select:focus {
+    border-color: var(--color-focus);
+    outline: none;
+}
+.input::placeholder {
+    color: var(--color-text-subtle);
+}
+
+/* Segmented Control (Switchers) */
+.segmented {
+    display: inline-flex;
+    background-color: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 2px;
+    gap: 2px;
+}
+.segmented-item {
+    padding: 4px 10px;
+    font-size: var(--text-body-sm);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    border-radius: calc(var(--radius-sm) - 2px);
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: background-color var(--duration-fast), color var(--duration-fast);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.segmented-item:hover {
+    color: var(--color-text);
+}
+.segmented-item.active {
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    font-weight: 600;
+}
+
+/* Tabs (Entity Switcher) */
+.entity-tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--color-border);
+    padding: 0 16px;
+    overflow-x: auto;
+    background: var(--color-surface);
+}
+.entity-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    font-size: var(--text-body-sm);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    transition: color var(--duration-fast), border-color var(--duration-fast);
+    white-space: nowrap;
+}
+.entity-tab:hover {
+    color: var(--color-text);
+}
+.entity-tab.active {
+    color: var(--tab-color, var(--color-brand-600));
+    border-bottom-color: var(--tab-color, var(--color-brand-600));
+    font-weight: 600;
+}
+.entity-tab .tab-count {
+    background: var(--color-surface-2);
+    color: var(--color-text-subtle);
+    font-size: var(--text-label);
+    padding: 1px 6px;
+    border-radius: var(--radius-full);
+}
+.entity-tab.active .tab-count {
+    background: var(--tab-bg, var(--color-brand-50));
+    color: var(--tab-color, var(--color-brand-600));
+}

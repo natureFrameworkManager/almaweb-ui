@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light" data-density="normal">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>alma.web — Interactive Mockup (DESIGN.md)</title>
+    <link rel="stylesheet" href="./css/mockup.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 1. TopBar (Section 7.1) -->
+        <header class="topbar">
+            <div class="brand" title="alma.web Leipzig">
+                <div class="brand-bars">
+                    <div class="brand-bar"></div>
+                    <div class="brand-bar"></div>
+                    <div class="brand-bar"></div>
+                </div>
+                <span>alma.web</span>
+            </div>
+
+            <div class="search-field-wrap" id="search-input-trigger" style="cursor: pointer;">
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <input type="text" class="search-field" placeholder="Module, Kurse, Räume, Personen suchen…" readonly style="cursor: pointer;">
+                <span class="search-kbd">⌘K</span>
+            </div>
+
+            <div class="topbar-actions">
+                <button class="btn btn-secondary btn-sm" id="btn-open-export">
+                    <span>Export ▾</span>
+                </button>
+                <button class="btn btn-ghost btn-icon" id="btn-density-toggle" title="Dichte wechseln (Komfort / Kompakt)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 6H3"/><path d="M21 12H3"/><path d="M21 18H3"/></svg>
+                </button>
+                <button class="btn btn-ghost btn-icon" id="btn-theme-toggle" title="Design wechseln (Hell / Dunkel)">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+                </button>
+                <button class="btn btn-ghost btn-sm" id="btn-open-about">Über ▾</button>
+            </div>
+        </header>
+
+<!-- 2. Entity Tabs (Section 8.0) -->
+        <nav class="entity-tabs" role="tablist" aria-label="Entitätstyp wählen">
+            <button class="entity-tab active" data-entity="module" style="--tab-color: var(--color-type-module); --tab-bg: var(--color-type-module-bg);">
+                <span>Module</span>
+                <span class="tab-count">6</span>
+            </button>
+            <button class="entity-tab" data-entity="course" style="--tab-color: var(--color-type-course); --tab-bg: var(--color-type-course-bg);">
+                <span>Kurse</span>
+                <span class="tab-count">5</span>
+            </button>
+            <button class="entity-tab" data-entity="event" style="--tab-color: var(--color-type-event); --tab-bg: var(--color-type-event-bg);">
+                <span>Veranstaltungen</span>
+                <span class="tab-count">5</span>
+            </button>
+            <button class="entity-tab" data-entity="exam" style="--tab-color: var(--color-type-exam); --tab-bg: var(--color-type-exam-bg);">
+                <span>Prüfungen</span>
+                <span class="tab-count">3</span>
+            </button>
+            <button class="entity-tab" data-entity="staff" style="--tab-color: var(--color-type-staff); --tab-bg: var(--color-type-staff-bg);">
+                <span>Personen</span>
+                <span class="tab-count">3</span>
+            </button>
+            <button class="entity-tab" data-entity="location" style="--tab-color: var(--color-type-location); --tab-bg: var(--color-type-location-bg);">
+                <span>Räume</span>
+                <span class="tab-count">4</span>
+            </button>
+        </nav>
+
+<!-- 3. Workspace Controls Toolbar -->
+        <div class="workspace-toolbar">
+            <div class="toolbar-group">
+                <span class="pane-eyebrow">Ansicht</span>
+                <div class="segmented" role="group" aria-label="Ansicht wählen">
+                    <button class="segmented-item active" data-layout="list">Liste</button>
+                    <button class="segmented-item" data-layout="cards">Kacheln</button>
+                    <button class="segmented-item" data-layout="table">Tabelle</button>
+                    <button class="segmented-item" data-layout="calendar">Kalender</button>
+                    <button class="segmented-item" data-layout="explorer">Explorer</button>
+                </div>
+            </div>
+
+            <div class="toolbar-group">
+                <span class="pane-eyebrow">Layout</span>
+                <div class="segmented" role="group" aria-label="Layout wählen">
+                    <button class="segmented-item active" data-split="single">Einzeln</button>
+                    <button class="segmented-item" data-split="split">Geteilt</button>
+                    <button class="segmented-item" data-split="compare">Vergleich</button>
+                </div>
+            </div>
+        </div>
+
+<!-- 4. Body: Filter-Rail + Panes + Detail-Drawer -->
+        <div class="app-body">
+            <!-- Left Filter Rail (Section 7.1) -->
+            <aside class="filter-rail" aria-label="Filter">
+                <div class="rail-header">
+                    <span class="rail-title">Filter</span>
+                    <button class="btn btn-ghost btn-sm" id="btn-reset-filters">Zurücksetzen</button>
+                </div>
+                <div class="rail-content">
+                    <div class="field">
+                        <label class="field-label" for="select-semester">Semester</label>
+                        <select class="select" id="select-semester">
+                            <option value="2025w">WiSe 2025/26 (aktuell)</option>
+                            <option value="2025s">SoSe 2025</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label class="field-label" for="select-faculty">Fakultät</label>
+                        <select class="select" id="select-faculty">
+                            <option value="all">Alle Fakultäten</option>
+                            <option value="math-inf">Mathematik und Informatik</option>
+                            <option value="econ">Wirtschaftswissenschaften</option>
+                            <option value="life">Lebenswissenschaften</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <span class="field-label">Leistungspunkte</span>
+                        <div class="range-row">
+                            <input type="number" class="input" placeholder="Min" min="0" max="30" aria-label="LP Minimum">
+                            <input type="number" class="input" placeholder="Max" min="0" max="30" aria-label="LP Maximum">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <span class="field-label">Aktive Filter</span>
+                        <div class="chip-row">
+                            <span class="chip chip-filter">WiSe 2025/26 <button type="button" aria-label="Filter entfernen">×</button></span>
+                            <span class="chip chip-filter">Informatik <button type="button" aria-label="Filter entfernen">×</button></span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Workspace Panes -->
+            <div class="panes-container">
+                <section class="pane" id="pane-a" aria-label="Ergebnisliste A">
+                    <div class="pane-toolbar">
+                        <span class="pane-title"><span class="pane-dot" style="background: var(--color-type-module);"></span>Ergebnisse</span>
+                        <span class="pane-meta">6 Einträge</span>
+                    </div>
+                    <div class="pane-content" id="pane-a-content"></div>
+                </section>
+
+                <section class="pane" id="pane-b" style="display: none;" aria-label="Kalender B">
+                    <div class="pane-toolbar">
+                        <span class="pane-title"><span class="pane-dot" style="background: var(--color-type-event);"></span>Stundenplan</span>
+                        <span class="pane-meta">WiSe 2025/26</span>
+                    </div>
+                    <div class="pane-content" id="pane-b-content"></div>
+                </section>
+            </div>
+
+            <!-- Detail Drawer (Section 9.6) -->
+            <aside class="detail-drawer" id="detail-drawer" style="display: none;" aria-label="Detailansicht"></aside>
+        </div>
+
+<!-- 5. StatusBar (Section 7.1) -->
+        <footer class="statusbar">
+            <div class="statusbar-group">
+                <span class="statusbar-item">
+                    <span class="status-dot"></span>
+                    <span id="status-datastand">Datenstand: 12:04 (ALMA Web)</span>
+                </span>
+                <span class="statusbar-item" style="color: var(--color-text-subtle);">·</span>
+                <span class="statusbar-item" id="stat-saved-count" style="color: var(--color-accent-600); font-weight: 600;">
+                    3 gemerkt
+                </span>
+                <span class="statusbar-item" style="color: var(--color-text-subtle);">·</span>
+                <span class="statusbar-item" id="stat-selection-count">0 ausgewählt</span>
+            </div>
+            <div class="statusbar-group">
+                <span class="statusbar-item">Inoffizielles Community-Projekt</span>
+            </div>
+        </footer>
+    </div>
+
+<!-- Command Palette (Section 8.0) -->
+    <div class="overlay-backdrop" id="command-palette-backdrop">
+        <div class="palette-dialog" role="dialog" aria-modal="true" aria-label="Befehlspalette">
+            <div class="palette-search-wrap">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <input type="text" id="palette-input" class="palette-input" placeholder="Befehl, Modul, Kurs oder Dozent…" autocomplete="off">
+                <span class="search-kbd">ESC</span>
+            </div>
+            <div class="palette-results" id="palette-results"></div>
+        </div>
+    </div>
+
+    <!-- Export Modal (Section 8.0) -->
+    <div class="overlay-backdrop" id="export-modal">
+        <div class="modal-dialog" role="dialog" aria-modal="true" aria-label="Export">
+            <div class="modal-header">
+                <h3 style="font-size: var(--text-subtitle);">Plan &amp; Auswahl exportieren</h3>
+                <button class="btn btn-ghost btn-icon" id="btn-close-export" aria-label="Schließen">✕</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-lead">
+                    Wählen Sie das Format für Stundenplan und gemerkte Einträge:
+                </p>
+                <div class="modal-options">
+                    <label class="modal-option">
+                        <input type="radio" name="export-format" value="ics" checked>
+                        <span><strong>iCalendar (.ics)</strong> — Apple Kalender, Google Calendar, Outlook</span>
+                    </label>
+                    <label class="modal-option">
+                        <input type="radio" name="export-format" value="csv">
+                        <span><strong>CSV Tabelle (.csv)</strong> — Excel und Tabellenkalkulation</span>
+                    </label>
+                    <label class="modal-option">
+                        <input type="radio" name="export-format" value="json">
+                        <span><strong>JSON Rohdaten (.json)</strong> — Entwickler-Format</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="btn-cancel-export">Abbrechen</button>
+                <button class="btn btn-primary" id="btn-do-export">Exportieren</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Modal (Section 3.2) -->
+    <div class="overlay-backdrop" id="about-modal">
+        <div class="modal-dialog" role="dialog" aria-modal="true" aria-label="Über alma.web">
+            <div class="modal-header">
+                <h3 style="font-size: var(--text-subtitle);">Über alma.web</h3>
+                <button class="btn btn-ghost btn-icon" id="btn-close-about" aria-label="Schließen">✕</button>
+            </div>
+            <div class="modal-body about-body">
+                <p>
+                    <strong>Inoffizielles Community-Projekt.</strong> Keine Verbindung zur Universität Leipzig.
+                    Alle Angaben ohne Gewähr — verbindlich sind ausschließlich die offiziellen Bekanntmachungen der Universität.
+                </p>
+                <p class="about-muted">
+                    Datenursprung: Modul- und Vorlesungsverzeichnis der Universität Leipzig (ALMA Web).
+                    Keine Speicherung persönlicher Daten auf externen Servern. „Meine Liste“ liegt ausschließlich lokal im Browser.
+                </p>
+                <p class="about-muted">
+                    Barrierefreiheit: WCAG 2.2 AA, vollständige Tastaturbedienung, reduzierte Bewegung wird respektiert.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="btn-close-about-footer">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./ts/main.ts"></script>
+</body>
+</html>

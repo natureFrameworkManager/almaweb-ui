@@ -1,0 +1,186 @@
+/* ==========================================================================
+   mockup/css/tokens.css — alma.web Blueprint Tokens (Section 17.1)
+   ========================================================================== */
+
+:root,
+[data-theme="light"] {
+    color-scheme: light;
+
+    /* fonts */
+    --font-sans: "Atkinson Hyperlegible", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+    /* brand (Bellis Blue) */
+    --color-brand-50: #eef3fc;
+    --color-brand-100: #dce6f8;
+    --color-brand-200: #b9ccf1;
+    --color-brand-300: #8faee8;
+    --color-brand-400: #5c86d6;
+    --color-brand-500: #3867c4;
+    --color-brand-600: #294d9d;
+    --color-brand-700: #1f3c7e;
+    --color-brand-800: #172e62;
+    --color-brand-900: #102047;
+    --color-on-brand: #ffffff;
+
+    /* accent (Bellis Pink — personal state only: Merken, Meine Liste, Stundenplan) */
+    --color-accent-50: #fdf2f8;
+    --color-accent-100: #fce7f3;
+    --color-accent-200: #fbcfe8;
+    --color-accent-500: #e4017b;
+    --color-accent-600: #c40069;
+    --color-accent-700: #9b0053;
+    --color-on-accent: #ffffff;
+
+    /* surfaces & text */
+    --color-bg: #f7f8fb;
+    --color-surface: #ffffff;
+    --color-surface-2: #eff1f7;
+    --color-surface-3: #e5e8f1;
+    --color-border: #d3d7e3;
+    --color-border-strong: #a8aec1;
+    --color-text: #14151a;
+    --color-text-muted: #5b6070;
+    --color-text-subtle: #7c8291;
+    --color-backdrop: rgba(20, 21, 26, 0.45);
+
+    /* status */
+    --color-success: #1f7a5a;
+    --color-success-bg: #e6f5ef;
+    --color-warning: #8a5300;
+    --color-warning-bg: #fef4e6;
+    --color-danger: #b3261e;
+    --color-danger-bg: #fdeee9;
+    --color-info: #0f6e9b;
+    --color-info-bg: #e6f4fa;
+    --color-focus: #294d9d;
+
+    /* entity types (Section 4.1) */
+    --color-type-module: #294d9d;
+    --color-type-module-bg: #edf3fd;
+    --color-type-course: #0f7a78;
+    --color-type-course-bg: #e6f6f5;
+    --color-type-event: #8a5300;
+    --color-type-event-bg: #fdf4e8;
+    --color-type-exam: #b3261e;
+    --color-type-exam-bg: #fdeee9;
+    --color-type-staff: #6a3fa0;
+    --color-type-staff-bg: #f5effe;
+    --color-type-location: #28607f;
+    --color-type-location-bg: #eaf4fa;
+
+    /* typography scale (Section 5.1) */
+    --text-display: 36px;
+    --text-headline: 26px;
+    --text-title: 19px;
+    --text-subtitle: 16px;
+    --text-body: 15px;
+    --text-body-sm: 13px;
+    --text-label: 11.5px;
+
+    --leading-display: 1.2;
+    --leading-headline: 1.28;
+    --leading-title: 1.4;
+    --leading-body: 1.47;
+    --leading-label: 1.33;
+
+    /* radius (Section 6.2) */
+    --radius-xs: 4px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-full: 9999px;
+
+    /* elevation (Section 6.3) */
+    --shadow-1: 0 1px 2px rgb(20 21 26 / 0.06), 0 1px 3px rgb(20 21 26 / 0.08);
+    --shadow-2: 0 4px 12px rgb(20 21 26 / 0.1);
+    --shadow-3: 0 12px 32px rgb(20 21 26 / 0.16);
+
+    /* motion (Section 6.4) */
+    --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+    --ease-emphasized: cubic-bezier(0.2, 0, 0, 1.2);
+    --duration-fast: 100ms;
+    --duration-base: 180ms;
+    --duration-slow: 300ms;
+
+    /* density */
+    --row-py: 11px;
+    --row-px: 16px;
+    --card-p: 16px;
+    --stack-gap: 8px;
+    --font-scale: 1;
+}
+
+[data-theme="dark"],
+.dark {
+    color-scheme: dark;
+
+    --color-brand-50: #141a2a;
+    --color-brand-100: #1b2440;
+    --color-brand-200: #24335c;
+    --color-brand-300: #2f4a85;
+    --color-brand-400: #4c6fbd;
+    --color-brand-500: #6a91de;
+    --color-brand-600: #8fb4ff;
+    --color-brand-700: #b0cbff;
+    --color-brand-800: #c9dbff;
+    --color-brand-900: #e3ecff;
+    --color-on-brand: #0e0e12;
+
+    --color-accent-50: #2e0f1e;
+    --color-accent-100: #4a1532;
+    --color-accent-200: #741d4c;
+    --color-accent-500: #f872b1;
+    --color-accent-600: #ff7fbf;
+    --color-accent-700: #ffa4d2;
+    --color-on-accent: #2a0018;
+
+    --color-bg: #0e0e12;
+    --color-surface: #17171d;
+    --color-surface-2: #20202a;
+    --color-surface-3: #282833;
+    --color-border: #33333f;
+    --color-border-strong: #4a4a58;
+    --color-text: #f2f3f7;
+    --color-text-muted: #a9aebd;
+    --color-text-subtle: #81879a;
+    --color-backdrop: rgba(0, 0, 0, 0.7);
+
+    --color-success: #6dd3a8;
+    --color-success-bg: #132b21;
+    --color-warning: #f5c36b;
+    --color-warning-bg: #302613;
+    --color-danger: #f08c87;
+    --color-danger-bg: #331616;
+    --color-info: #78c8ee;
+    --color-info-bg: #122834;
+    --color-focus: #8fb4ff;
+
+    --color-type-module: #8fb4ff;
+    --color-type-module-bg: #17243c;
+    --color-type-course: #6fd3cf;
+    --color-type-course-bg: #142d2c;
+    --color-type-event: #f2b84b;
+    --color-type-event-bg: #332610;
+    --color-type-exam: #f08c87;
+    --color-type-exam-bg: #341718;
+    --color-type-staff: #c3a6f5;
+    --color-type-staff-bg: #291a3c;
+    --color-type-location: #8fcbe8;
+    --color-type-location-bg: #152632;
+
+    --shadow-1: 0 1px 2px rgb(0 0 0 / 0.3);
+    --shadow-2: 0 4px 12px rgb(0 0 0 / 0.5), 0 0 0 1px var(--color-border);
+    --shadow-3: 0 12px 32px rgb(0 0 0 / 0.7), 0 0 0 1px var(--color-border);
+}
+
+[data-density="compact"] {
+    --row-py: 7px;
+    --row-px: 12px;
+    --card-p: 12px;
+    --stack-gap: 4px;
+}
+
+[data-a11y-font="large"] {
+    --font-scale: 1.15;
+}

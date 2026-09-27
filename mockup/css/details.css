@@ -1,0 +1,157 @@
+/* ==========================================================================
+   mockup/css/details.css — Shell fixes, helpers, modal internals
+   ========================================================================== */
+
+/* --- Shell overflow hardening: keeps every region inside the viewport --- */
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+#app {
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+}
+.topbar,
+.entity-tabs,
+.workspace-toolbar,
+.statusbar {
+    flex: 0 0 auto;
+}
+.app-body {
+    flex: 1 1 auto;
+    min-height: 0;
+}
+.filter-rail {
+    flex: 0 0 260px;
+    width: 260px;
+    min-height: 0;
+}
+.panes-container {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+}
+.pane {
+    min-width: 0;
+    min-height: 0;
+}
+.pane-content {
+    min-height: 0;
+}
+.detail-drawer {
+    flex: 0 0 400px;
+    width: 400px;
+    min-height: 0;
+    overflow: hidden;
+}
+.detail-body {
+    min-height: 0;
+}
+
+/* Panes that are hidden must not keep layout space */
+.pane[style*="display: none"] {
+    display: none !important;
+}
+
+/* --- Component helpers used by the shell markup --- */
+.pane-eyebrow {
+    font-size: var(--text-label);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-subtle);
+}
+.pane-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+.pane-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-full);
+    display: inline-block;
+}
+.pane-meta {
+    font-size: var(--text-label);
+    color: var(--color-text-subtle);
+}
+.range-row {
+    display: flex;
+    gap: 8px;
+}
+.chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+/* --- Modal internals --- */
+.modal-lead {
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted);
+    margin-bottom: 12px;
+}
+.modal-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.modal-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--text-body-sm);
+    cursor: pointer;
+}
+.about-body {
+    font-size: var(--text-body-sm);
+    line-height: 1.6;
+}
+.about-body p + p {
+    margin-top: 10px;
+}
+.about-muted {
+    color: var(--color-text-muted);
+}
+
+/* --- Selection / interaction affordances --- */
+.list-row,
+.card,
+.explorer-tile,
+.data-table tbody tr,
+.cal-event-pill,
+.palette-item,
+.entity-tab,
+.segmented-item,
+.btn,
+.rail-header,
+.pane-toolbar {
+    user-select: none;
+}
+.detail-body,
+.about-body,
+.modal-body,
+.input,
+.select {
+    user-select: text;
+}
+
+.card:focus-visible,
+.list-row:focus-visible,
+.explorer-tile:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: -2px;
+}
+
+/* Compact density tuning for the shell */
+[data-density="compact"] .list-row {
+    padding: var(--row-py) var(--row-px);
+}
+[data-density="compact"] .card-grid {
+    gap: 12px;
+    padding: 12px;
+}
