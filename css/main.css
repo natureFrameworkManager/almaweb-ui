@@ -53,12 +53,14 @@
 .switcher {
     @apply flex flex-row items-center;
     @apply cursor-pointer;
+    @apply h-8;
 }
 .switcher span {
     @apply p-1 first:rounded-s-full first:ps-2 last:rounded-e-full last:pe-2;
     @apply bg-primary text-background;
     @apply hover:bg-primary/80;
     @apply border-e border-primary last:border-e-0;
+    @apply h-full flex items-center;
 }
 .switcher .active {
     @apply bg-accent text-text dark:text-background;
@@ -148,8 +150,7 @@ header#top-header nav item.active {
     @apply border-b-2 border-primary;
 }
 header#top-header div#view-switcher {
-    @apply col-2 row-1 flex flex-row items-end justify-center;
-    @apply px-2 pb-1;
+    @apply col-2 row-1 flex flex-row items-center justify-center;
 }
 header#top-header div#additional-controls {
     @apply col-3 row-1 flex flex-row items-center justify-end gap-x-2;
@@ -162,6 +163,9 @@ header#top-header div#additional-controls div#last-updated-con span.material-sym
 }
 header#top-header div#additional-controls div#dark-mode-toggle {
     @apply text-[16px];
+}
+header#top-header div#additional-controls button span.material-symbols {
+    @apply text-[18px];
 }
 header#top-header div#save-slot-options {
     @apply col-1 row-1 flex flex-row-reverse items-center justify-end gap-x-2 ps-2;
