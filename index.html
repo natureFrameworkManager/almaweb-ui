@@ -61,277 +61,287 @@
         </header>
         <div id="filter-options">
             <details class="filter-group" open>
-                <summary>Globale Filter</summary>
-                <div class="input-container slim">
-                    <select id="filter-semester" multiple>
-                        <option>Alle Semester</option>
-                        <option>WiSe 2026/27</option>
-                        <option>SoSe 2026</option>
-                        <option>WiSe 2025/26</option>
-                        <option>SoSe 2025</option>
-                        <option>WiSe 2024/25</option>
-                        <option>SoSe 2024</option>
-                    </select>
-                    <label for="filter-semester">Semester</label>
+                <summary><span class="material-symbols">globe</span>Globale Filter</summary>
+                <div class="filter-group-content">
+                    <div class="input-container slim">
+                        <select id="filter-semester" multiple>
+                            <option>Alle Semester</option>
+                            <option>WiSe 2026/27</option>
+                            <option>SoSe 2026</option>
+                            <option>WiSe 2025/26</option>
+                            <option>SoSe 2025</option>
+                            <option>WiSe 2024/25</option>
+                            <option>SoSe 2024</option>
+                        </select>
+                        <label for="filter-semester">Semester</label>
+                    </div>
                 </div>
             </details>
             <details class="filter-group" open>
-                <summary>Modulfilter</summary>
-                <div class="input-container">
-                    <input
-                        id="search-input"
-                        type="text"
-                        placeholder='"Statistik"'
-                    />
-                    <label for="search-input">Modulname</label>
-                </div>
-                <div class="input-container">
-                    <input
-                        id="search-input-number"
-                        type="text"
-                        placeholder='"10-200-4045"'
-                    />
-                    <label for="search-input-number">Modulnummer</label>
-                </div>
-                <div class="input-container slim">
-                    <select id="filter-faculty" multiple>
-                        <option>Alle Fakultäten</option>
-                        <option>10 - Informatik</option>
-                        <option>20 - Mathematik</option>
-                        <option>30 - Physik</option>
-                    </select>
-                    <label for="filter-faculty">Fakultät</label>
-                </div>
-                <div class="input-container slim">
-                    <input type="text" id="filter-responsible-person" placeholder='"Max Mustermann"'>
-                    <label for="filter-responsible-person">Verantwortliche Person</label>
-                </div>
-                <div class="input-container range slim">
-                    <div>
+                <summary><span class="material-symbols">extension</span>Modulfilter</summary>
+                <div class="filter-group-content">
+                    <div class="input-container">
                         <input
-                            type="number"
-                            placeholder="Min"
-                            min="0"
+                            id="search-input"
+                            type="text"
+                            placeholder='"Statistik"'
                         />
-                        <input
-                            type="number"
-                            placeholder="Max"
-                            min="0"
-                        />
+                        <label for="search-input">Modulname</label>
                     </div>
-                    <label for="filter-lp">Leistungspunkte</label>
-                </div>
-                <div class="input-container range slim">
-                    <div>
+                    <div class="input-container">
                         <input
-                            type="number"
-                            placeholder="Min"
-                            min="0"
+                            id="search-input-number"
+                            type="text"
+                            placeholder='"10-200-4045"'
                         />
-                        <input
-                            type="number"
-                            placeholder="Max"
-                            min="0"
-                        />
+                        <label for="search-input-number">Modulnummer</label>
                     </div>
-                    <label for="filter-duration">Semesterdauer</label>
-                </div>
-                <div class="input-container slim">
-                    <select id="filter-language" multiple>
-                        <option>Alle Sprachen</option>
-                        <option>Deutsch</option>
-                        <option>Englisch</option>
-                        <option>Französisch</option>
-                    </select>
-                    <label for="filter-language">Sprache</label>
+                    <div class="input-container slim">
+                        <select id="filter-faculty" multiple>
+                            <option>Alle Fakultäten</option>
+                            <option>10 - Informatik</option>
+                            <option>20 - Mathematik</option>
+                            <option>30 - Physik</option>
+                        </select>
+                        <label for="filter-faculty">Fakultät</label>
+                    </div>
+                    <div class="input-container slim">
+                        <input type="text" id="filter-responsible-person" placeholder='"Max Mustermann"'>
+                        <label for="filter-responsible-person">Verantwortliche Person</label>
+                    </div>
+                    <div class="input-container range slim">
+                        <div>
+                            <input
+                                type="number"
+                                placeholder="Min"
+                                min="0"
+                            />
+                            <input
+                                type="number"
+                                placeholder="Max"
+                                min="0"
+                            />
+                        </div>
+                        <label for="filter-lp">Leistungspunkte</label>
+                    </div>
+                    <div class="input-container range slim">
+                        <div>
+                            <input
+                                type="number"
+                                placeholder="Min"
+                                min="0"
+                            />
+                            <input
+                                type="number"
+                                placeholder="Max"
+                                min="0"
+                            />
+                        </div>
+                        <label for="filter-duration">Semesterdauer</label>
+                    </div>
+                    <div class="input-container slim">
+                        <select id="filter-language" multiple>
+                            <option>Alle Sprachen</option>
+                            <option>Deutsch</option>
+                            <option>Englisch</option>
+                            <option>Französisch</option>
+                        </select>
+                        <label for="filter-language">Sprache</label>
+                    </div>
                 </div>
             </details>
             <details class="filter-group" open>
-                <summary>Kurse</summary>
-                <div class="input-container">
-                    <input
-                        id="search-input"
-                        type="text"
-                        placeholder='"Statistik"'
-                    />
-                    <label for="search-input">Kursname</label>
-                </div>
-                <div class="input-container">
-                    <input
-                        id="search-input-number"
-                        type="text"
-                        placeholder='"10-200-4045-V01"'
-                    />
-                    <label for="search-input-number">Kursnummer</label>
-                </div>
-                <div class="input-container slim">
-                    <select id="filter-type" multiple>
-                        <option>Alle Typen</option>
-                        <option>Vorlesung</option>
-                        <option>Übung</option>
-                        <option>Seminar</option>
-                    </select>
-                    <label for="filter-type">Kurstyp</label>
-                </div>
-                <div class="input-container slim">
-                    <select id="filter-instructors" multiple>
-                        <option>Alle Dozenten</option>
-                        <option>Max Mustermann</option>
-                        <option>Erika Musterfrau</option>
-                        <option>John Doe</option>
-                    </select>
-                    <label for="filter-instructors">Dozenten in Kursen</label>
-                </div>
-                <div class="input-container range slim">
-                    <div>
+                <summary><span class="material-symbols">book</span>Kurse</summary>
+                <div class="filter-group-content">
+                    <div class="input-container">
                         <input
-                            type="number"
-                            placeholder="Min"
-                            min="0"
+                            id="search-input"
+                            type="text"
+                            placeholder='"Statistik"'
                         />
-                        <input
-                            type="number"
-                            placeholder="Max"
-                            min="0"
-                        />
+                        <label for="search-input">Kursname</label>
                     </div>
-                    <label for="filter-weekly-hours">Wochenstunden</label>
+                    <div class="input-container">
+                        <input
+                            id="search-input-number"
+                            type="text"
+                            placeholder='"10-200-4045-V01"'
+                        />
+                        <label for="search-input-number">Kursnummer</label>
+                    </div>
+                    <div class="input-container slim">
+                        <select id="filter-type" multiple>
+                            <option>Alle Typen</option>
+                            <option>Vorlesung</option>
+                            <option>Übung</option>
+                            <option>Seminar</option>
+                        </select>
+                        <label for="filter-type">Kurstyp</label>
+                    </div>
+                    <div class="input-container slim">
+                        <select id="filter-instructors" multiple>
+                            <option>Alle Dozenten</option>
+                            <option>Max Mustermann</option>
+                            <option>Erika Musterfrau</option>
+                            <option>John Doe</option>
+                        </select>
+                        <label for="filter-instructors">Dozenten in Kursen</label>
+                    </div>
+                    <div class="input-container range slim">
+                        <div>
+                            <input
+                                type="number"
+                                placeholder="Min"
+                                min="0"
+                            />
+                            <input
+                                type="number"
+                                placeholder="Max"
+                                min="0"
+                            />
+                        </div>
+                        <label for="filter-weekly-hours">Wochenstunden</label>
+                    </div>
                 </div>
             </details>
             <details class="filter-group" open>
-                <summary>Veranstaltungen</summary>
-                <div class="input-container range slim">
-                    <div>
-                        <input
-                            type="time"
-                            placeholder="Min"
-                            min="0"
-                        />
-                        <input
-                            type="time"
-                            placeholder="Max"
-                            min="0"
-                        />
+                <summary><span class="material-symbols">event</span>Veranstaltungen</summary>
+                <div class="filter-group-content">
+                    <div class="input-container range slim">
+                        <div>
+                            <input
+                                type="time"
+                                placeholder="Min"
+                                min="0"
+                            />
+                            <input
+                                type="time"
+                                placeholder="Max"
+                                min="0"
+                            />
+                        </div>
+                        <label for="filter-course-times">Start-Uhrzeit</label>
                     </div>
-                    <label for="filter-course-times">Start-Uhrzeit</label>
-                </div>
-                <div class="input-container range slim">
-                    <div>
-                        <input
-                            type="time"
-                            placeholder="Min"
-                            min="0"
-                        />
-                        <input
-                            type="time"
-                            placeholder="Max"
-                            min="0"
-                        />
+                    <div class="input-container range slim">
+                        <div>
+                            <input
+                                type="time"
+                                placeholder="Min"
+                                min="0"
+                            />
+                            <input
+                                type="time"
+                                placeholder="Max"
+                                min="0"
+                            />
+                        </div>
+                        <label for="filter-course-times">End-Uhrzeit</label>
                     </div>
-                    <label for="filter-course-times">End-Uhrzeit</label>
-                </div>
-                <div class="input-container range slim">
-                    <div>
-                        <input
-                            type="date"
-                            placeholder="Min"
-                            min="2024-01-01"
-                        />
-                        <input
-                            type="date"
-                            placeholder="Max"
-                            min="2024-01-01"
-                        />
+                    <div class="input-container range slim">
+                        <div>
+                            <input
+                                type="date"
+                                placeholder="Min"
+                                min="2024-01-01"
+                            />
+                            <input
+                                type="date"
+                                placeholder="Max"
+                                min="2024-01-01"
+                            />
+                        </div>
+                        <label for="filter-course-times">Datumszeitraum</label>
                     </div>
-                    <label for="filter-course-times">Datumszeitraum</label>
-                </div>
-                <div class="input-container slim">
-                    <select id="filter-buildings" multiple>
-                        <option>Alle Gebäude</option>
-                        <option>Gebäude A</option>
-                        <option>Gebäude B</option>
-                        <option>Gebäude C</option>
-                    </select>
-                    <label for="filter-buildings">Gebäude</label>
+                    <div class="input-container slim">
+                        <select id="filter-buildings" >
+                            <option>Alle Gebäude</option>
+                            <option>Gebäude A</option>
+                            <option>Gebäude B</option>
+                            <option>Gebäude C</option>
+                        </select>
+                        <label for="filter-buildings">Gebäude</label>
+                    </div>
                 </div>
             </details>
             <details class="filter-group" open>
-                <summary>Prüfungen</summary>
-                <div class="input-container slim">
-                    <select id="filter-examtypes" multiple>
-                        <option>Alle Prüfungsarten</option>
-                        <option>Klausur</option>
-                        <option>Hausarbeit</option>
-                        <option>Mündliche Prüfung</option>
-                    </select>
-                    <label for="filter-examtypes">Prüfungsarten</label>
-                </div>
-                <div class="input-container range slim">
-                    <div>
-                        <input
-                            type="time"
-                            placeholder="Min"
-                            min="0"
-                        />
-                        <input
-                            type="time"
-                            placeholder="Max"
-                            min="0"
-                        />
+                <summary><span class="material-symbols">history_edu</span>Prüfungen</summary>
+                <div class="filter-group-content">
+                    <div class="input-container slim">
+                        <select id="filter-examtypes" multiple>
+                            <option>Alle Prüfungsarten</option>
+                            <option>Klausur</option>
+                            <option>Hausarbeit</option>
+                            <option>Mündliche Prüfung</option>
+                        </select>
+                        <label for="filter-examtypes">Prüfungsarten</label>
                     </div>
-                    <label for="filter-course-times">Start-Uhrzeit</label>
-                </div>
-                <div class="input-container range slim">
-                    <div>
-                        <input
-                            type="time"
-                            placeholder="Min"
-                            min="0"
-                        />
-                        <input
-                            type="time"
-                            placeholder="Max"
-                            min="0"
-                        />
+                    <div class="input-container range slim">
+                        <div>
+                            <input
+                                type="time"
+                                placeholder="Min"
+                                min="0"
+                            />
+                            <input
+                                type="time"
+                                placeholder="Max"
+                                min="0"
+                            />
+                        </div>
+                        <label for="filter-course-times">Start-Uhrzeit</label>
                     </div>
-                    <label for="filter-course-times">End-Uhrzeit</label>
-                </div>
-                <div class="input-container range slim">
-                    <div>
-                        <input
-                            type="date"
-                            placeholder="Min"
-                            min="2024-01-01"
-                        />
-                        <input
-                            type="date"
-                            placeholder="Max"
-                            min="2024-01-01"
-                        />
+                    <div class="input-container range slim">
+                        <div>
+                            <input
+                                type="time"
+                                placeholder="Min"
+                                min="0"
+                            />
+                            <input
+                                type="time"
+                                placeholder="Max"
+                                min="0"
+                            />
+                        </div>
+                        <label for="filter-course-times">End-Uhrzeit</label>
                     </div>
-                    <label for="filter-course-times">Datumszeitraum</label>
-                </div>
-                <div class="input-container slim">
-                    <select id="filter-buildings" multiple>
-                        <option>Alle Gebäude</option>
-                        <option>Gebäude A</option>
-                        <option>Gebäude B</option>
-                        <option>Gebäude C</option>
-                    </select>
-                    <label for="filter-buildings">Gebäude</label>
-                </div>
-                <div class="input-container slim">
-                    <input type="checkbox" id="filter-exam-required" /> <!-- Try-State: Either, Required, Not Required -->
-                    <label for="filter-exam-required">Prüfung erforderlich</label>
-                </div>
-                <div class="input-container slim">
-                    <select id="filter-staff" multiple>
-                        <option>Alle Prüfer</option>
-                        <option>Prüfer A</option>
-                        <option>Prüfer B</option>
-                        <option>Prüfer C</option>
-                    </select>
-                    <label for="filter-staff">Prüfer</label>
+                    <div class="input-container range slim">
+                        <div>
+                            <input
+                                type="date"
+                                placeholder="Min"
+                                min="2024-01-01"
+                            />
+                            <input
+                                type="date"
+                                placeholder="Max"
+                                min="2024-01-01"
+                            />
+                        </div>
+                        <label for="filter-course-times">Datumszeitraum</label>
+                    </div>
+                    <div class="input-container slim">
+                        <select id="filter-buildings" multiple>
+                            <option>Alle Gebäude</option>
+                            <option>Gebäude A</option>
+                            <option>Gebäude B</option>
+                            <option>Gebäude C</option>
+                        </select>
+                        <label for="filter-buildings">Gebäude</label>
+                    </div>
+                    <div class="input-container slim">
+                        <input type="checkbox" id="filter-exam-required" /> <!-- Try-State: Either, Required, Not Required -->
+                        <label for="filter-exam-required">Prüfung erforderlich</label>
+                    </div>
+                    <div class="input-container slim">
+                        <select id="filter-staff" multiple>
+                            <option>Alle Prüfer</option>
+                            <option>Prüfer A</option>
+                            <option>Prüfer B</option>
+                            <option>Prüfer C</option>
+                        </select>
+                        <label for="filter-staff">Prüfer</label>
+                    </div>
                 </div>
             </details>
         </div>

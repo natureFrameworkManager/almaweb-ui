@@ -87,11 +87,14 @@
 .input-container input,
 .input-container textarea,
 .input-container select {
-    @apply rounded-md border border-border bg-background px-3 py-2 text-text;
+    @apply rounded-md border border-border bg-transparent px-3 py-2 text-text;
     @apply w-full;
 }
 .input-container select {
     @apply pe-4;
+}
+.input-container select[multiple] option:checked {
+    @apply bg-primary text-background ps-1;
 }
 .input-container label {
     @apply ps-2 pb-0.5 text-label-medium text-text;
@@ -108,17 +111,17 @@
     content: "-";
     @apply text-text col-2 row-1;
 }
-.input-container.range div > input:first-of-type {
+.input-container.range div input:first-of-type {
     @apply col-1 row-1;
 }
-.input-container.range div > input:last-of-type {
+.input-container.range div input:last-of-type {
     @apply col-3 row-1;
 }
 
 body {
     @apply min-h-screen max-w-screen;
     @apply bg-background text-body-medium leading-[1.2] text-text;
-    @apply grid grid-cols-[330px_1fr_1fr] grid-rows-[max-content_auto];
+    @apply grid grid-cols-[330px_1fr_1fr] grid-rows-[min-content_1fr];
 }
 
 header#top-header {
@@ -126,66 +129,85 @@ header#top-header {
     @apply col-start-2 col-end-4 row-1 pe-2 pt-3 pb-2;
     @apply grid grid-cols-[max-content_max-content_auto] grid-rows-[max-content_max-content] gap-y-2;
 }
-header#top-header > nav {
+header#top-header nav {
     @apply flex flex-row items-end;
     @apply px-2;
 }
-header#top-header > nav#display-changer1 {
+header#top-header nav#display-changer1 {
     @apply col-1 row-2 ;
 }
-header#top-header > nav#display-changer2 {
+header#top-header nav#display-changer2 {
     @apply col-1 row-1 ;
 }
-header#top-header > nav > item {
+header#top-header nav item {
     @apply cursor-pointer px-2 text-2xl;
     @apply border-b-2 border-transparent;
     @apply hover:border-primary;
 }
-header#top-header > nav > item.active {
+header#top-header nav item.active {
     @apply border-b-2 border-primary;
 }
-header#top-header > div#view-switcher {
+header#top-header div#view-switcher {
     @apply col-2 row-2 flex flex-row items-end;
     @apply px-2 pb-1;
 }
-header#top-header > div#additional-controls {
+header#top-header div#additional-controls {
     @apply col-start-2 col-end-4 row-1 flex flex-row items-center justify-end gap-x-2;
 }
-header#top-header > div#additional-controls > div#last-updated-con {
+header#top-header div#additional-controls div#last-updated-con {
     @apply flex flex-row flex-nowrap items-center gap-x-2 text-nowrap;
 }
-header#top-header > div#additional-controls > div#last-updated-con > span.material-symbols {
+header#top-header div#additional-controls div#last-updated-con span.material-symbols {
     @apply text-[16px];
 }
-header#top-header > div#additional-controls > div#dark-mode-toggle {
+header#top-header div#additional-controls div#dark-mode-toggle {
     @apply text-[16px];
 }
-header#top-header > div#save-slot-options {
+header#top-header div#save-slot-options {
     @apply col-3 row-2 flex flex-row items-center justify-end gap-x-2 pb-1;
 }
 div#filter-options {
     @apply border-r border-border;
     @apply col-1 row-start-1 row-end-3;
-    @apply flex flex-col gap-y-4 px-1 py-2;
+    @apply flex flex-col;
+    @apply max-h-screen overflow-y-auto;
+    @apply bg-primary/5;
 }
-div#filter-options > details.filter-group {
-    @apply flex flex-col gap-y-2;
-}
-div#filter-options > details.filter-group > summary {
+div#filter-options details.filter-group summary {
     @apply cursor-pointer list-none;
-    @apply text-title-small font-semibold;
+    @apply text-title-medium font-semibold text-nowrap;
+    @apply flex flex-row items-center gap-x-2;
+    @apply border-y border-border p-2;
+    @apply sticky top-0;
+    @apply bg-primary text-background;
 }
-div#filter-options > details.filter-group > div.checkbox-list {
+div#filter-options details.filter-group:open summary {
+    @apply mb-1;
+}
+div#filter-options details.filter-group summary::after {
+    @apply content-['+'];
+    @apply w-full text-right;
+}
+div#filter-options details.filter-group:open > summary::after {
+    @apply content-['-'];
+}
+div#filter-options details.filter-group summary span.material-symbols {
+    @apply text-[20px];
+}
+div#filter-options details.filter-group div.filter-group-content {
+    @apply flex flex-col gap-y-2 pb-3 px-1;
+}
+div#filter-options details.filter-group div.checkbox-list {
     @apply flex flex-col gap-y-1;
 }
-div#filter-options > details.filter-group > div.checkbox-list > label.checkbox-item {
+div#filter-options details.filter-group div.checkbox-list label.checkbox-item {
     @apply flex cursor-pointer flex-row items-center gap-x-2;
 }
 div#filter-options
-    > details.filter-group
-    > div.checkbox-list
-    > label.checkbox-item
-    > input[type="checkbox"] {
+    details.filter-group
+    div.checkbox-list
+    label.checkbox-item
+    input[type="checkbox"] {
     @apply h-4 w-4 accent-primary;
 }
 main.list-card-view {
@@ -211,18 +233,18 @@ main.calendar#calendar2 {
 header.list-card-view-header {
     @apply mb-4 flex flex-row items-end justify-between;
 }
-header.list-card-view-header > div.type-switcher {
+header.list-card-view-header div.type-switcher {
     @apply flex flex-row items-end;
 }
-header.list-card-view-header > div.type-switcher > span {
+header.list-card-view-header div.type-switcher span {
     @apply cursor-pointer px-2 text-lg;
     @apply border-b-2 border-transparent;
     @apply hover:border-primary;
 }
-header.list-card-view-header > div.type-switcher > span.active {
+header.list-card-view-header div.type-switcher span.active {
     @apply border-b-2 border-primary;
 }
-header.list-card-view-header > div.multi-level-sort {
+header.list-card-view-header div.multi-level-sort {
     @apply cursor-pointer;
     @apply border border-border;
     @apply rounded-md px-2 py-1;
@@ -242,84 +264,84 @@ main.list-card-view:has(.type-switcher span.active[data-view="locations"]) .type
 }
 
 /* Display changer: swaps the list/card-grid pair per pane based on the active nav item */
-.type-content > .card-grid {
+.type-content .card-grid {
     display: none;
 }
-body:has(#display-changer1 item.active[data-view="cards"]) #list-card-view1 .type-content > .list {
+body:has(#display-changer1 item.active[data-view="cards"]) #list-card-view1 .type-content .list {
     display: none;
 }
-body:has(#display-changer1 item.active[data-view="cards"]) #list-card-view1 .type-content > .card-grid {
+body:has(#display-changer1 item.active[data-view="cards"]) #list-card-view1 .type-content .card-grid {
     display: grid;
 }
-body:has(#display-changer2 item.active[data-view="cards"]) #list-card-view2 .type-content > .list {
+body:has(#display-changer2 item.active[data-view="cards"]) #list-card-view2 .type-content .list {
     display: none;
 }
-body:has(#display-changer2 item.active[data-view="cards"]) #list-card-view2 .type-content > .card-grid {
+body:has(#display-changer2 item.active[data-view="cards"]) #list-card-view2 .type-content .card-grid {
     display: grid;
 }
 
 ul.list {
     @apply m-0 list-none overflow-y-auto p-0;
 }
-ul.list > li.list-item {
+ul.list li.list-item {
     @apply border-b border-border p-2 last:border-b-0;
     @apply flex flex-col gap-y-1;
 }
-ul.list > li.list-item > h1 {
+ul.list li.list-item h1 {
     @apply text-lg font-bold text-wrap;
 }
-ul.list > li.list-item > h2 {
+ul.list li.list-item h2 {
     @apply flex h-full flex-col font-semibold;
 }
-ul.list > li.list-item > div.info-container {
+ul.list li.list-item div.info-container {
     @apply flex flex-row flex-wrap gap-2;
 }
-ul.list > li.list-item span.info {
+ul.list li.list-item span.info {
     @apply w-fit rounded-full border border-border px-2 py-1;
     @apply bg-primary/5 dark:bg-primary/15 text-sm;
     @apply text-nowrap;
 }
-ul.list > li.list-item > button {
+ul.list li.list-item button {
     @apply self-end;
 }
 div.card-grid {
     @apply grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-2;
 }
-div.card-grid > div.card {
+div.card-grid div.card {
     @apply rounded-md border border-border px-2 pt-1 pb-2;
     @apply flex flex-col gap-1;
 }
-div.card-grid > div.card > h1 {
+div.card-grid div.card h1 {
     @apply text-lg leading-tight font-bold text-wrap;
 }
-div.card-grid > div.card > h2 {
+div.card-grid div.card h2 {
     @apply mb-2 flex h-full flex-col font-semibold;
 }
-div.card-grid > div.card > div.info-container {
+div.card-grid div.card div.info-container {
     @apply flex flex-row flex-wrap gap-2;
 }
-div.card-grid > div.card span.info {
+div.card-grid div.card span.info {
     @apply h-fit w-fit rounded border border-border px-2 py-1;
     @apply bg-primary/5 dark:bg-primary/15 text-sm;
     @apply text-wrap;
 }
-div.card-grid > div.card > div.btn-con {
+div.card-grid div.card div.btn-con {
     @apply mt-2 flex items-center justify-between gap-x-1;
 }
-div.card-grid > div.card > div.btn-con > button {
+div.card-grid div.card div.btn-con button {
     @apply h-full first:w-full;
 }
 
 main.tree {
     @apply flex flex-col gap-y-4;
 }
-main.tree > .levels,
-main.tree > .opened-levels {
+main.tree .levels,
+main.tree .opened-levels {
     @apply grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-x-2 gap-y-2;
 }
-main.tree > .opened-levels > .opened-level {
+main.tree .opened-levels .opened-level {
     @apply col-1 flex flex-row items-center justify-between rounded-md border border-border ps-1;
 }
-main.tree > .levels > .level {
+main.tree .levels .level {
     @apply flex flex-row items-center justify-between rounded-md border border-border p-2;
 }
