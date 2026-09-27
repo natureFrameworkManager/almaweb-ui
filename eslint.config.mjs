@@ -130,19 +130,10 @@ export default [
             "jsdoc/require-throws-description": "error",
             "jsdoc/text-escaping": ["warn", { escapeHTML: true, escapeMarkdown: true }],
             "jsdoc/sort-tags": "warn",
-            "jsdoc/type-formatting": "warn",
-            "jsdoc/check-types": [
-                "warn",
-                {
-                    noDefaults: true,
-                    exemptTagContexts: [
-                        { tag: "typedef", types: true },
-                        { tag: "property", types: true },
-                    ],
-                },
-            ],
-            "jsdoc/valid-types": "error",
-            "jsdoc/no-undefined-types": ["warn", { disableReporting: false }],
+            // TypeScript owns function and property types in .ts files.
+            "jsdoc/require-param-type": "off",
+            "jsdoc/require-property-type": "off",
+            "jsdoc/require-returns-type": "off",
         },
     },
 ];
