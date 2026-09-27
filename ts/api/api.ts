@@ -2,6 +2,12 @@ import type { Module, Course, Event, Exam, Staff, Location } from "./types";
 
 const host = "https://api.casparkroll.de/almaweb/v1";
 
+/**
+ * Fetch JSON data from the remote API.
+ * @param endpoint - API endpoint path.
+ * @param options - Optional fetch options.
+ * @returns The decoded JSON response.
+ */
 async function fetchApi(endpoint: string, options?: RequestInit) {
     const response = await fetch(`${host}${endpoint}`, options);
     if (!response.ok) {
@@ -10,6 +16,12 @@ async function fetchApi(endpoint: string, options?: RequestInit) {
     return response.json();
 }
 
+/**
+ * Fetch JSON data from a local fixture.
+ * @param endpoint - Fixture path.
+ * @param options - Optional fetch options.
+ * @returns The decoded JSON response.
+ */
 async function fetchLocal(endpoint: string, options?: RequestInit) {
     const response = await fetch(`${endpoint}`, options);
     if (!response.ok) {
@@ -20,7 +32,7 @@ async function fetchLocal(endpoint: string, options?: RequestInit) {
 
 /**
  * Fetch module data from the local fixture.
- * @returns {Promise<{count: number, page: number, limit: number, total_pages: number, items: Module[]}>} Module response data.
+ * @returns The module response data.
  */
 export async function getModules(): Promise<{
     count: number;
@@ -34,7 +46,7 @@ export async function getModules(): Promise<{
 
 /**
  * Fetch course data from the local fixture.
- * @returns {Promise<{count: number, page: number, limit: number, total_pages: number, items: Course[]}>} Course response data.
+ * @returns The course response data.
  */
 export async function getCourses(): Promise<{
     count: number;
@@ -48,7 +60,7 @@ export async function getCourses(): Promise<{
 
 /**
  * Fetch event data from the local fixture.
- * @returns {Promise<{count: number, page: number, limit: number, total_pages: number, items: Event[]}>} Event response data.
+ * @returns The event response data.
  */
 export async function getEvents(): Promise<{
     count: number;
@@ -62,7 +74,7 @@ export async function getEvents(): Promise<{
 
 /**
  * Fetch exam data from the local fixture.
- * @returns {Promise<{count: number, page: number, limit: number, total_pages: number, items: Exam[]}>} Exam response data.
+ * @returns The exam response data.
  */
 export async function getExams(): Promise<{
     count: number;
@@ -76,7 +88,7 @@ export async function getExams(): Promise<{
 
 /**
  * Fetch staff data from the API.
- * @returns {Promise<{count: number, page: number, limit: number, total_pages: number, items: Staff[]}>} Staff response data.
+ * @returns The staff response data.
  */
 export async function getStaff(): Promise<{
     count: number;
@@ -90,7 +102,7 @@ export async function getStaff(): Promise<{
 
 /**
  * Fetch location data from the API.
- * @returns {Promise<{count: number, page: number, limit: number, total_pages: number, items: Location[]}>} Location response data.
+ * @returns The location response data.
  */
 export async function getLocations(): Promise<{
     count: number;
