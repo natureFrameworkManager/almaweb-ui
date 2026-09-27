@@ -82,29 +82,43 @@
 }
 
 .input-container {
-    @apply flex flex-col;
+    @apply flex flex-col-reverse;
 }
 .input-container input,
 .input-container textarea,
 .input-container select {
     @apply rounded-md border border-border bg-background px-3 py-2 text-text;
+    @apply w-full;
 }
 .input-container select {
     @apply pe-4;
 }
 .input-container label {
-    @apply ps-2 pt-0.5 text-label-medium text-text;
+    @apply ps-2 pb-0.5 text-label-medium text-text;
 }
 .input-container.slim input,
 .input-container.slim textarea,
 .input-container.slim select {
     @apply px-2 py-1;
 }
+.input-container.range div {
+    @apply grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-x-2;
+}
+.input-container.range div::before {
+    content: "-";
+    @apply text-text col-2 row-1;
+}
+.input-container.range div > input:first-of-type {
+    @apply col-1 row-1;
+}
+.input-container.range div > input:last-of-type {
+    @apply col-3 row-1;
+}
 
 body {
-    @apply min-h-screen;
+    @apply min-h-screen max-w-screen;
     @apply bg-background text-body-medium leading-[1.2] text-text;
-    @apply grid grid-cols-[330px_auto_auto] grid-rows-[max-content_auto];
+    @apply grid grid-cols-[330px_1fr_1fr] grid-rows-[max-content_auto];
 }
 
 header#top-header {
