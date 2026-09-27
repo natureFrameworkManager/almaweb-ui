@@ -9,7 +9,7 @@ export default [
     ...tseslint.configs.recommended,
     prettier,
     {
-        ignores: ["dist/**", "node_modules", "eslint.config.mjs", "css/css.css"],
+        ignores: ["**/dist/**", "node_modules", "eslint.config.mjs", "css/css.css"],
     },
     {
         files: ["ts/**/*.ts"],

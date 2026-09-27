@@ -14,12 +14,9 @@ import "fullcalendar/themes/monarch/theme.css";
 import type { Module, Course, Event, Exam, Staff, Location } from "./api/types";
 import { getCourses, getEvents, getExams, getModules, getStaff, getLocations } from "./api/api";
 
-const calendarElementId = "calendar";
 const THEME_STORAGE_KEY = "almaweb-theme";
 
 type ThemeMode = "system" | "dark" | "light";
-
-let calendarInstance = null;
 
 function isThemeMode(value: string | null): value is ThemeMode {
     return value === "system" || value === "dark" || value === "light";
@@ -50,13 +47,13 @@ function initTheme() {
     handleThemeChange(theme);
 }
 
-function initCal() {
-    const calendarElement = document.querySelector(`#${calendarElementId}`) as HTMLElement | null;
+function initCal(elementId: string): Calendar {
+    const calendarElement = document.querySelector(`#${elementId}`) as HTMLElement | null;
     if (!calendarElement) {
-        throw new Error(`Calendar element with ID "${calendarElementId}" not found.`);
+        throw new Error(`Calendar element with ID "${elementId}" not found.`);
     }
 
-    calendarInstance = new Calendar(calendarElement, {
+    const calendar = new Calendar(calendarElement, {
         initialView: "listMonth",
         locale: "de",
         eventMaxStack: 4,
@@ -78,7 +75,8 @@ function initCal() {
         noEventsContent: "Keine anzuzeigenden Termine",
         plugins: [themePlugin, dayGridPlugin, timeGridPlugin, listPlugin, multiMonthPlugin],
     });
-    calendarInstance.render();
+    calendar.render();
+    return calendar;
 }
 
 type EntityView = {
@@ -100,27 +98,35 @@ function createInfoSpan(spec: InfoSpec): HTMLSpanElement {
     return span;
 }
 
+function appendHeading(parent: HTMLElement, level: "h1" | "h2", text: string): void {
+    const heading = document.createElement(level);
+    heading.textContent = text;
+    parent.appendChild(heading);
+}
+
+function appendInfoContainer(parent: HTMLElement, infos: InfoSpec[]): void {
+    const infoContainer = document.createElement("div");
+    infoContainer.className = "info-container";
+    infos.forEach(info => infoContainer.appendChild(createInfoSpan(info)));
+    parent.appendChild(infoContainer);
+}
+
+function createActionButton(className: string, text: string): HTMLButtonElement {
+    const button = document.createElement("button");
+    button.className = className;
+    button.textContent = text;
+    return button;
+}
+
 function createListItem(view: EntityView): HTMLLIElement {
     const item = document.createElement("li");
     item.className = "list-item";
-
-    const name = document.createElement("h1");
-    name.textContent = view.name;
-    item.appendChild(name);
+    appendHeading(item, "h1", view.name);
     if (view.number) {
-        const number = document.createElement("h2");
-        number.textContent = view.number;
-        item.appendChild(number);
+        appendHeading(item, "h2", view.number);
     }
-    const infoContainer = document.createElement("div");
-    infoContainer.className = "info-container";
-    view.listInfos.forEach(info => infoContainer.appendChild(createInfoSpan(info)));
-    item.appendChild(infoContainer);
-
-    const saveButton = document.createElement("button");
-    saveButton.className = "btn material-symbols";
-    saveButton.textContent = "save";
-    item.appendChild(saveButton);
+    appendInfoContainer(item, view.listInfos);
+    item.appendChild(createActionButton("btn material-symbols", "save"));
 
     return item;
 }
@@ -128,30 +134,16 @@ function createListItem(view: EntityView): HTMLLIElement {
 function createCard(view: EntityView): HTMLDivElement {
     const card = document.createElement("div");
     card.className = "card";
-
-    const name = document.createElement("h1");
-    name.textContent = view.name;
-    card.appendChild(name);
+    appendHeading(card, "h1", view.name);
     if (view.number) {
-        const number = document.createElement("h2");
-        number.textContent = view.number;
-        card.appendChild(number);
+        appendHeading(card, "h2", view.number);
     }
-    const infoContainer = document.createElement("div");
-    infoContainer.className = "info-container";
-    view.cardInfos.forEach(info => infoContainer.appendChild(createInfoSpan(info)));
-    card.appendChild(infoContainer);
+    appendInfoContainer(card, view.cardInfos);
 
     const btnCon = document.createElement("div");
     btnCon.className = "btn-con";
-    const detailButton = document.createElement("button");
-    detailButton.className = "btn";
-    detailButton.textContent = "Mehr Details";
-    btnCon.appendChild(detailButton);
-    const saveButton = document.createElement("button");
-    saveButton.className = "btn material-symbols";
-    saveButton.textContent = "save";
-    btnCon.appendChild(saveButton);
+    btnCon.appendChild(createActionButton("btn", "Mehr Details"));
+    btnCon.appendChild(createActionButton("btn material-symbols", "save"));
     card.appendChild(btnCon);
 
     return card;
@@ -179,38 +171,52 @@ function formatTimeRange(start: string, end: string): string {
     return `${start.slice(0, 5)} - ${end.slice(0, 5)}`;
 }
 
-function moduleToView(module: Module): EntityView {
+function addInfoIfPresent(infos: InfoSpec[], className: string, text: string): void {
+    if (text) {
+        infos.push({ className, text });
+    }
+}
+
+function getModulePathLabels(module: Module): string[] {
+    return normalizePath(module.path, module.faculty.name).map(el => el.join(" > "));
+}
+
+function getModuleListInfos(module: Module): InfoSpec[] {
     const listInfos: InfoSpec[] = [{ className: "module-credits", text: `${module.credits ? module.credits : "?"} LP` }];
-    if (module.duration_semesters) {
-        listInfos.push({ className: "module-duration", text: `${module.duration_semesters} Semester` });
-    }
-    if (module.frequency) {
-        listInfos.push({ className: "module-frequency", text: module.frequency });
-    }
-    if (module.language) {
-        listInfos.push({ className: "module-language", text: module.language });
-    }
+    addInfoIfPresent(listInfos, "module-duration", module.duration_semesters ? `${module.duration_semesters} Semester` : "");
+    addInfoIfPresent(listInfos, "module-frequency", module.frequency);
+    addInfoIfPresent(listInfos, "module-language", module.language);
     listInfos.push({ className: "module-faculty", text: module.faculty.name });
-    if (module.path.length > 0) {
-        listInfos.push({ className: "module-path", text: normalizePath(module.path, module.faculty.name).map(el => el.join(" > ")).join(" / ") });
+    if (module.duration_semesters) {
+        addInfoIfPresent(listInfos, "module-path", getModulePathLabels(module).join(" / "));
     }
     if (module.courses.length > 0) {
-        listInfos.push({ className: "module-course-types", text: [...new Set(module.courses.map(course => course.type.name))].join(", ") });
+        addInfoIfPresent(listInfos, "module-course-types", [...new Set(module.courses.map(course => course.type.name))].join(", "));
     }
     if (module.exams.length > 0) {
-        listInfos.push({ className: "module-exam-types", text: [...new Set(module.exams.map(exam => exam.name))].join(", ") });
+        addInfoIfPresent(listInfos, "module-exam-types", [...new Set(module.exams.map(exam => exam.name))].join(", "));
     }
+    return listInfos;
+}
 
+function getModuleCardInfos(module: Module): InfoSpec[] {
     const cardInfos: InfoSpec[] = [{ className: "module-credits", text: `${module.credits ? module.credits : "?"} LP` }];
-    if (module.duration_semesters) {
-        cardInfos.push({ className: "module-duration", text: `${module.duration_semesters} Semester` });
-    }
+    addInfoIfPresent(cardInfos, "module-duration", module.duration_semesters ? `${module.duration_semesters} Semester` : "");
     cardInfos.push({ className: "module-faculty", text: module.faculty.name });
     if (module.path.length > 0) {
-        cardInfos.push({ className: "module-path", text: [...new Set(normalizePath(module.path, module.faculty.name).map(el => el[el.length - 1]))].join(" / ") });
+        const pathLabels = getModulePathLabels(module).map(path => path.split(" > ").at(-1) ?? "");
+        addInfoIfPresent(cardInfos, "module-path", [...new Set(pathLabels)].join(" / "));
     }
+    return cardInfos;
+}
 
-    return { name: module.name, number: module.number, listInfos, cardInfos };
+function moduleToView(module: Module): EntityView {
+    return {
+        name: module.name,
+        number: module.number,
+        listInfos: getModuleListInfos(module),
+        cardInfos: getModuleCardInfos(module),
+    };
 }
 
 function courseToView(course: Course): EntityView {
@@ -275,78 +281,74 @@ function staffToView(staff: Staff): EntityView {
     return { name: staff.name, number: null, listInfos: [], cardInfos: [] };
 }
 
-function locationToView(location: Location): EntityView {
-    const listInfos: InfoSpec[] = [
-        location.type ? { className: "location-type", text: location.type } : null,
-        location.seats ? { className: "location-seats", text: `${location.seats ?? "?"} Plätze` } : null,
-        location.accessibility ? { className: "location-accessibility", text: location.accessibility } : null,
-        location.building.name ? { className: "location-building", text: `${location.building.name} - ${location.building.address}` } : null,
-    ].filter(info => info !== null);
-    const cardInfos: InfoSpec[] = [
-        location.type ? { className: "location-type", text: location.type } : null,
-        location.seats ? { className: "location-seats", text: `${location.seats ?? "?"} Plätze` } : null,
-    ].filter(info => info !== null);
-
-    return { name: location.name, number: location.external_id, listInfos, cardInfos };
+function getLocationInfos(location: Location, includeDetails: boolean): InfoSpec[] {
+    const infos: InfoSpec[] = [];
+    addInfoIfPresent(infos, "location-type", location.type);
+    addInfoIfPresent(infos, "location-seats", location.seats ? `${location.seats} Plätze` : "");
+    if (includeDetails) {
+        addInfoIfPresent(infos, "location-accessibility", location.accessibility);
+        addInfoIfPresent(infos, "location-building", location.building.name ? `${location.building.name} - ${location.building.address}` : "");
+    }
+    return infos;
 }
 
-function displayTree(modules: Module[]) {
-    const treeContainer = document.querySelector("main.tree") as HTMLElement;
+function locationToView(location: Location): EntityView {
+    return {
+        name: location.name,
+        number: location.external_id,
+        listInfos: getLocationInfos(location, true),
+        cardInfos: getLocationInfos(location, false),
+    };
+}
+
+function createOpenedLevels(openedLevels: string[]): HTMLDivElement {
+    const container = document.createElement("div");
+    container.id = "opened-levels";
+    openedLevels.forEach(level => {
+        const levelElement = document.createElement("div");
+        levelElement.className = "opened-level";
+        const title = document.createElement("span");
+        title.textContent = level === "Root" ? "Wurzel" : level;
+        levelElement.appendChild(title);
+        levelElement.appendChild(createActionButton("btn slim material-symbols", "reply_all"));
+        container.appendChild(levelElement);
+    });
+    return container;
+}
+
+function createTreeLevel(levelName: string): HTMLDivElement {
+    const levelElement = document.createElement("div");
+    levelElement.className = "level";
+    const title = document.createElement("span");
+    title.textContent = levelName;
+    levelElement.appendChild(title);
+    levelElement.appendChild(createActionButton("btn slim material-symbols", "keyboard_double_arrow_right"));
+    return levelElement;
+}
+
+function createTreeLevels(level: TreeNode): HTMLDivElement {
+    const container = document.createElement("div");
+    container.id = "levels";
+    Object.keys(level)
+        .filter(key => key !== "_modules")
+        .map(createTreeLevel)
+        .forEach(levelElement => container.appendChild(levelElement));
+    return container;
+}
+
+function displayTree(modules: Module[], paneId: 1 | 2): void {
+    const treeContainer = document.querySelector(`#tree${paneId}`) as HTMLElement | null;
     if (!treeContainer) {
         console.error("Tree view container is missing.");
         return;
     }
     const treeData = computeTreeData(modules);
-    console.log(treeData);
-    
     treeContainer.innerHTML = "";
 
-    // show opened levels
-    // Fallback:
     const openedLevels = ["Root", "SoSe 2025", "01 - Theologische Fakultät"];
     const level = getTreeLevel(treeData, openedLevels);
-
-    const openedLevelsContainer = document.createElement("div");
-    openedLevelsContainer.id = "opened-levels";
-    openedLevels.forEach(level => {
-        const levelElement = document.createElement("div");
-        levelElement.className = "opened-level";
-        const levelElementTitle = document.createElement("span");
-        levelElementTitle.textContent = level === "Root" ? "Wurzel" : level;
-        levelElement.appendChild(levelElementTitle);
-        const levelButton = document.createElement("button");
-        levelButton.className = "btn slim material-symbols";
-        levelButton.textContent = "reply_all";
-        levelElement.appendChild(levelButton);
-        openedLevelsContainer.appendChild(levelElement);
-    });
-    treeContainer.appendChild(openedLevelsContainer);
-
-    const levelsContainer = document.createElement("div");
-    levelsContainer.id = "levels";
-    // Display the current tree level based on the opened levels
-    // Case 1: Object keys represent sub-levels in the tree
-    // Case 2: Leaf nodes contain module IDs
-    if (Object.keys(level).includes("_modules")) {
-        const moduleIds = level._modules ?? [];
-        console.log("Modules at this level:", moduleIds);
-    } else {
-        const subLevels = Object.keys(level).filter(key => key !== "_modules");
-        const subLevelElements = subLevels.map(subLevel => {
-            const subLevelElement = document.createElement("div");
-            subLevelElement.className = "level";
-            const subLevelTitle = document.createElement("span");
-            subLevelTitle.textContent = subLevel;
-            subLevelElement.appendChild(subLevelTitle);
-            const subLevelButton = document.createElement("button");
-            subLevelButton.className = "btn slim material-symbols";
-            subLevelButton.textContent = "keyboard_double_arrow_right";
-            subLevelElement.appendChild(subLevelButton);
-            return subLevelElement;
-        });
-        subLevelElements.forEach(el => levelsContainer.appendChild(el));
-    }
-    treeContainer.appendChild(levelsContainer);
+    treeContainer.appendChild(createOpenedLevels(openedLevels));
+    treeContainer.appendChild(createTreeLevels(level));
 }
 
 function normalizePath(path: string[][], faculty: string): string[][] {
@@ -361,8 +363,8 @@ function normalizePath(path: string[][], faculty: string): string[][] {
     });
 }
 
-function getTreeLevel(tree: Record<string, TreeNode>, path: string[]): Record<string, TreeNode> {
-    return path.reduce<Record<string, TreeNode>>((currentLevel, segment) => {
+function getTreeLevel(tree: TreeNode, path: string[]): TreeNode {
+    return path.reduce<TreeNode>((currentLevel, segment) => {
         if (!currentLevel[segment]) {
             currentLevel[segment] = {};
         }
@@ -371,12 +373,12 @@ function getTreeLevel(tree: Record<string, TreeNode>, path: string[]): Record<st
 }
 
 type TreeNode = {
-    [key: string]: TreeNode | Module["id"][];
+    [key: string]: TreeNode | Module["id"][] | undefined;
     _modules?: Module["id"][];
 };
 
-function computeTreeData(modules: Module[]): Record<string, TreeNode> {
-    const tree: Record<string, TreeNode> = {};
+function computeTreeData(modules: Module[]): TreeNode {
+    const tree: TreeNode = {};
     modules.forEach(module => {
         module.path.forEach(path => {
             const lastNode = path.reduce<TreeNode>((currentLevel, segment) => {
@@ -395,7 +397,26 @@ const activeMainViews: Record<1 | 2, string> = { 1: "list", 2: "list" };
 
 // List/cards switching within a pane is handled purely by CSS reacting to the "active" class; here we
 // only need to toggle which top-level main (list-card-view/calendar/tree) is visible per pane.
-function switchMainView(paneId: 1 | 2, view: string) {
+function setPaneViewVisibility(elements: HTMLElement[], visible: boolean): void {
+    elements.forEach(element => {
+        element.style.display = visible ? "" : "none";
+    });
+}
+
+function isPaneVisible(paneId: 1 | 2): boolean {
+    const viewMode = document.body.dataset.viewMode ?? "single";
+    return paneId === 1 ? viewMode !== "compare" : viewMode === "split";
+}
+
+function isListCardView(view: string): boolean {
+    return view === "list" || view === "cards";
+}
+
+function updatePaneView(element: HTMLElement, paneIsVisible: boolean, view: string, expectedView: string): void {
+    setPaneViewVisibility([element], paneIsVisible && view === expectedView);
+}
+
+function switchMainView(paneId: 1 | 2, view: string): void {
     const listCardView = document.querySelector(`#list-card-view${paneId}`) as HTMLElement | null;
     const calendarView = document.querySelector(`#calendar${paneId}`) as HTMLElement | null;
     const treeView = document.querySelector(`#tree${paneId}`) as HTMLElement | null;
@@ -406,12 +427,11 @@ function switchMainView(paneId: 1 | 2, view: string) {
     }
 
     activeMainViews[paneId] = view;
-    const viewMode = document.body.dataset.viewMode ?? "single";
-    const paneIsVisible = paneId === 1 ? viewMode !== "compare" : viewMode === "split";
+    const paneIsVisible = isPaneVisible(paneId);
 
-    listCardView.style.display = paneIsVisible && (view === "list" || view === "cards") ? "" : "none";
-    calendarView.style.display = paneIsVisible && view === "calendar" ? "" : "none";
-    treeView.style.display = paneIsVisible && view === "tree" ? "" : "none";
+    setPaneViewVisibility([listCardView], paneIsVisible && isListCardView(view));
+    updatePaneView(calendarView, paneIsVisible, view, "calendar");
+    updatePaneView(treeView, paneIsVisible, view, "tree");
 }
 
 function switchViewMode(mode: "single" | "split" | "compare") {
@@ -453,10 +473,11 @@ switchViewMode("single");
 switchMainView(1, "list");
 switchMainView(2, "list");
 
-// initCal();
+const calendars = [initCal("calendar1"), initCal("calendar2")];
 getModules().then(modules => {
     renderEntities("modules", modules.items.sort((a, b) => a.name.localeCompare(b.name)), moduleToView);
-    displayTree(modules.items);
+    displayTree(modules.items, 1);
+    displayTree(modules.items, 2);
 }).catch(error => {
     console.error("Failed to fetch modules:", error);
 });
@@ -473,11 +494,19 @@ getExams().then(exams => {
     console.error("Failed to fetch exams:", error);
 });
 
-// getEvents().then(events => {
-//     renderEntities("events", events.items.sort((a, b) => a.event_date.localeCompare(b.event_date)), eventToView);
-// }).catch(error => {
-//     console.error("Failed to fetch events:", error);
-// });
+getEvents().then(events => {
+    const sortedEvents = events.items.sort((a, b) => a.event_date.localeCompare(b.event_date));
+    renderEntities("events", sortedEvents, eventToView);
+    const calendarEvents = sortedEvents.map(event => ({
+        id: String(event.id),
+        title: event.name || event.location.name,
+        start: `${event.event_date}T${event.start_time}`,
+        end: `${event.event_date}T${event.end_time}`,
+    }));
+    calendars.forEach(calendar => calendar.addEventSource(calendarEvents));
+}).catch(error => {
+    console.error("Failed to fetch events:", error);
+});
 
 getStaff().then(staff => {
     renderEntities("staff", staff.items.sort((a, b) => a.name.localeCompare(b.name)), staffToView);
