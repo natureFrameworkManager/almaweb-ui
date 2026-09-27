@@ -168,20 +168,21 @@ div#filter-options {
     @apply col-1 row-start-1 row-end-3;
     @apply flex flex-col gap-y-4 px-1 py-2;
 }
-div#filter-options > div.filter-group {
+div#filter-options > details.filter-group {
     @apply flex flex-col gap-y-2;
 }
-div#filter-options > div.filter-group > h3 {
+div#filter-options > details.filter-group > summary {
+    @apply cursor-pointer list-none;
     @apply text-title-small font-semibold;
 }
-div#filter-options > div.filter-group > div.checkbox-list {
+div#filter-options > details.filter-group > div.checkbox-list {
     @apply flex flex-col gap-y-1;
 }
-div#filter-options > div.filter-group > div.checkbox-list > label.checkbox-item {
+div#filter-options > details.filter-group > div.checkbox-list > label.checkbox-item {
     @apply flex cursor-pointer flex-row items-center gap-x-2;
 }
 div#filter-options
-    > div.filter-group
+    > details.filter-group
     > div.checkbox-list
     > label.checkbox-item
     > input[type="checkbox"] {
