@@ -50,7 +50,7 @@ function initCal() {
 }
 
 function displayModuleList(modules: Module[]) {
-    const moduleListElement = document.querySelector("ul#module-list") as HTMLElement | null;
+    const moduleListElement = document.querySelector("ul.module-list") as HTMLElement | null;
     if (!moduleListElement) {
         throw new Error(`Module list element with ID "module-list" not found.`);
     }
@@ -129,7 +129,7 @@ function displayModuleList(modules: Module[]) {
 }
 
 function displayModuleCards(modules: Module[]) {
-    const moduleListElement = document.querySelector("div#module-card-grid") as HTMLElement | null;
+    const moduleListElement = document.querySelector("div.module-card-grid") as HTMLElement | null;
     if (!moduleListElement) {
         throw new Error(`Module list element with ID "module-card-grid" not found.`);
     }
@@ -184,7 +184,7 @@ function displayModuleCards(modules: Module[]) {
 }
 
 function displayTree(modules: Module[]) {
-    const treeContainer = document.querySelector("main#tree") as HTMLElement;
+    const treeContainer = document.querySelector("main.tree") as HTMLElement;
     if (!treeContainer) {
         console.error("Tree view container is missing.");
         return;
@@ -285,10 +285,10 @@ function computeTreeData(modules: Module[]): Record<string, TreeNode> {
 }
 
 function switchView(view: "list" | "cards" | "calendar" | "tree") {
-    const listView = document.querySelector("ul#module-list") as HTMLUListElement;
-    const cardView = document.querySelector("div#module-card-grid") as HTMLDivElement;
-    const calendarView = document.querySelector("main#calendar") as HTMLElement;
-    const treeView = document.querySelector("main#tree") as HTMLElement;
+    const listView = document.querySelector("ul.module-list") as HTMLUListElement;
+    const cardView = document.querySelector("div.module-card-grid") as HTMLDivElement;
+    const calendarView = document.querySelector("main.calendar") as HTMLElement;
+    const treeView = document.querySelector("main.tree") as HTMLElement;
 
     if (!listView || !cardView || !calendarView || !treeView) {
         console.error("One or more view elements are missing.");
@@ -300,7 +300,7 @@ function switchView(view: "list" | "cards" | "calendar" | "tree") {
     calendarView.style.display = view === "calendar" ? "" : "none";
     treeView.style.display = view === "tree" ? "" : "none";
 
-    const mainContainer = document.querySelector("main#list-card-view") as HTMLElement;
+    const mainContainer = document.querySelector("main.list-card-view") as HTMLElement;
     if (view !== "list" && view !== "cards" && mainContainer) {
         mainContainer.style.display = "none";
     } else if (mainContainer) {

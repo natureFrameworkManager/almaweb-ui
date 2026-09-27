@@ -115,9 +115,9 @@
                 <button class="btn slim">Filter zurücksetzen</button>
             </div>
         </div>
-        <main id="list-card-view">
-            <header id="list-card-view-header">
-                <div id="type-switcher">
+        <main class="list-card-view" id="list-card-view1">
+            <header class="list-card-view-header" id="list-card-view-header1">
+                <div class="type-switcher" id="type-switcher1">
                     <span data-view="modules" class="active">Module</span>
                     <span data-view="courses">Kurse</span>
                     <span data-view="events">Veranstaltungen</span>
@@ -125,11 +125,11 @@
                     <span data-view="staff">Mitarbeitende</span>
                     <span data-view="locations">Räumlichkeiten</span>
                 </div>
-                <div id="multi-level-sort">
+                <div class="multi-level-sort" id="multi-level-sort1">
                     <span>Sortieren nach</span>
                 </div>
             </header>
-            <ul id="module-list" style="display: none;">
+            <ul class="module-list" id="module-list1" style="display: none;">
                 <li class="module-list-item">
                     <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
                     <h2 class="module-number">10-201-2011</h2>
@@ -151,7 +151,58 @@
                     <button class="btn material-symbols">save</button>
                 </li>
             </ul>
-            <div class="card-grid" id="module-card-grid">
+            <div class="module-card-grid" id="module-card-grid1">
+                <div class="card">
+                    <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
+                    <h2 class="module-number">10-201-2011</h2>
+                    <span class="module-info module-credits">3 LP</span>
+                    <span class="module-info module-duration">1 Semester</span>
+                    <span class="module-info module-faculty">Informatik</span>
+                    <span class="module-info module-path">Pflichtmodule</span>
+                    <div class="module-btn-con">
+                        <button class="btn">Mehr Details</button>
+                        <button class="btn material-symbols">save</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <main class="list-card-view" id="list-card-view2">
+            <header class="list-card-view-header" id="list-card-view-header2">
+                <div class="type-switcher" id="type-switcher2">
+                    <span data-view="modules" class="active">Module</span>
+                    <span data-view="courses">Kurse</span>
+                    <span data-view="events">Veranstaltungen</span>
+                    <span data-view="exams">Prüfungen</span>
+                    <span data-view="staff">Mitarbeitende</span>
+                    <span data-view="locations">Räumlichkeiten</span>
+                </div>
+                <div class="multi-level-sort" id="multi-level-sort2">
+                    <span>Sortieren nach</span>
+                </div>
+            </header>
+            <ul class="module-list" id="module-list2" style="display: none;">
+                <li class="module-list-item">
+                    <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
+                    <h2 class="module-number">10-201-2011</h2>
+                    <div class="module-info-container">
+                        <span class="module-info module-credits">3 LP</span>
+                        <span class="module-info module-duration">1 Semester</span>
+                        <span class="module-info module-frequency">jedes Wintersemester</span>
+                        <span class="module-info module-language">Deutsch</span>
+                    </div>
+                    <div class="module-info-container">
+                        <span class="module-info module-faculty">Informatik</span>
+                        <span class="module-info module-path"
+                            >Informatik (Bachelor of Science) > Pflichtmodule</span
+                        >
+                    </div>
+                    <span class="module-info module-course-types">Vorlesung, Übung, Seminar</span>
+                    <span class="module-info module-exam-types">Klausur, Hausarbeit</span>
+
+                    <button class="btn material-symbols">save</button>
+                </li>
+            </ul>
+            <div class="module-card-grid" id="module-card-grid2">
                 <div class="card">
                     <h1 class="module-name">Algorithmen und Datenstrukturen 1</h1>
                     <h2 class="module-number">10-201-2011</h2>
@@ -167,20 +218,45 @@
             </div>
         </main>
         <main
-            id="calendar"
+        class="calendar"
+            id="calendar1"
             style="display: none"
         ></main>
         <main
-            id="tree"
+        class="calendar"
+            id="calendar2"
+            style="display: none"
+        ></main>
+        <main
+        class="tree"
+            id="tree1"
             style="display: none"
         >
-            <div id="opened-levels">
+            <div class="opened-levels" id="opened-levels1">
                 <div class="opened-level">
                     <span>Wurzel</span>
                     <button class="btn slim material-symbols">reply_all</button>
                 </div>
             </div>
-            <div id="levels">
+            <div class="levels" id="levels1">
+                <div class="level">
+                    <span>Analysis</span>
+                    <button class="btn slim material-symbols">keyboard_double_arrow_right</button>
+                </div>
+            </div>
+        </main>
+        <main
+        class="tree"
+            id="tree2"
+            style="display: none"
+        >
+            <div class="opened-levels" id="opened-levels2">
+                <div class="opened-level">
+                    <span>Wurzel</span>
+                    <button class="btn slim material-symbols">reply_all</button>
+                </div>
+            </div>
+            <div class="levels" id="levels2">
                 <div class="level">
                     <span>Analysis</span>
                     <button class="btn slim material-symbols">keyboard_double_arrow_right</button>

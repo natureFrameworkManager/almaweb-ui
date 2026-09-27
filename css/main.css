@@ -115,12 +115,12 @@
 body {
     @apply min-h-screen;
     @apply bg-background text-body-medium leading-[1.2] text-on-background;
-    @apply grid grid-cols-[330px_auto] grid-rows-[max-content_auto];
+    @apply grid grid-cols-[330px_auto_auto] grid-rows-[max-content_auto];
 }
 
 header#top-header {
     @apply border-b border-border;
-    @apply col-2 row-1 pe-2 pt-3 pb-2;
+    @apply col-start-2 col-end-4 row-1 pe-2 pt-3 pb-2;
     @apply grid grid-cols-[max-content_max-content_auto] grid-rows-[max-content_max-content] gap-y-2;
 }
 header#top-header > nav {
@@ -184,104 +184,114 @@ div#filter-options
     > input[type="checkbox"] {
     @apply h-4 w-4 accent-primary;
 }
-main#list-card-view {
-    @apply col-2 row-2;
+main.list-card-view {
     @apply flex flex-col px-2 py-2;
 }
-main#calendar,
-main#tree {
-    @apply col-start-1 col-end-3 row-2;
+main.calendar,
+main.tree {
     @apply flex flex-col px-2 py-2;
+}
+main.list-card-view#list-card-view1 {
+    @apply col-2 row-2;
+}
+main.list-card-view#list-card-view2 {
+    @apply col-3 row-2;
+}
+main.calendar#calendar1 {
+    @apply col-start-1 col-end-3 row-2;
+}
+main.calendar#calendar2 {
+    @apply col-start-1 col-end-3 row-2;
 }
 
-header#list-card-view-header {
+header.list-card-view-header {
     @apply mb-4 flex flex-row items-end justify-between;
 }
-header#list-card-view-header > div#type-switcher {
+header.list-card-view-header > div.type-switcher {
     @apply flex flex-row items-end;
 }
-header#list-card-view-header > div#type-switcher > span {
+header.list-card-view-header > div.type-switcher > span {
     @apply cursor-pointer px-2 text-lg;
     @apply border-b-2 border-transparent;
     @apply hover:border-primary;
 }
-header#list-card-view-header > div#type-switcher > span.active {
+header.list-card-view-header > div.type-switcher > span.active {
     @apply border-b-2 border-primary;
 }
-header#list-card-view-header > div#multi-level-sort {
+header.list-card-view-header > div.multi-level-sort {
     @apply cursor-pointer;
     @apply border border-border;
     @apply rounded-md px-2 py-1;
     @apply bg-surface text-on-surface;
 }
-ul#module-list {
+ul.module-list {
     @apply m-0 list-none overflow-y-auto p-0;
 }
-ul#module-list > li.module-list-item {
+ul.module-list > li.module-list-item {
     @apply border-b border-border p-2 last:border-b-0;
     @apply grid grid-cols-[auto_auto_auto_auto] grid-rows-[auto_auto] items-center gap-x-2 gap-y-1;
 }
-ul#module-list > li.module-list-item > h1 {
+ul.module-list > li.module-list-item > h1 {
     @apply col-1 row-1 text-lg font-bold text-wrap;
 }
-ul#module-list > li.module-list-item > h2 {
+ul.module-list > li.module-list-item > h2 {
     @apply col-1 row-2 flex h-full flex-col font-semibold;
 }
-ul#module-list > li.module-list-item > div.module-info-container {
+ul.module-list > li.module-list-item > div.module-info-container {
     @apply col-2 flex flex-row flex-nowrap gap-2 overflow-x-auto;
 }
-ul#module-list > li.module-list-item span.module-info {
+ul.module-list > li.module-list-item span.module-info {
     @apply w-fit rounded-full border border-border px-2 py-1;
     @apply bg-primary/20 text-sm;
     @apply text-nowrap;
 }
-ul#module-list > li.module-list-item span.module-info.module-course-types {
+ul.module-list > li.module-list-item span.module-info.module-course-types {
     @apply col-3 row-1;
 }
-ul#module-list > li.module-list-item span.module-info.module-exam-types {
+ul.module-list > li.module-list-item span.module-info.module-exam-types {
     @apply col-3 row-2;
 }
-ul#module-list > li.module-list-item > button {
+ul.module-list > li.module-list-item > button {
     @apply col-4 row-start-1 row-end-3 justify-self-end;
 }
-div#module-card-grid {
+div.module-card-grid {
     @apply grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-2;
 }
-div#module-card-grid > div.card {
+div.module-card-grid > div.card {
     @apply rounded-md border border-border px-2 pt-1 pb-2;
     @apply grid grid-cols-[auto_auto] gap-x-1 gap-y-1;
 }
-div#module-card-grid > div.card > h1 {
+div.module-card-grid > div.card > h1 {
     @apply col-span-2 text-lg leading-tight font-bold text-wrap;
 }
-div#module-card-grid > div.card > h2 {
+div.module-card-grid > div.card > h2 {
     @apply col-span-2 mb-2 flex h-full flex-col font-semibold;
 }
-div#module-card-grid > div.card > div.module-info-container {
+div.module-card-grid > div.card > div.module-info-container {
     @apply col-1 flex flex-row flex-wrap gap-2;
 }
-div#module-card-grid > div.card span.module-info {
+div.module-card-grid > div.card span.module-info {
     @apply h-fit w-fit rounded border border-border px-2 py-1;
     @apply bg-primary/20 text-sm;
     @apply text-wrap;
 }
-div#module-card-grid > div.card > div.module-btn-con {
+div.module-card-grid > div.card > div.module-btn-con {
     @apply col-start-1 col-end-3 mt-2 flex items-center justify-between gap-x-1;
 }
-div#module-card-grid > div.card > div.module-btn-con > button {
+div.module-card-grid > div.card > div.module-btn-con > button {
     @apply h-full first:w-full;
 }
 
-main#tree {
+main.tree {
     @apply flex flex-col gap-y-4;
 }
-main#tree > #levels,
-main#tree > #opened-levels {
+main.tree > .levels,
+main.tree > .opened-levels {
     @apply grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-x-2 gap-y-2;
 }
-main#tree > #opened-levels > .opened-level {
+main.tree > .opened-levels > .opened-level {
     @apply col-1 flex flex-row items-center justify-between rounded-md border border-border ps-1;
 }
-main#tree > #levels > .level {
+main.tree > .levels > .level {
     @apply flex flex-row items-center justify-between rounded-md border border-border p-2;
 }
