@@ -359,6 +359,8 @@ function computeTreeData(modules: Module[]): Record<string, TreeNode> {
     return tree;
 }
 
+const activeMainViews: Record<1 | 2, string> = { 1: "list", 2: "list" };
+
 // List/cards switching within a pane is handled purely by CSS reacting to the "active" class; here we
 // only need to toggle which top-level main (list-card-view/calendar/tree) is visible per pane.
 function switchMainView(paneId: 1 | 2, view: string) {
@@ -371,9 +373,26 @@ function switchMainView(paneId: 1 | 2, view: string) {
         return;
     }
 
-    listCardView.style.display = view === "list" || view === "cards" ? "" : "none";
-    calendarView.style.display = view === "calendar" ? "" : "none";
-    treeView.style.display = view === "tree" ? "" : "none";
+    activeMainViews[paneId] = view;
+    const viewMode = document.body.dataset.viewMode ?? "single";
+    const paneIsVisible = paneId === 1 ? viewMode !== "compare" : viewMode === "split";
+
+    listCardView.style.display = paneIsVisible && (view === "list" || view === "cards") ? "" : "none";
+    calendarView.style.display = paneIsVisible && view === "calendar" ? "" : "none";
+    treeView.style.display = paneIsVisible && view === "tree" ? "" : "none";
+}
+
+function switchViewMode(mode: "single" | "split" | "compare") {
+    document.body.dataset.viewMode = mode;
+    switchMainView(1, activeMainViews[1]);
+    switchMainView(2, activeMainViews[2]);
+
+    const compareView = document.querySelector("#compare") as HTMLElement | null;
+    if (!compareView) {
+        console.error("Compare view is missing.");
+        return;
+    }
+    compareView.style.display = mode === "compare" ? "" : "none";
 }
 
 // Marks the clicked item as active (and its siblings as inactive) within a single switcher nav
@@ -389,8 +408,14 @@ function wireSwitcher(navSelector: string, onSelect?: (view: string) => void) {
 
 wireSwitcher("#display-changer1", view => switchMainView(1, view));
 wireSwitcher("#display-changer2", view => switchMainView(2, view));
+wireSwitcher("#view-switcher", view => {
+    if (view === "single" || view === "split" || view === "compare") {
+        switchViewMode(view);
+    }
+});
 wireSwitcher("#type-switcher1");
 wireSwitcher("#type-switcher2");
+switchViewMode("single");
 switchMainView(1, "list");
 switchMainView(2, "list");
 
