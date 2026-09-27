@@ -1,0 +1,93 @@
+/* ==========================================================================
+   mockup/css/tweaks.css — Small helpers referenced by the renderers
+   ========================================================================== */
+
+/* Bulk bar (Section 9.1) */
+.bulk-bar-count {
+    font-size: var(--text-body-sm);
+    font-weight: 600;
+}
+.bulk-bar-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.bulk-bar .btn-secondary,
+.bulk-bar .btn-ghost {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.28);
+    color: var(--color-on-brand);
+}
+.bulk-bar .btn-ghost {
+    background: transparent;
+}
+
+/* Sortable table headers (Section 9.2) */
+.data-table th .sort-marker {
+    opacity: 0.45;
+    font-size: 9px;
+}
+.data-table th[aria-sort="ascending"] .sort-marker,
+.data-table th[aria-sort="descending"] .sort-marker {
+    opacity: 1;
+    color: var(--color-brand-600);
+}
+.data-table .col-select,
+.data-table .col-star {
+    width: 42px;
+    text-align: center;
+}
+.data-table .col-select {
+    width: 36px;
+}
+.data-table tbody td .row-checkbox {
+    cursor: pointer;
+}
+
+/* Cards */
+.card.is-selected {
+    border-color: var(--color-brand-400);
+    box-shadow: 0 0 0 2px var(--color-brand-100);
+}
+.card-foot-text {
+    font-size: var(--text-label);
+    color: var(--color-text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Calendar + compare action groups */
+.week-blocked-actions,
+.compare-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+/* Chip tone for "saved" content inside calendar and rows */
+.week-event.is-saved .week-event-title {
+    color: var(--color-accent-700);
+}
+
+/* Global empty state (Section 8.0 empty-state) */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 100%;
+    padding: 32px 24px;
+    text-align: center;
+}
+.empty-state-title {
+    font-size: var(--text-title);
+    font-weight: 600;
+}
+.empty-state-text {
+    max-width: 42ch;
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted);
+}

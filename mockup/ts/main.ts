@@ -7,6 +7,7 @@ import { initCommandPalette } from "./ui-palette";
 import { renderDetailDrawer } from "./ui-detail";
 import { renderActiveViews } from "./ui-views";
 import { bindUserInteractions } from "./ui-bindings";
+import { ENTITY_META, getRowCountLabel, getRows } from "./entity-rows";
 
 function renderShell(): void {
     const state = store.getState();
@@ -56,6 +57,19 @@ function renderShell(): void {
         selectionEl.textContent =
             state.selectedItems.size > 0 ? `${state.selectedItems.size} ausgewählt` : "0 ausgewählt";
     }
+
+    const entityEl = document.getElementById("status-entity");
+    if (entityEl) {
+        const rows = getRows(state.activeEntity);
+        entityEl.textContent = getRowCountLabel(state.activeEntity, rows.length);
+    }
+
+    // Entity tabs: counts reflect the real dataset per entity
+    document.querySelectorAll<HTMLElement>(".entity-tab").forEach((tab) => {
+        const entity = tab.getAttribute("data-entity") as keyof typeof ENTITY_META | null;
+        const countEl = tab.querySelector<HTMLElement>(".tab-count");
+        if (entity && countEl) countEl.textContent = String(getRows(entity).length);
+    });
 }
 
 document.addEventListener("DOMContentLoaded", () => {

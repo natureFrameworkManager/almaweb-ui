@@ -1,0 +1,201 @@
+/* ==========================================================================
+   mockup/css/entities.css — Entity-aware rows, cards, tables, chips
+   ========================================================================== */
+
+/* Entity colour bars (never colour-only: rows also carry an entity chip) */
+.type-bar-module   { background: var(--color-type-module); }
+.type-bar-course   { background: var(--color-type-course); }
+.type-bar-event    { background: var(--color-type-event); }
+.type-bar-exam     { background: var(--color-type-exam); }
+.type-bar-staff    { background: var(--color-type-staff); }
+.type-bar-location { background: var(--color-type-location); }
+
+/* Row anatomy: entity bar → title → mono number → ≤ 3 meta cells → actions */
+.list-row {
+    padding: var(--row-py) var(--row-px);
+    gap: 10px;
+}
+.list-row-indicator {
+    width: 4px;
+    align-self: stretch;
+    height: auto;
+    min-height: 30px;
+    border-radius: 2px;
+}
+.list-row-title-line {
+    min-width: 0;
+}
+.list-row-title {
+    min-height: 0;
+}
+.list-row-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    margin-top: 3px;
+    color: var(--color-text-muted);
+}
+.row-meta-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--text-body-sm);
+    white-space: nowrap;
+}
+.row-meta-cell.is-time,
+.row-meta-cell.is-date {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+}
+.row-meta-cell.is-strong {
+    color: var(--color-text);
+    font-weight: 600;
+}
+.row-flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 1px 7px;
+    border-radius: var(--radius-full);
+    font-size: var(--text-label);
+    font-weight: 600;
+}
+.row-flag.is-warn {
+    background: var(--color-warning-bg);
+    color: var(--color-warning);
+}
+.row-flag.is-danger {
+    background: var(--color-danger-bg);
+    color: var(--color-danger);
+}
+.row-flag.is-info {
+    background: var(--color-info-bg);
+    color: var(--color-info);
+}
+.row-flag.is-ok {
+    background: var(--color-success-bg);
+    color: var(--color-success);
+}
+
+/* Row actions keep a hit area ≥ 32px but stay visually quiet */
+.list-row-actions {
+    opacity: 1;
+}
+.list-row-actions .btn {
+    min-height: 30px;
+}
+.btn-star {
+    min-width: 34px;
+    padding: 5px 7px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text-subtle);
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    transition: color var(--duration-fast), border-color var(--duration-fast),
+                background-color var(--duration-fast);
+}
+.btn-star:hover {
+    color: var(--color-accent-600);
+    border-color: var(--color-accent-500);
+}
+.btn-star.is-on {
+    background: var(--color-accent-50);
+    border-color: var(--color-accent-500);
+    color: var(--color-accent-600);
+}
+
+/* Cards: entity stripe, ≤ 4 chips, footer action */
+.card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(272px, 1fr));
+    gap: 14px;
+    padding: 14px;
+}
+.card {
+    gap: 6px;
+    padding: var(--card-p);
+}
+.card-stripe {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    height: 3px;
+}
+.card-glyph {
+    position: absolute;
+    inset-block-end: 8px;
+    inset-inline-end: 12px;
+    font-size: 54px;
+    line-height: 1;
+    opacity: 0.055;
+    pointer-events: none;
+    user-select: none;
+}
+.card-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--text-label);
+    color: var(--color-text-muted);
+}
+.card-footer {
+    border-top: 1px solid var(--color-surface-3);
+    padding-top: 8px;
+}
+
+/* Table: numeric columns are tabular and right-aligned */
+.col-num {
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+}
+.col-mono {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    color: var(--color-text-subtle);
+}
+.cell-strong {
+    font-weight: 600;
+}
+.cell-muted {
+    color: var(--color-text-muted);
+}
+.cell-star {
+    color: var(--color-accent-600);
+}
+
+/* Entity chip on a table row (colour + label, never colour alone) */
+.table-entity {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: var(--text-label);
+    font-weight: 600;
+}
+
+/* Generic list section header (sticky group header, Section 9.1) */
+.group-header {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 6px 16px;
+    background: var(--color-surface-2);
+    border-bottom: 1px solid var(--color-border);
+    font-size: var(--text-label);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+}
+.group-header-count {
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--color-text-subtle);
+}

@@ -139,16 +139,22 @@
             <div class="panes-container">
                 <section class="pane" id="pane-a" aria-label="Ergebnisliste A">
                     <div class="pane-toolbar">
-                        <span class="pane-title"><span class="pane-dot" style="background: var(--color-type-module);"></span>Ergebnisse</span>
+                        <span class="pane-title">
+                            <span class="pane-dot" style="background: var(--color-type-module);"></span>
+                            <span class="pane-title-text">Modul · Liste</span>
+                        </span>
                         <span class="pane-meta">6 Einträge</span>
                     </div>
                     <div class="pane-content" id="pane-a-content"></div>
                 </section>
 
-                <section class="pane" id="pane-b" style="display: none;" aria-label="Kalender B">
+                <section class="pane" id="pane-b" style="display: none;" aria-label="Stundenplan B">
                     <div class="pane-toolbar">
-                        <span class="pane-title"><span class="pane-dot" style="background: var(--color-type-event);"></span>Stundenplan</span>
-                        <span class="pane-meta">WiSe 2025/26</span>
+                        <span class="pane-title">
+                            <span class="pane-dot" style="background: var(--color-type-event);"></span>
+                            <span class="pane-title-text">Veranstaltung · Kalender</span>
+                        </span>
+                        <span class="pane-meta">5 Termine</span>
                     </div>
                     <div class="pane-content" id="pane-b-content"></div>
                 </section>
@@ -163,16 +169,17 @@
             <div class="statusbar-group">
                 <span class="statusbar-item">
                     <span class="status-dot"></span>
-                    <span id="status-datastand">Datenstand: 12:04 (ALMA Web)</span>
+                    <span id="status-datastand">Datenstand 12:04 · ALMA Web</span>
                 </span>
-                <span class="statusbar-item" style="color: var(--color-text-subtle);">·</span>
-                <span class="statusbar-item" id="stat-saved-count" style="color: var(--color-accent-600); font-weight: 600;">
-                    3 gemerkt
-                </span>
-                <span class="statusbar-item" style="color: var(--color-text-subtle);">·</span>
-                <span class="statusbar-item" id="stat-selection-count">0 ausgewählt</span>
+                <span class="statusbar-item statusbar-sep">|</span>
+                <span class="statusbar-item statusbar-badge" id="stat-saved-count">3 gemerkt</span>
+                <span class="statusbar-item statusbar-badge" id="stat-selection-count">0 ausgewählt</span>
+                <span class="statusbar-item statusbar-sep">|</span>
+                <span class="statusbar-item" id="status-entity">6 Module</span>
             </div>
             <div class="statusbar-group">
+                <span class="statusbar-item">Keine Anmeldung · Keine Tracker</span>
+                <span class="statusbar-item statusbar-sep">|</span>
                 <span class="statusbar-item">Inoffizielles Community-Projekt</span>
             </div>
         </footer>

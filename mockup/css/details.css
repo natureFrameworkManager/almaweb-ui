@@ -1,87 +1,43 @@
 /* ==========================================================================
-   mockup/css/details.css — Shell fixes, helpers, modal internals
+   mockup/css/details.css — Shell helpers, modal internals, a11y affordances
    ========================================================================== */
 
-/* --- Shell overflow hardening: keeps every region inside the viewport --- */
-html, body {
-    height: 100%;
-    overflow: hidden;
-}
-#app {
-    height: 100vh;
-    max-height: 100vh;
-    overflow: hidden;
-}
-.topbar,
-.entity-tabs,
-.workspace-toolbar,
-.statusbar {
-    flex: 0 0 auto;
-}
-.app-body {
-    flex: 1 1 auto;
-    min-height: 0;
-}
-.filter-rail {
-    flex: 0 0 260px;
-    width: 260px;
-    min-height: 0;
-}
-.panes-container {
-    flex: 1 1 auto;
-    min-width: 0;
-    min-height: 0;
-}
-.pane {
-    min-width: 0;
-    min-height: 0;
-}
-.pane-content {
-    min-height: 0;
-}
-.detail-drawer {
-    flex: 0 0 400px;
-    width: 400px;
-    min-height: 0;
-    overflow: hidden;
-}
-.detail-body {
-    min-height: 0;
-}
-
-/* Panes that are hidden must not keep layout space */
-.pane[style*="display: none"] {
-    display: none !important;
-}
-
-/* --- Component helpers used by the shell markup --- */
+/* --- Pane toolbar helpers --- */
 .pane-eyebrow {
     font-size: var(--text-label);
     font-weight: 700;
-    text-transform: uppercase;
     letter-spacing: 0.05em;
+    text-transform: uppercase;
     color: var(--color-text-subtle);
 }
 .pane-title {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    min-width: 0;
     font-weight: 600;
     color: var(--color-text);
 }
 .pane-dot {
+    display: inline-block;
     width: 8px;
     height: 8px;
     border-radius: var(--radius-full);
-    display: inline-block;
+    flex: 0 0 auto;
 }
 .pane-meta {
     font-size: var(--text-label);
     color: var(--color-text-subtle);
+    white-space: nowrap;
 }
+
+/* --- Filter rail helpers --- */
 .range-row {
     display: flex;
     gap: 8px;
+}
+.range-row .input {
+    min-width: 0;
 }
 .chip-row {
     display: flex;
@@ -91,9 +47,9 @@ html, body {
 
 /* --- Modal internals --- */
 .modal-lead {
+    margin-bottom: 12px;
     font-size: var(--text-body-sm);
     color: var(--color-text-muted);
-    margin-bottom: 12px;
 }
 .modal-options {
     display: flex;
@@ -119,39 +75,51 @@ html, body {
 }
 
 /* --- Selection / interaction affordances --- */
-.list-row,
-.card,
-.explorer-tile,
-.data-table tbody tr,
-.cal-event-pill,
-.palette-item,
+.btn,
 .entity-tab,
 .segmented-item,
-.btn,
-.rail-header,
-.pane-toolbar {
+.palette-item,
+.tab-count,
+.statusbar,
+.pane-toolbar,
+.week-event,
+.level-tile,
+.compare-cell,
+.crumb,
+.allday-chip {
     user-select: none;
 }
 .detail-body,
-.about-body,
 .modal-body,
+.about-body,
 .input,
-.select {
+.select,
+.list-row-title,
+.card-title {
     user-select: text;
 }
 
-.card:focus-visible,
 .list-row:focus-visible,
-.explorer-tile:focus-visible {
+.card:focus-visible,
+.level-tile:focus-visible,
+.week-event:focus-visible,
+.allday-chip:focus-visible,
+.crumb:focus-visible {
     outline: 2px solid var(--color-focus);
     outline-offset: -2px;
 }
 
-/* Compact density tuning for the shell */
-[data-density="compact"] .list-row {
-    padding: var(--row-py) var(--row-px);
-}
+/* --- Density tuning (Section 6.1) --- */
 [data-density="compact"] .card-grid {
     gap: 12px;
     padding: 12px;
+}
+[data-density="compact"] .level-grid {
+    gap: 9px;
+}
+[data-density="compact"] .compare-cell {
+    padding: 7px 12px;
+}
+[data-density="compact"] .week-grid {
+    grid-auto-rows: 34px;
 }

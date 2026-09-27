@@ -1,0 +1,183 @@
+/* ==========================================================================
+   mockup/css/views-explorer.css — Explorer / Navigationsbaum (Section 9.5)
+   ========================================================================== */
+
+.explorer-wrap {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    background: var(--color-surface);
+}
+
+/* Breadcrumb bar */
+.explorer-bar {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface);
+}
+.crumbs {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+.crumb {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    background: var(--color-surface-2);
+    color: var(--color-text-muted);
+    font-family: inherit;
+    font-size: var(--text-label);
+    font-weight: 500;
+    cursor: pointer;
+    transition: color var(--duration-fast) var(--ease-standard),
+                border-color var(--duration-fast) var(--ease-standard);
+}
+.crumb:hover {
+    color: var(--color-text);
+    border-color: var(--color-border-strong);
+}
+.crumb.is-current {
+    background: var(--color-brand-50);
+    border-color: var(--color-brand-200);
+    color: var(--color-brand-700);
+    font-weight: 600;
+    cursor: default;
+}
+.crumb-sep {
+    color: var(--color-border-strong);
+    font-size: var(--text-label);
+}
+.explorer-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Level tiles */
+.explorer-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 14px;
+}
+.explorer-level-title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+    font-size: var(--text-subtitle);
+    font-weight: 600;
+}
+.explorer-level-count {
+    font-size: var(--text-label);
+    font-weight: 400;
+    color: var(--color-text-subtle);
+}
+.level-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
+    gap: 12px;
+}
+.level-tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 92px;
+    padding: 14px 14px 14px 18px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    text-align: start;
+    font-family: inherit;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color var(--duration-fast) var(--ease-standard),
+                box-shadow var(--duration-fast) var(--ease-standard),
+                transform var(--duration-fast) var(--ease-standard);
+}
+.level-tile::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: 4px;
+    background: var(--tile-hue, var(--color-brand-500));
+}
+.level-tile:hover {
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-1);
+    transform: translateY(-1px);
+}
+.level-tile-name {
+    font-size: var(--text-body-sm);
+    font-weight: 600;
+    color: var(--color-text);
+}
+.level-tile-path {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-subtle);
+}
+.level-tile-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: auto;
+}
+.level-tile-count {
+    font-size: var(--text-label);
+    color: var(--color-text-muted);
+}
+.level-tile-goto {
+    font-size: var(--text-label);
+    font-weight: 600;
+    color: var(--tile-hue, var(--color-brand-600));
+}
+
+/* Leaf level: real result rows re-use the row component */
+.explorer-leaf {
+    margin-top: 18px;
+    border-top: 1px solid var(--color-border);
+    padding-top: 12px;
+}
+.explorer-leaf-title {
+    margin-bottom: 8px;
+    font-size: var(--text-label);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+}
+.explorer-rows {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+.explorer-hint {
+    margin-top: 10px;
+    font-size: var(--text-label);
+    color: var(--color-text-subtle);
+}
+.explorer-hint kbd {
+    padding: 0 4px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xs);
+    background: var(--color-surface-2);
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+}

@@ -1,0 +1,257 @@
+/* ==========================================================================
+   mockup/css/views-calendar.css — Kalender (Section 9.4)
+   ========================================================================== */
+
+.week-wrap {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    background: var(--color-surface);
+}
+
+/* Toolbar above the grid: range, threshold note and legend */
+.week-toolbar {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface);
+}
+.week-range {
+    font-size: var(--text-body-sm);
+    font-weight: 600;
+}
+.week-range-sub {
+    display: block;
+    font-size: var(--text-label);
+    font-weight: 400;
+    color: var(--color-text-subtle);
+}
+.week-legend {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    font-size: var(--text-label);
+    color: var(--color-text-muted);
+}
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.legend-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    display: inline-block;
+}
+.legend-swatch.is-saved {
+    background: var(--color-accent-500);
+}
+.legend-swatch.is-conflict {
+    background: var(--color-danger);
+}
+
+/* Threshold note (decision Q8) */
+.threshold-note {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-info-bg);
+    color: var(--color-info);
+    font-size: var(--text-body-sm);
+}
+
+/* All-day strip for exams without a time */
+.allday-strip {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface-2);
+    overflow-x: auto;
+}
+.allday-label {
+    font-size: var(--text-label);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-subtle);
+    white-space: nowrap;
+}
+.allday-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border: 1px solid var(--color-type-exam);
+    border-radius: var(--radius-full);
+    background: var(--color-type-exam-bg);
+    color: var(--color-type-exam);
+    font-size: var(--text-label);
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+/* The week grid */
+.week-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    padding: 12px;
+}
+.week-grid {
+    display: grid;
+    grid-template-columns: 62px repeat(5, minmax(118px, 1fr));
+    grid-auto-rows: 42px;
+    gap: 1px;
+    padding: 1px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-border);
+    min-width: 660px;
+}
+.week-corner {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-surface-3);
+    font-size: var(--text-label);
+    font-weight: 700;
+    color: var(--color-text-muted);
+}
+.week-day {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    background: var(--color-surface-2);
+    font-size: var(--text-label);
+
+.week-cell.is-today {
+    background: var(--color-brand-50);
+}
+
+/* Events sit inside the grid and span their duration */
+.week-event {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1px;
+    margin: 2px;
+    padding: 4px 8px;
+    border: 1px solid transparent;
+    border-inline-start-width: 3px;
+    border-radius: var(--radius-xs);
+    font-size: var(--text-label);
+    line-height: 1.25;
+    text-align: start;
+    cursor: pointer;
+    overflow: hidden;
+    transition: filter var(--duration-fast) var(--ease-standard);
+}
+.week-event:hover {
+    filter: brightness(0.97);
+}
+.week-event.is-course {
+    background: var(--color-type-course-bg);
+    border-inline-start-color: var(--color-type-course);
+    color: var(--color-type-course);
+}
+.week-event.is-event {
+    background: var(--color-type-event-bg);
+    border-inline-start-color: var(--color-type-event);
+    color: var(--color-type-event);
+}
+.week-event.is-exam {
+    background: var(--color-type-exam-bg);
+    border-inline-start-color: var(--color-type-exam);
+    color: var(--color-type-exam);
+}
+.week-event.is-saved {
+    border-inline-start-color: var(--color-accent-600);
+    box-shadow: inset 0 0 0 1px var(--color-accent-500);
+}
+.week-event.is-conflict {
+    box-shadow: inset 0 0 0 1px var(--color-danger);
+}
+.week-event-title {
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.week-event-meta {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Blocked state when the threshold is exceeded (decision Q8) */
+.week-blocked {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 100%;
+    padding: 32px 24px;
+    text-align: center;
+}
+.week-blocked-title {
+    font-size: var(--text-title);
+    font-weight: 600;
+}
+.week-blocked-text {
+    max-width: 44ch;
+    font-size: var(--text-body-sm);
+    color: var(--color-text-muted);
+}
+
+    font-weight: 600;
+}
+.week-day-date {
+    font-weight: 400;
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+}
+.week-day.is-today {
+    background: var(--color-brand-50);
+    color: var(--color-brand-700);
+}
+.week-time {
+    position: sticky;
+    inset-inline-start: 0;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 3px;
+    background: var(--color-surface-2);
+    color: var(--color-text-subtle);
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+}
+.week-cell {
+    background: var(--color-surface);
+}

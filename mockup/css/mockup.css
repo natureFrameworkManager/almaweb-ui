@@ -9,4 +9,10 @@
 @import "./components-views.css";
 @import "./components-modals.css";
 @import "./layout.css";
+@import "./entities.css";
+@import "./views-calendar.css";
+@import "./views-explorer.css";
+@import "./views-compare.css";
+@import "./detail.css";
+@import "./tweaks.css";
 @import "./details.css";

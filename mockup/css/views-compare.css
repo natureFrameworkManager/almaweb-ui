@@ -1,0 +1,167 @@
+/* ==========================================================================
+   mockup/css/views-compare.css — Compare / Vergleichsmodus (Section 9.7)
+   ========================================================================== */
+
+.compare-wrap {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    background: var(--color-surface);
+}
+
+/* Toolbar: diff switch + actions */
+.compare-toolbar {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface);
+}
+.compare-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--text-body-sm);
+    color: var(--color-text);
+    cursor: pointer;
+}
+.compare-switch input {
+    width: 15px;
+    height: 15px;
+    accent-color: var(--color-brand-600);
+    cursor: pointer;
+}
+
+/* Two aligned columns */
+.compare-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+}
+.compare-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+    min-width: 560px;
+}
+.compare-head {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 14px;
+    border-bottom: 2px solid var(--color-border);
+    background: var(--color-surface-2);
+}
+.compare-head.slot-a {
+    border-top: 3px solid var(--color-brand-600);
+}
+.compare-head.slot-b {
+    border-top: 3px solid var(--color-accent-600);
+}
+.compare-head-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--text-subtitle);
+    font-weight: 700;
+}
+.compare-head-title.slot-a {
+    color: var(--color-brand-700);
+}
+.compare-head-title.slot-b {
+    color: var(--color-accent-600);
+}
+.compare-head-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: var(--text-label);
+    color: var(--color-text-muted);
+}
+
+/* Section rows */
+.compare-section {
+    grid-column: 1 / -1;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface-3);
+    font-size: var(--text-label);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+}
+.compare-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface);
+    font-size: var(--text-body-sm);
+}
+.compare-cell + .compare-cell {
+    border-inline-start: 1px solid var(--color-border);
+}
+.compare-cell.is-diff {
+    background: var(--color-warning-bg);
+}
+.compare-cell.is-empty {
+    color: var(--color-text-subtle);
+    font-style: italic;
+}
+.compare-cell-title {
+    font-weight: 600;
+}
+.compare-cell.is-mine .compare-cell-title {
+    color: var(--color-accent-600);
+}
+.compare-cell-meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    color: var(--color-text-subtle);
+}
+.compare-cell-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+/* Totals footer */
+.compare-totals {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+    border-top: 2px solid var(--color-border);
+    background: var(--color-surface-2);
+}
+.compare-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 12px 14px;
+    font-size: var(--text-body-sm);
+    font-weight: 600;
+}
+.compare-total + .compare-total {
+    border-inline-start: 1px solid var(--color-border);
+}
+.compare-total-value {
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+.compare-note {
+    grid-column: 1 / -1;
+    padding: 10px 14px;
+    border-top: 1px solid var(--color-border);
+    font-size: var(--text-label);
+    color: var(--color-text-subtle);
+}
