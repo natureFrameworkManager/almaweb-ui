@@ -491,7 +491,7 @@ function locationToView(location: Location): EntityView {
  */
 function createOpenedLevels(openedLevels: string[]): HTMLDivElement {
     const container = document.createElement("div");
-    container.id = "opened-levels";
+    container.className = "opened-levels";
     openedLevels.forEach((level) => {
         const levelElement = document.createElement("div");
         levelElement.className = "opened-level";
@@ -528,7 +528,7 @@ function createTreeLevel(levelName: string): HTMLDivElement {
  */
 function createTreeLevels(level: TreeNode): HTMLDivElement {
     const container = document.createElement("div");
-    container.id = "levels";
+    container.className = "levels";
     Object.keys(level)
         .filter((key) => key !== "_modules")
         .map(createTreeLevel)
