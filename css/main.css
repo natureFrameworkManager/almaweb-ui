@@ -224,61 +224,85 @@ header.list-card-view-header > div.multi-level-sort {
     @apply rounded-md px-2 py-1;
     @apply bg-surface text-on-surface;
 }
-ul.module-list {
+/* Type switcher: shows only the type-content matching the active span in .type-switcher */
+.type-content {
+    display: none;
+}
+main.list-card-view:has(.type-switcher span.active[data-view="modules"]) .type-content[data-type="modules"],
+main.list-card-view:has(.type-switcher span.active[data-view="courses"]) .type-content[data-type="courses"],
+main.list-card-view:has(.type-switcher span.active[data-view="events"]) .type-content[data-type="events"],
+main.list-card-view:has(.type-switcher span.active[data-view="exams"]) .type-content[data-type="exams"],
+main.list-card-view:has(.type-switcher span.active[data-view="staff"]) .type-content[data-type="staff"],
+main.list-card-view:has(.type-switcher span.active[data-view="locations"]) .type-content[data-type="locations"] {
+    display: contents;
+}
+
+/* Display changer: swaps the list/card-grid pair per pane based on the active nav item */
+.type-content > .card-grid {
+    display: none;
+}
+body:has(#display-changer1 item.active[data-view="cards"]) #list-card-view1 .type-content > .list {
+    display: none;
+}
+body:has(#display-changer1 item.active[data-view="cards"]) #list-card-view1 .type-content > .card-grid {
+    display: grid;
+}
+body:has(#display-changer2 item.active[data-view="cards"]) #list-card-view2 .type-content > .list {
+    display: none;
+}
+body:has(#display-changer2 item.active[data-view="cards"]) #list-card-view2 .type-content > .card-grid {
+    display: grid;
+}
+
+ul.list {
     @apply m-0 list-none overflow-y-auto p-0;
 }
-ul.module-list > li.module-list-item {
+ul.list > li.list-item {
     @apply border-b border-border p-2 last:border-b-0;
-    @apply grid grid-cols-[auto_auto_auto_auto] grid-rows-[auto_auto] items-center gap-x-2 gap-y-1;
+    @apply flex flex-col gap-y-1;
 }
-ul.module-list > li.module-list-item > h1 {
-    @apply col-1 row-1 text-lg font-bold text-wrap;
+ul.list > li.list-item > h1 {
+    @apply text-lg font-bold text-wrap;
 }
-ul.module-list > li.module-list-item > h2 {
-    @apply col-1 row-2 flex h-full flex-col font-semibold;
+ul.list > li.list-item > h2 {
+    @apply flex h-full flex-col font-semibold;
 }
-ul.module-list > li.module-list-item > div.module-info-container {
-    @apply col-2 flex flex-row flex-nowrap gap-2 overflow-x-auto;
+ul.list > li.list-item > div.info-container {
+    @apply flex flex-row flex-wrap gap-2;
 }
-ul.module-list > li.module-list-item span.module-info {
+ul.list > li.list-item span.info {
     @apply w-fit rounded-full border border-border px-2 py-1;
     @apply bg-primary/20 text-sm;
     @apply text-nowrap;
 }
-ul.module-list > li.module-list-item span.module-info.module-course-types {
-    @apply col-3 row-1;
+ul.list > li.list-item > button {
+    @apply self-end;
 }
-ul.module-list > li.module-list-item span.module-info.module-exam-types {
-    @apply col-3 row-2;
-}
-ul.module-list > li.module-list-item > button {
-    @apply col-4 row-start-1 row-end-3 justify-self-end;
-}
-div.module-card-grid {
+div.card-grid {
     @apply grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-2;
 }
-div.module-card-grid > div.card {
+div.card-grid > div.card {
     @apply rounded-md border border-border px-2 pt-1 pb-2;
-    @apply grid grid-cols-[auto_auto] gap-x-1 gap-y-1;
+    @apply flex flex-col gap-1;
 }
-div.module-card-grid > div.card > h1 {
-    @apply col-span-2 text-lg leading-tight font-bold text-wrap;
+div.card-grid > div.card > h1 {
+    @apply text-lg leading-tight font-bold text-wrap;
 }
-div.module-card-grid > div.card > h2 {
-    @apply col-span-2 mb-2 flex h-full flex-col font-semibold;
+div.card-grid > div.card > h2 {
+    @apply mb-2 flex h-full flex-col font-semibold;
 }
-div.module-card-grid > div.card > div.module-info-container {
-    @apply col-1 flex flex-row flex-wrap gap-2;
+div.card-grid > div.card > div.info-container {
+    @apply flex flex-row flex-wrap gap-2;
 }
-div.module-card-grid > div.card span.module-info {
+div.card-grid > div.card span.info {
     @apply h-fit w-fit rounded border border-border px-2 py-1;
     @apply bg-primary/20 text-sm;
     @apply text-wrap;
 }
-div.module-card-grid > div.card > div.module-btn-con {
-    @apply col-start-1 col-end-3 mt-2 flex items-center justify-between gap-x-1;
+div.card-grid > div.card > div.btn-con {
+    @apply mt-2 flex items-center justify-between gap-x-1;
 }
-div.module-card-grid > div.card > div.module-btn-con > button {
+div.card-grid > div.card > div.btn-con > button {
     @apply h-full first:w-full;
 }
 
