@@ -11,8 +11,8 @@ import "fullcalendar/skeleton.css";
 import "fullcalendar/themes/monarch/palettes/purple.css";
 import "fullcalendar/themes/monarch/theme.css";
 
-import type { Module } from "./api/types";
-import { getCourses, getEvents, getExams, getModules } from "./api/api";
+import type { Module, Course, Event, Exam, Staff, Location } from "./api/types";
+import { getCourses, getEvents, getExams, getModules, getStaff, getLocations } from "./api/api";
 
 const calendarElementId = "calendar";
 
@@ -49,138 +49,213 @@ function initCal() {
     calendarInstance.render();
 }
 
-function displayModuleList(modules: Module[]) {
-    const moduleListElement = document.querySelector("ul.module-list") as HTMLElement | null;
-    if (!moduleListElement) {
-        throw new Error(`Module list element with ID "module-list" not found.`);
+type EntityView = {
+    name: string;
+    number: string | null;
+    listInfos: InfoSpec[];
+    cardInfos: InfoSpec[];
+};
+
+type InfoSpec = {
+    className: string;
+    text: string;
+};
+
+function createInfoSpan(spec: InfoSpec): HTMLSpanElement {
+    const span = document.createElement("span");
+    span.className = `info ${spec.className}`;
+    span.textContent = spec.text;
+    return span;
+}
+
+function createListItem(view: EntityView): HTMLLIElement {
+    const item = document.createElement("li");
+    item.className = "list-item";
+
+    const name = document.createElement("h1");
+    name.textContent = view.name;
+    item.appendChild(name);
+    if (view.number) {
+        const number = document.createElement("h2");
+        number.textContent = view.number;
+        item.appendChild(number);
     }
+    const infoContainer = document.createElement("div");
+    infoContainer.className = "info-container";
+    view.listInfos.forEach(info => infoContainer.appendChild(createInfoSpan(info)));
+    item.appendChild(infoContainer);
 
-    moduleListElement.innerHTML = "";
-    modules.sort((a, b) => a.name.localeCompare(b.name));
-    modules.forEach(module => {
-        const moduleItem = document.createElement("li");
-        moduleItem.className = "module-list-item";
+    const saveButton = document.createElement("button");
+    saveButton.className = "btn material-symbols";
+    saveButton.textContent = "save";
+    item.appendChild(saveButton);
 
-        const moduleName = document.createElement("h1");
-        moduleName.textContent = module.name;
-        moduleItem.appendChild(moduleName);
-        const moduleNumber = document.createElement("h2");
-        moduleNumber.textContent = module.number;
-        moduleItem.appendChild(moduleNumber);
-        const moduleInfo1 = document.createElement("div");
-        moduleInfo1.className = "module-info-container";
-        const moduleCredits = document.createElement("span");
-        moduleCredits.className = "module-info module-credits";
-        moduleCredits.textContent = `${module.credits ? module.credits : "?"} LP`;
-        moduleInfo1.appendChild(moduleCredits);
-        if (module.duration_semesters) {
-            const moduleDuration = document.createElement("span");
-            moduleDuration.className = "module-info module-duration";
-            moduleDuration.textContent = `${module.duration_semesters} Semester`;
-            moduleInfo1.appendChild(moduleDuration);
-        }
-        if (module.frequency) {
-            const moduleFrequency = document.createElement("span");
-            moduleFrequency.className = "module-info module-frequency";
-            moduleFrequency.textContent = module.frequency;
-            moduleInfo1.appendChild(moduleFrequency);
-        }
-        if (module.language) {
-            const moduleLanguage = document.createElement("span");
-            moduleLanguage.className = "module-info module-language";
-            moduleLanguage.textContent = module.language;
-            moduleInfo1.appendChild(moduleLanguage);
-        }
-        if (module.courses.length > 0) {
-            const moduleCourseTypes = document.createElement("span");
-            moduleCourseTypes.className = "module-info module-course-types";
-            moduleCourseTypes.textContent = [...new Set(module.courses.map(course => course.type.name))].join(", ");
-            moduleInfo1.appendChild(moduleCourseTypes);
-        }
-        moduleItem.appendChild(moduleInfo1);
-        
-        const moduleInfo2 = document.createElement("div");
-        moduleInfo2.className = "module-info-container";
-        const moduleFaculty = document.createElement("span");
-        moduleFaculty.className = "module-info module-faculty";
-        moduleFaculty.textContent = String(module.faculty.name);
-        moduleInfo2.appendChild(moduleFaculty);
-        if (module.path.length > 0) {
-            const modulePath = document.createElement("span");
-            modulePath.className = "module-info module-path";
-            modulePath.textContent = normalizePath(module.path, module.faculty.name).map(el => el.join(" > ")).join(" / ");
-            moduleInfo2.appendChild(modulePath);
-        }
-        if (module.exams.length > 0) {
-            const moduleExamTypes = document.createElement("span");
-            moduleExamTypes.className = "module-info module-exam-types";
-            moduleExamTypes.textContent = [...new Set(module.exams)].map(exam => exam.name).join(", ");
-            moduleInfo2.appendChild(moduleExamTypes);
-        }
-        moduleItem.appendChild(moduleInfo2);
-        
-        const saveButton = document.createElement("button");
-        saveButton.className = "btn material-symbols";
-        saveButton.textContent = "save";
-        moduleItem.appendChild(saveButton);
+    return item;
+}
 
-        moduleListElement.appendChild(moduleItem);
+function createCard(view: EntityView): HTMLDivElement {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const name = document.createElement("h1");
+    name.textContent = view.name;
+    card.appendChild(name);
+    if (view.number) {
+        const number = document.createElement("h2");
+        number.textContent = view.number;
+        card.appendChild(number);
+    }
+    const infoContainer = document.createElement("div");
+    infoContainer.className = "info-container";
+    view.cardInfos.forEach(info => infoContainer.appendChild(createInfoSpan(info)));
+    card.appendChild(infoContainer);
+
+    const btnCon = document.createElement("div");
+    btnCon.className = "btn-con";
+    const detailButton = document.createElement("button");
+    detailButton.className = "btn";
+    detailButton.textContent = "Mehr Details";
+    btnCon.appendChild(detailButton);
+    const saveButton = document.createElement("button");
+    saveButton.className = "btn material-symbols";
+    saveButton.textContent = "save";
+    btnCon.appendChild(saveButton);
+    card.appendChild(btnCon);
+
+    return card;
+}
+
+// Renders items into every pane's list/card-grid for the given type (both list-card-view1 and list-card-view2)
+function renderEntities<T>(type: string, items: T[], toView: (item: T) => EntityView) {
+    const views = items.map(toView);
+
+    document.querySelectorAll(`.type-content[data-type="${type}"] > ul.list`).forEach(listEl => {
+        listEl.innerHTML = "";
+        views.forEach(view => listEl.appendChild(createListItem(view)));
+    });
+    document.querySelectorAll(`.type-content[data-type="${type}"] > div.card-grid`).forEach(gridEl => {
+        gridEl.innerHTML = "";
+        views.forEach(view => gridEl.appendChild(createCard(view)));
     });
 }
 
-function displayModuleCards(modules: Module[]) {
-    const moduleListElement = document.querySelector("div.module-card-grid") as HTMLElement | null;
-    if (!moduleListElement) {
-        throw new Error(`Module list element with ID "module-card-grid" not found.`);
+function formatDate(date: string): string {
+    return new Date(date).toLocaleDateString("de-DE");
+}
+
+function formatTimeRange(start: string, end: string): string {
+    return `${start.slice(0, 5)} - ${end.slice(0, 5)}`;
+}
+
+function moduleToView(module: Module): EntityView {
+    const listInfos: InfoSpec[] = [{ className: "module-credits", text: `${module.credits ? module.credits : "?"} LP` }];
+    if (module.duration_semesters) {
+        listInfos.push({ className: "module-duration", text: `${module.duration_semesters} Semester` });
+    }
+    if (module.frequency) {
+        listInfos.push({ className: "module-frequency", text: module.frequency });
+    }
+    if (module.language) {
+        listInfos.push({ className: "module-language", text: module.language });
+    }
+    listInfos.push({ className: "module-faculty", text: module.faculty.name });
+    if (module.path.length > 0) {
+        listInfos.push({ className: "module-path", text: normalizePath(module.path, module.faculty.name).map(el => el.join(" > ")).join(" / ") });
+    }
+    if (module.courses.length > 0) {
+        listInfos.push({ className: "module-course-types", text: [...new Set(module.courses.map(course => course.type.name))].join(", ") });
+    }
+    if (module.exams.length > 0) {
+        listInfos.push({ className: "module-exam-types", text: [...new Set(module.exams.map(exam => exam.name))].join(", ") });
     }
 
-    moduleListElement.innerHTML = "";
-    modules.sort((a, b) => a.name.localeCompare(b.name));
-    modules.forEach(module => {
-        const moduleItem = document.createElement("div");
-        moduleItem.className = "card";
+    const cardInfos: InfoSpec[] = [{ className: "module-credits", text: `${module.credits ? module.credits : "?"} LP` }];
+    if (module.duration_semesters) {
+        cardInfos.push({ className: "module-duration", text: `${module.duration_semesters} Semester` });
+    }
+    cardInfos.push({ className: "module-faculty", text: module.faculty.name });
+    if (module.path.length > 0) {
+        cardInfos.push({ className: "module-path", text: [...new Set(normalizePath(module.path, module.faculty.name).map(el => el[el.length - 1]))].join(" / ") });
+    }
 
-        const moduleName = document.createElement("h1");
-        moduleName.textContent = module.name;
-        moduleItem.appendChild(moduleName);
-        const moduleNumber = document.createElement("h2");
-        moduleNumber.textContent = module.number;
-        moduleItem.appendChild(moduleNumber);
-        const moduleCredits = document.createElement("span");
-        moduleCredits.className = "module-info module-credits";
-        moduleCredits.textContent = `${module.credits ? module.credits : "?"} LP`;
-        moduleItem.appendChild(moduleCredits);
-        if (module.duration_semesters) {
-            const moduleDuration = document.createElement("span");
-            moduleDuration.className = "module-info module-duration";
-            moduleDuration.textContent = `${module.duration_semesters} Semester`;
-            moduleItem.appendChild(moduleDuration);
+    return { name: module.name, number: module.number, listInfos, cardInfos };
+}
+
+function courseToView(course: Course): EntityView {
+    const staffNames = course.staff.map(staff => staff.name).join(", ");
+    const baseInfos = (): InfoSpec[] => {
+        const infos: InfoSpec[] = [{ className: "course-type", text: course.type.name }];
+        if (course.weekday) {
+            infos.push({ className: "course-weekday", text: course.weekday });
         }
-        const moduleFaculty = document.createElement("span");
-        moduleFaculty.className = "module-info module-faculty";
-        moduleFaculty.textContent = String(module.faculty.name);
-        moduleItem.appendChild(moduleFaculty);
-        if (module.path.length > 0) {
-            const modulePath = document.createElement("span");
-            modulePath.className = "module-info module-path";
-            modulePath.textContent = [...new Set(normalizePath(module.path, module.faculty.name).map(el => el[el.length - 1]))].join(" / ");
-            moduleItem.appendChild(modulePath);
-        }
+        infos.push({ className: "course-weekly-hours", text: `${course.weekly_hours} SWS` });
+        return infos;
+    };
 
-        const buttonContainer = document.createElement("div");
-        buttonContainer.className = "module-btn-con";
-        const detailButton = document.createElement("button");
-        detailButton.className = "btn";
-        detailButton.textContent = "Mehr Details";
-        buttonContainer.appendChild(detailButton);
-        const saveButton = document.createElement("button");
-        saveButton.className = "btn material-symbols";
-        saveButton.textContent = "save";
-        buttonContainer.appendChild(saveButton);
-        moduleItem.appendChild(buttonContainer);
+    const listInfos = baseInfos();
+    if (course.language) {
+        listInfos.push({ className: "course-language", text: course.language });
+    }
+    if (staffNames) {
+        listInfos.push({ className: "course-staff", text: staffNames });
+    }
 
-        moduleListElement.appendChild(moduleItem);
-    });
+    return { name: `${course.name} - ${course.type.name}`, number: course.number, listInfos, cardInfos: baseInfos() };
+}
+
+function eventToView(event: Event): EntityView {
+    const staffNames = event.staff.map(staff => staff.name).join(", ");
+    const listInfos: InfoSpec[] = [
+        { className: "event-date", text: formatDate(event.event_date) },
+        { className: "event-time", text: formatTimeRange(event.start_time, event.end_time) },
+        { className: "event-location", text: `${event.location.name} (${event.location.building.name})` },
+    ];
+    if (staffNames) {
+        listInfos.push({ className: "event-staff", text: staffNames });
+    }
+
+    const cardInfos: InfoSpec[] = [
+        { className: "event-date", text: formatDate(event.event_date) },
+        { className: "event-time", text: formatTimeRange(event.start_time, event.end_time) },
+        { className: "event-location", text: event.location.name },
+    ];
+
+    return { name: event.name || event.location.name, number: event.number, listInfos, cardInfos };
+}
+
+function examToView(exam: Exam): EntityView {
+    const staffNames = exam.staff.map(staff => staff.name).join(", ");
+    const baseInfos = (): InfoSpec[] => [
+        { className: "exam-date", text: exam.exam_date ? formatDate(exam.exam_date) : "Kein Datum" },
+        { className: "exam-time", text: exam.start_time && exam.end_time ? formatTimeRange(exam.start_time, exam.end_time) : "Kein Zeitangabe" },
+        { className: "exam-required", text: exam.required ? "Erforderlich" : "Nicht erforderlich" },
+    ];
+
+    const listInfos = baseInfos();
+    if (staffNames) {
+        listInfos.push({ className: "exam-staff", text: staffNames });
+    }
+
+    return { name: exam.name, number: null, listInfos, cardInfos: baseInfos() };
+}
+
+function staffToView(staff: Staff): EntityView {
+    return { name: staff.name, number: null, listInfos: [], cardInfos: [] };
+}
+
+function locationToView(location: Location): EntityView {
+    const listInfos: InfoSpec[] = [
+        location.type ? { className: "location-type", text: location.type } : null,
+        location.seats ? { className: "location-seats", text: `${location.seats ?? "?"} Plätze` } : null,
+        location.accessibility ? { className: "location-accessibility", text: location.accessibility } : null,
+        location.building.name ? { className: "location-building", text: `${location.building.name} - ${location.building.address}` } : null,
+    ].filter(info => info !== null);
+    const cardInfos: InfoSpec[] = [
+        location.type ? { className: "location-type", text: location.type } : null,
+        location.seats ? { className: "location-seats", text: `${location.seats ?? "?"} Plätze` } : null,
+    ].filter(info => info !== null);
+
+    return { name: location.name, number: location.external_id, listInfos, cardInfos };
 }
 
 function displayTree(modules: Module[]) {
@@ -284,64 +359,75 @@ function computeTreeData(modules: Module[]): Record<string, TreeNode> {
     return tree;
 }
 
-function switchView(view: "list" | "cards" | "calendar" | "tree") {
-    const listView = document.querySelector("ul.module-list") as HTMLUListElement;
-    const cardView = document.querySelector("div.module-card-grid") as HTMLDivElement;
-    const calendarView = document.querySelector("main.calendar") as HTMLElement;
-    const treeView = document.querySelector("main.tree") as HTMLElement;
+// List/cards switching within a pane is handled purely by CSS reacting to the "active" class; here we
+// only need to toggle which top-level main (list-card-view/calendar/tree) is visible per pane.
+function switchMainView(paneId: 1 | 2, view: string) {
+    const listCardView = document.querySelector(`#list-card-view${paneId}`) as HTMLElement | null;
+    const calendarView = document.querySelector(`#calendar${paneId}`) as HTMLElement | null;
+    const treeView = document.querySelector(`#tree${paneId}`) as HTMLElement | null;
 
-    if (!listView || !cardView || !calendarView || !treeView) {
+    if (!listCardView || !calendarView || !treeView) {
         console.error("One or more view elements are missing.");
         return;
     }
 
-    listView.style.display = view === "list" ? "" : "none";
-    cardView.style.display = view === "cards" ? "" : "none";
+    listCardView.style.display = view === "list" || view === "cards" ? "" : "none";
     calendarView.style.display = view === "calendar" ? "" : "none";
     treeView.style.display = view === "tree" ? "" : "none";
-
-    const mainContainer = document.querySelector("main.list-card-view") as HTMLElement;
-    if (view !== "list" && view !== "cards" && mainContainer) {
-        mainContainer.style.display = "none";
-    } else if (mainContainer) {
-        mainContainer.style.display = "";
-    }
 }
 
-document.querySelectorAll("body > header > nav#display-changer1 > item").forEach(item => {
-    item.addEventListener("click", () => {
-        const view = item.getAttribute("data-view") as "list" | "cards" | "calendar" | "tree";
-        item.parentElement?.querySelectorAll("item").forEach(sibling => sibling.classList.remove("active"));
-        item.classList.add("active");
-        switchView(view);
+// Marks the clicked item as active (and its siblings as inactive) within a single switcher nav
+function wireSwitcher(navSelector: string, onSelect?: (view: string) => void) {
+    document.querySelectorAll(`${navSelector} > *`).forEach(item => {
+        item.addEventListener("click", () => {
+            item.parentElement?.querySelectorAll(":scope > *").forEach(sibling => sibling.classList.remove("active"));
+            item.classList.add("active");
+            onSelect?.(item.getAttribute("data-view") ?? "");
+        });
     });
-});
-switchView("list");
+}
+
+wireSwitcher("#display-changer1", view => switchMainView(1, view));
+wireSwitcher("#display-changer2", view => switchMainView(2, view));
+wireSwitcher("#type-switcher1");
+wireSwitcher("#type-switcher2");
+switchMainView(1, "list");
+switchMainView(2, "list");
 
 // initCal();
 getModules().then(modules => {
-    console.log(modules);
-    displayModuleList(modules.items);
-    displayModuleCards(modules.items);
+    renderEntities("modules", modules.items.sort((a, b) => a.name.localeCompare(b.name)), moduleToView);
     displayTree(modules.items);
 }).catch(error => {
     console.error("Failed to fetch modules:", error);
 });
 
 getCourses().then(courses => {
-    console.log(courses);
+    renderEntities("courses", courses.items.sort((a, b) => a.name.localeCompare(b.name)), courseToView);
 }).catch(error => {
     console.error("Failed to fetch courses:", error);
 });
 
 getExams().then(exams => {
-    console.log(exams);
+    renderEntities("exams", exams.items.sort((a, b) => a.name.localeCompare(b.name)), examToView);
 }).catch(error => {
     console.error("Failed to fetch exams:", error);
 });
 
-getEvents().then(events => {
-    console.log(events);
+// getEvents().then(events => {
+//     renderEntities("events", events.items.sort((a, b) => a.event_date.localeCompare(b.event_date)), eventToView);
+// }).catch(error => {
+//     console.error("Failed to fetch events:", error);
+// });
+
+getStaff().then(staff => {
+    renderEntities("staff", staff.items.sort((a, b) => a.name.localeCompare(b.name)), staffToView);
 }).catch(error => {
-    console.error("Failed to fetch events:", error);
+    console.error("Failed to fetch staff:", error);
+});
+
+getLocations().then(locations => {
+    renderEntities("locations", locations.items.sort((a, b) => a.name.localeCompare(b.name)), locationToView);
+}).catch(error => {
+    console.error("Failed to fetch locations:", error);
 });
