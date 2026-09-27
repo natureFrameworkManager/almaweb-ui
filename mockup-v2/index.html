@@ -1,0 +1,254 @@
+﻿<!DOCTYPE html>
+<html lang="de" data-theme="papier" data-density="dicht">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>almanach — Das Studienbuch (Mockup V2)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/app.css">
+    <script>
+        (() => {
+            const stored = localStorage.getItem("almanach.theme");
+            const system = matchMedia("(prefers-color-scheme: dark)").matches ? "nacht" : "papier";
+            const theme = stored && stored !== "system" ? stored : system;
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+</head>
+<body>
+    <div id="app-shell">
+        <!-- Top App Header -->
+        <header class="app-header">
+            <div class="brand-section">
+                <a href="#/heute" class="brand-logo" id="brand-home-link">
+                    <div class="brand-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+                            <path d="M6 6h10"/>
+                            <path d="M6 10h10"/>
+                        </svg>
+                    </div>
+                    <span class="brand-title">alm<span class="hl-char">a</span>nach</span>
+                </a>
+                <span class="brand-badge">V2 Entwurf</span>
+            </div>
+
+            <!-- Omnibox -->
+            <div class="omnibox-wrapper">
+                <div class="omnibox-input-group">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink-muted)" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    <input type="text" id="omnibox-input" class="omnibox-input" placeholder="Nachschlagen: Name, 10-201-..., typ:kurs, lp:5, Prof. Rahm..." autocomplete="off">
+                    <span class="kbd-badge">⌘K</span>
+                </div>
+                <div class="omnibox-results" id="omnibox-dropdown"></div>
+            </div>
+
+            <!-- Header Actions -->
+            <div class="header-actions">
+                <button class="header-btn" id="btn-density-toggle" title="Dichte wechseln">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 6H3"/><path d="M21 12H3"/><path d="M21 18H3"/></svg>
+                    <span>Dichte</span>
+                </button>
+                <button class="header-btn" id="btn-theme-toggle" title="Thema (Papier / Nacht) wechseln">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+                    <span>Thema</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Left Rail Navigation -->
+        <nav class="app-rail">
+            <button class="rail-btn active" data-view="heute" title="Heute (Übersicht)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span>Heute</span>
+            </button>
+            <button class="rail-btn" data-view="blaettern" title="Blättern (Verzeichnis)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><polyline points="10 2 10 10 13 7 16 10 16 2"/></svg>
+                <span>Katalog</span>
+            </button>
+            <button class="rail-btn" data-view="fuehrer" title="Studienführer (Miller Columns)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                <span>Führer</span>
+            </button>
+            <button class="rail-btn" data-view="woche" title="Wochenplan (Kalender)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                <span>Woche</span>
+            </button>
+
+            <div class="rail-spacer"></div>
+
+            <button class="rail-btn" id="btn-export-plan" title="Plan als Link teilen">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+                <span>Teilen</span>
+            </button>
+        </nav>
+
+        <!-- Main Workspace -->
+        <main class="app-main">
+            <!-- Tabs Bar -->
+            <div class="workspace-tabs" id="workspace-tabs"></div>
+
+            <!-- Subbar with Satzfilter & Controls -->
+            <div class="view-subbar">
+                <div class="satzfilter">
+                    <span>Zeige</span>
+                    <button class="satz-slot" id="slot-entity">Module ▾</button>
+                    <span>aus</span>
+                    <button class="satz-slot" id="slot-faculty">Alle Fakultäten ▾</button>
+                    <span>im</span>
+                    <button class="satz-slot" id="slot-semester">WiSe 2025/26 ▾</button>
+                    <span>mit</span>
+                    <button class="satz-slot" id="slot-lp">beliebig vielen LP ▾</button>
+                </div>
+
+                <div class="view-controls">
+                    <span id="browse-count-label" style="font-size: 0.8rem; color: var(--ink-muted); margin-right: 8px;">6 Module</span>
+                    <div class="segmented-control">
+                        <button class="segment-btn active">Zeilen</button>
+                        <button class="segment-btn">Karten</button>
+                        <button class="segment-btn">Tabelle</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Viewport Container -->
+            <div class="viewport-content">
+                <!-- View 1: Heute -->
+                <div id="view-heute" class="view-pane active">
+                    <div class="heute-greeting">
+                        <h1 class="heute-title">Guten Morgen.</h1>
+                        <p class="heute-date">Mittwoch, 22. Oktober 2025 · WiSe 2025/26 (Woche 3)</p>
+                    </div>
+
+                    <div class="heute-grid">
+                        <div class="heute-card">
+                            <div class="heute-card-header">
+                                <h2 class="heute-card-title">Als Nächstes</h2>
+                                <span class="entity-badge badge-termin">HEUTE</span>
+                            </div>
+                            <div class="schedule-item">
+                                <div class="schedule-time">09:15</div>
+                                <div class="schedule-details">
+                                    <div class="schedule-title">Datenbanksysteme I · Vorlesung</div>
+                                    <div class="schedule-room">HS 3 · Hörsaalgebäude Augustusplatz</div>
+                                </div>
+                            </div>
+                            <div class="schedule-item">
+                                <div class="schedule-time">13:15</div>
+                                <div class="schedule-details">
+                                    <div class="schedule-title">Softwaretechnik · Vorlesung</div>
+                                    <div class="schedule-room">HS 1 · Hörsaalgebäude Augustusplatz</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="heute-card">
+                            <div class="heute-card-header">
+                                <h2 class="heute-card-title">Prüfungen im Blick</h2>
+                                <span class="entity-badge badge-pruefung">WiSe 25/26</span>
+                            </div>
+                            <div class="schedule-item">
+                                <div class="schedule-time" style="color: var(--danger);">12. Feb</div>
+                                <div class="schedule-details">
+                                    <div class="schedule-title">Klausur: Datenbanksysteme I</div>
+                                    <div class="schedule-room">10:00–11:30 · HS 3 · Pflicht</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View 2: Blättern -->
+                <div id="view-blaettern" class="view-pane">
+                    <div class="result-list" id="browse-result-list"></div>
+                </div>
+
+                <!-- View 3: Studienführer -->
+                <div id="view-fuehrer" class="view-pane">
+                    <div style="margin-bottom: 12px; font-size: 0.9rem; color: var(--ink-muted);">
+                        Hierarchischer Studienführer: Semester → Fakultät → Studiengang → Bereich:
+                    </div>
+                    <div class="miller-columns" id="studienfuehrer-columns"></div>
+                </div>
+
+                <!-- View 4: Woche -->
+                <div id="view-woche" class="view-pane">
+                    <div class="week-grid-container">
+                        <div class="week-grid-header">
+                            <div>Zeit</div>
+                            <div>Montag</div>
+                            <div>Dienstag</div>
+                            <div>Mittwoch</div>
+                            <div>Donnerstag</div>
+                            <div>Freitag</div>
+                        </div>
+                        <div class="week-grid-body" id="week-calendar-body"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Tray: Die Mappe -->
+        <aside class="app-mappe">
+            <div class="mappe-header">
+                <div class="mappe-title-row">
+                    <h2 class="mappe-title">Die Mappe</h2>
+                    <span style="font-size: 0.75rem; color: var(--ink-subtle);">Lokal gesichert</span>
+                </div>
+
+                <!-- Scenario Register Tabs -->
+                <div class="register-tabs">
+                    <div class="register-tab reg-a active" data-sc="A">
+                        <span class="reg-dot"></span>
+                        <span>Plan A</span>
+                    </div>
+                    <div class="register-tab reg-b" data-sc="B">
+                        <span class="reg-dot"></span>
+                        <span>Plan B</span>
+                    </div>
+                    <div class="register-tab reg-c" data-sc="C">
+                        <span class="reg-dot"></span>
+                        <span>Plan C</span>
+                    </div>
+                </div>
+
+                <!-- LP Meter -->
+                <div class="lp-meter-card">
+                    <div class="lp-label-row">
+                        <span>Leistungspunkte</span>
+                        <span id="lp-meter-text">20 von 30 LP</span>
+                    </div>
+                    <div class="lp-bar-track">
+                        <div class="lp-bar-fill" id="lp-meter-bar" style="width: 66%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mappe Items List -->
+            <div class="mappe-body" id="mappe-items-list"></div>
+
+            <div class="mappe-footer">
+                <button class="header-btn" style="width: 100%; justify-content: center; background: var(--paper);" onclick="document.querySelector('.rail-btn[data-view=woche]').click();">
+                    Wochenplan aufschlagen ↗
+                </button>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Quick Peek Drawer -->
+    <div class="peek-drawer" id="quick-peek-drawer"></div>
+
+    <!-- Full Blatt Modal Dialog -->
+    <div class="dialog-overlay" id="blatt-dialog-overlay">
+        <div class="sheet-dialog" id="blatt-dialog-content"></div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container"></div>
+
+    <!-- Application Script -->
+    <script type="module" src="./ts/main.ts"></script>
+</body>
+</html>

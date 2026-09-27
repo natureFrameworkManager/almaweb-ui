@@ -1,0 +1,181 @@
+/* mockup-v2/css/navigation.css */
+
+/* Omnibox */
+.omnibox-wrapper {
+    flex: 1;
+    max-width: 640px;
+    position: relative;
+}
+
+.omnibox-input-group {
+    display: flex;
+    align-items: center;
+    background: var(--paper);
+    border: var(--border-width) solid var(--rule-strong);
+    border-radius: var(--r-pill);
+    padding: 6px 14px;
+    gap: var(--s-2);
+    transition: all var(--m-fast);
+}
+
+.omnibox-input-group:focus-within {
+    border-color: var(--brand-700);
+    box-shadow: 0 0 0 3px var(--brand-50);
+    background: var(--sheet);
+}
+
+.omnibox-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 0.92rem;
+    color: var(--ink);
+}
+
+.kbd-badge {
+    font-size: 0.72rem;
+    background: var(--sheet-2);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 2px 6px;
+    color: var(--ink-muted);
+    font-family: monospace;
+}
+
+.omnibox-results {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: var(--sheet);
+    border: var(--border-width) solid var(--rule);
+    border-radius: var(--r-md);
+    box-shadow: var(--e-3);
+    z-index: 100;
+    max-height: 440px;
+    overflow-y: auto;
+    display: none;
+}
+
+.omnibox-results.open {
+    display: block;
+}
+
+.omnibox-group-title {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-subtle);
+    padding: var(--s-2) var(--s-4);
+    background: var(--sheet-2);
+    border-bottom: 1px solid var(--rule);
+    font-weight: 600;
+}
+
+.omnibox-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px var(--s-4);
+    cursor: pointer;
+    border-bottom: 1px solid var(--rule);
+    transition: background var(--m-fast);
+}
+
+.omnibox-item:hover, .omnibox-item.active {
+    background: var(--brand-50);
+}
+
+.omnibox-item:last-child {
+    border-bottom: none;
+}
+
+/* Header Actions */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+}
+
+.header-btn {
+    padding: 6px 12px;
+    border-radius: var(--r-sm);
+    font-size: 0.82rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: var(--border-width) solid var(--rule);
+    background: var(--sheet);
+    color: var(--ink);
+    transition: all var(--m-fast);
+}
+
+.header-btn:hover {
+    background: var(--sheet-2);
+    border-color: var(--rule-strong);
+}
+
+/* Left Icon Rail */
+.app-rail {
+    grid-column: 1 / 2;
+    background: var(--sheet);
+    border-right: var(--border-width) solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--s-4) 0;
+    gap: var(--s-3);
+    z-index: 10;
+    height: 100%;
+}
+
+.rail-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--r-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-muted);
+    transition: all var(--m-fast);
+    position: relative;
+}
+
+.rail-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.rail-btn span {
+    font-size: 0.65rem;
+    margin-top: 2px;
+    font-weight: 500;
+}
+
+.rail-btn:hover {
+    color: var(--brand-700);
+    background: var(--brand-50);
+}
+
+.rail-btn.active {
+    color: var(--brand-700);
+    background: var(--brand-50);
+}
+
+.rail-btn.active::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 3px;
+    background: var(--brand-700);
+    border-radius: 0 var(--r-xs) var(--r-xs) 0;
+}
+
+.rail-spacer {
+    flex: 1;
+}
