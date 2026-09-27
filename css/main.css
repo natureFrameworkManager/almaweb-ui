@@ -121,9 +121,9 @@
 }
 
 body {
-    @apply min-h-screen max-w-screen;
+    @apply min-h-screen w-screen max-w-screen overflow-x-hidden;
     @apply bg-background text-body-medium leading-[1.2] text-text;
-    @apply grid grid-cols-[330px_1fr_1fr] grid-rows-[min-content_1fr];
+    @apply grid grid-cols-[330px_minmax(0,1fr)_minmax(0,1fr)] grid-rows-[min-content_minmax(0,1fr)];
 }
 
 header#top-header {
@@ -220,23 +220,26 @@ div#filter-options
     @apply h-4 w-4 accent-primary;
 }
 main.list-card-view {
-    @apply flex flex-col px-2 py-2;
+    @apply flex min-w-0 max-w-full flex-col overflow-hidden px-2 py-2;
 }
 main.calendar,
 main.tree {
-    @apply flex flex-col px-2 py-2;
+    @apply flex min-w-0 max-w-full flex-col overflow-hidden px-2 py-2;
 }
-main.list-card-view#list-card-view1 {
+main#list-card-view1,
+main#calendar1,
+main#tree1 {
     @apply col-2 row-2;
 }
-main.list-card-view#list-card-view2 {
+main#list-card-view2,
+main#calendar2,
+main#tree2 {
     @apply col-3 row-2;
 }
-main.calendar#calendar1 {
-    @apply col-start-1 col-end-3 row-2;
-}
-main.calendar#calendar2 {
-    @apply col-start-1 col-end-3 row-2;
+body[data-view-mode="single"] main#list-card-view1,
+body[data-view-mode="single"] main#calendar1,
+body[data-view-mode="single"] main#tree1 {
+    grid-column: 2 / 4;
 }
 main#compare {
     @apply col-start-2 col-end-4 row-2 px-2 py-2;
