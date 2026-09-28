@@ -112,24 +112,46 @@ function createCard(view: EntityView): HTMLDivElement {
     return card;
 }
 
-// Renders items into every pane's list/card-grid for the given type (both list-card-view1 and list-card-view2)
-/**
- * Render entity data into all matching list and card containers.
- * @param type - Entity type selector value.
- * @param items - Entity records to render.
- * @param toView - Entity-to-view converter.
- */
-export function renderEntities<T>(type: string, items: T[], toView: (item: T) => EntityView) {
-    const views = items.map(toView);
+/** The two representations an entity can be rendered as. */
+export type EntityKind = "list" | "card";
 
-    document.querySelectorAll(`.type-content[data-type="${type}"] > ul.list`).forEach((listEl) => {
-        listEl.innerHTML = "";
-        views.forEach((view) => listEl.appendChild(createListItem(view)));
-    });
-    document
-        .querySelectorAll(`.type-content[data-type="${type}"] > div.card-grid`)
-        .forEach((gridEl) => {
-            gridEl.innerHTML = "";
-            views.forEach((view) => gridEl.appendChild(createCard(view)));
-        });
+/**
+ * Build the DOM node representing an entity view.
+ * @param kind - Representation to build.
+ * @param view - Entity view data.
+ * @returns The created list item or card.
+ */
+function createEntityNode(kind: EntityKind, view: EntityView): HTMLElement {
+    return kind === "list" ? createListItem(view) : createCard(view);
+}
+
+/**
+ * Append the entity views that are not rendered yet to a container.
+ *
+ * The number of already rendered views is tracked on the container itself, so
+ * calling this repeatedly only creates the missing nodes and preserves the
+ * current scroll position. When the incoming data shrinks (for example after a
+ * filter change) the container is reset first.
+ * @param container - List or card-grid container to fill.
+ * @param kind - Representation to render.
+ * @param views - Entity views to display.
+ */
+export function syncEntityContainer(
+    container: HTMLElement,
+    kind: EntityKind,
+    views: EntityView[],
+): void {
+    const renderedCount = container.dataset["renderedCount"];
+    const rendered = renderedCount === undefined ? 0 : Number(renderedCount);
+
+    if (renderedCount === undefined || Number.isNaN(rendered) || rendered > views.length) {
+        container.replaceChildren();
+        container.dataset["renderedCount"] = "0";
+    }
+
+    const start = Number(container.dataset["renderedCount"] ?? "0");
+    const fragment = document.createDocumentFragment();
+    views.slice(start).forEach((view) => fragment.append(createEntityNode(kind, view)));
+    container.append(fragment);
+    container.dataset["renderedCount"] = String(views.length);
 }

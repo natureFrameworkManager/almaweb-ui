@@ -94,3 +94,11 @@ export interface EventType {
     id: number;
     name: string;
 }
+
+export interface PagedResponse<T> {
+    count: number;
+    page: number;
+    limit: number;
+    total_pages: number;
+    items: T[];
+}

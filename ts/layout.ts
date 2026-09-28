@@ -18,9 +18,18 @@ function setPaneViewVisibility(elements: HTMLElement[], visible: boolean): void 
  * @param paneId - Pane identifier.
  * @returns Whether the pane is visible.
  */
-function isPaneVisible(paneId: 1 | 2): boolean {
+export function isPaneVisible(paneId: 1 | 2): boolean {
     const viewMode = document.body.dataset.viewMode ?? "single";
     return paneId === 1 ? viewMode !== "compare" : viewMode === "split";
+}
+
+/**
+ * Read the main view currently active in a pane.
+ * @param paneId - Pane identifier.
+ * @returns The active main view name.
+ */
+export function getActiveMainView(paneId: 1 | 2): string {
+    return activeMainViews[paneId];
 }
 
 /**

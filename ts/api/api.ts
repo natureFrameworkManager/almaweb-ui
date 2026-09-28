@@ -9,6 +9,7 @@ import type {
     Building,
     EventType,
     Faculty,
+    PagedResponse,
 } from "./types";
 
 const host = "https://api.casparkroll.de/almaweb/v1";
@@ -42,6 +43,35 @@ async function fetchLocal(endpoint: string, options?: RequestInit) {
 }
 
 /**
+ * Append pagination parameters to a query.
+ * @param queryParams - Query parameters to extend.
+ * @param page - Optional one-based page number.
+ * @param pageSize - Optional number of items per page.
+ */
+function appendPaging(queryParams: URLSearchParams, page?: number, pageSize?: number): void {
+    if (page !== undefined) {
+        queryParams.append("page", page.toString());
+    }
+    if (pageSize !== undefined) {
+        queryParams.append("page_size", pageSize.toString());
+    }
+}
+
+/**
+ * Append encoded query parameters to a URL.
+ * @param url - Base URL, optionally already containing a query string.
+ * @param queryParams - Query parameters to append.
+ * @returns The URL including the non-empty query parameters.
+ */
+function appendQuery(url: string, queryParams: URLSearchParams): string {
+    const query = queryParams.toString();
+    if (query === "") {
+        return url;
+    }
+    return `${url}${url.includes("?") ? "&" : "?"}${query}`;
+}
+
+/**
  * Fetch module data from the local fixture.
  * @param name - Optional module name filter.
  * @param number - Optional module number filter.
@@ -53,6 +83,8 @@ async function fetchLocal(endpoint: string, options?: RequestInit) {
  * @param durationMax - Optional maximum duration filter.
  * @param language - Optional language filter.
  * @param semester - Optional semester ID filter.
+ * @param page - Optional one-based page number.
+ * @param pageSize - Optional number of items per page.
  * @returns The module response data.
  */
 export async function getModules(
@@ -66,13 +98,9 @@ export async function getModules(
     durationMax?: number,
     language?: string | string[],
     semester?: number | number[],
-): Promise<{
-    count: number;
-    page: number;
-    limit: number;
-    total_pages: number;
-    items: Module[];
-}> {
+    page?: number,
+    pageSize?: number,
+): Promise<PagedResponse<Module>> {
     const queryParams = new URLSearchParams();
     if (name) {
         if (Array.isArray(name)) {
@@ -124,11 +152,14 @@ export async function getModules(
             queryParams.append("semester_id", semester.toString());
         }
     }
+    appendPaging(queryParams, page, pageSize);
     console.log(
         "/modules?include=faculty&include=courses&include=exams&fields=id&fields=name&fields=number&fields=language&fields=duration_semesters&fields=credits&fields=frequency&fields=path&fields=faculty.name&fields=courses.type&fields=exams.name&" +
             queryParams.toString(),
     );
-    return fetchApi(`/modules?include=faculty&include=courses&include=exams&fields=id&fields=name&fields=number&fields=language&fields=duration_semesters&fields=credits&fields=frequency&fields=path&fields=faculty.name&fields=courses.type&fields=exams.name&${queryParams.toString()}`);
+    return fetchApi(
+        `/modules?include=faculty&include=courses&include=exams&fields=id&fields=name&fields=number&fields=language&fields=duration_semesters&fields=credits&fields=frequency&fields=path&fields=faculty.name&fields=courses.type&fields=exams.name&${queryParams.toString()}`,
+    );
 }
 
 /**
@@ -140,6 +171,8 @@ export async function getModules(
  * @param weekHoursMin - Optional minimum weekly hours filter.
  * @param weekHoursMax - Optional maximum weekly hours filter.
  * @param semester - Optional semester ID filter.
+ * @param page - Optional one-based page number.
+ * @param pageSize - Optional number of items per page.
  * @returns The course response data.
  */
 export async function getCourses(
@@ -150,13 +183,9 @@ export async function getCourses(
     weekHoursMin?: number,
     weekHoursMax?: number,
     semester?: number | number[],
-): Promise<{
-    count: number;
-    page: number;
-    limit: number;
-    total_pages: number;
-    items: Course[];
-}> {
+    page?: number,
+    pageSize?: number,
+): Promise<PagedResponse<Course>> {
     const queryParams = new URLSearchParams();
     if (name) {
         if (Array.isArray(name)) {
@@ -200,6 +229,7 @@ export async function getCourses(
             queryParams.append("semester_id", semester.toString());
         }
     }
+    appendPaging(queryParams, page, pageSize);
     console.log(
         "/courses?fields=id&fields=name&fields=number&fields=weekday&fields=weekly_hours&fields=language&fields=staff&fields=type.name&" +
             queryParams.toString(),
@@ -217,6 +247,8 @@ export async function getCourses(
  * @param endDate - Optional end date filter.
  * @param building - Optional building filter.
  * @param semester - Optional semester ID filter.
+ * @param page - Optional one-based page number.
+ * @param pageSize - Optional number of items per page.
  * @returns The event response data.
  */
 export async function getEvents(
@@ -228,13 +260,9 @@ export async function getEvents(
     endDate?: string,
     building?: number | number[],
     semester?: number | number[],
-): Promise<{
-    count: number;
-    page: number;
-    limit: number;
-    total_pages: number;
-    items: Event[];
-}> {
+    page?: number,
+    pageSize?: number,
+): Promise<PagedResponse<Event>> {
     const queryParams = new URLSearchParams();
     if (startTimeMin) {
         queryParams.append("start_time_from", startTimeMin);
@@ -268,6 +296,7 @@ export async function getEvents(
             queryParams.append("semester_id", semester.toString());
         }
     }
+    appendPaging(queryParams, page, pageSize);
     console.log(
         "/events?fields=id&fields=number&fields=name&fields=start_time&fields=end_time&fields=event_date&fields=location&fields=location.building&fields=staff&" +
             queryParams.toString(),
@@ -287,6 +316,8 @@ export async function getEvents(
  * @param required - Optional required filter.
  * @param staff - Optional staff ID filter.
  * @param semester - Optional semester ID filter.
+ * @param page - Optional one-based page number.
+ * @param pageSize - Optional number of items per page.
  * @returns The exam response data.
  */
 export async function getExams(
@@ -300,13 +331,9 @@ export async function getExams(
     required?: boolean,
     staff?: number | number[],
     semester?: number | number[],
-): Promise<{
-    count: number;
-    page: number;
-    limit: number;
-    total_pages: number;
-    items: Exam[];
-}> {
+    page?: number,
+    pageSize?: number,
+): Promise<PagedResponse<Exam>> {
     const queryParams = new URLSearchParams();
     if (startTimeMin) {
         queryParams.append("start_time_from", startTimeMin);
@@ -350,123 +377,134 @@ export async function getExams(
             queryParams.append("semester_id", semester.toString());
         }
     }
+    appendPaging(queryParams, page, pageSize);
     console.log(
         "/exams?fields=id&fields=name&fields=exam_date&fields=start_time&fields=end_time&fields=required&fields=staff&" +
             queryParams.toString(),
     );
-    return fetchApi(`/exams?fields=id&fields=name&fields=exam_date&fields=start_time&fields=end_time&fields=required&fields=staff&${queryParams.toString()}`);
+    return fetchApi(
+        `/exams?fields=id&fields=name&fields=exam_date&fields=start_time&fields=end_time&fields=required&fields=staff&${queryParams.toString()}`,
+    );
 }
 
 /**
  * Fetch staff data from the API.
+ * @param page - Optional one-based page number.
+ * @param pageSize - Optional number of items per page.
  * @returns The staff response data.
  */
-export async function getStaff(): Promise<{
-    count: number;
-    page: number;
-    limit: number;
-    total_pages: number;
-    items: Staff[];
-}> {
-    return fetchApi("/staff?fields=id&fields=name");
+export async function getStaff(page?: number, pageSize?: number): Promise<PagedResponse<Staff>> {
+    const queryParams = new URLSearchParams();
+    appendPaging(queryParams, page, pageSize);
+    return fetchApi(appendQuery("/staff?fields=id&fields=name", queryParams));
 }
 
 /**
  * Fetch location data from the API.
+ * @param page - Optional one-based page number.
+ * @param pageSize - Optional number of items per page.
  * @returns The location response data.
  */
-export async function getLocations(): Promise<{
-    count: number;
-    page: number;
-    limit: number;
-    total_pages: number;
-    items: Location[];
-}> {
+export async function getLocations(
+    page?: number,
+    pageSize?: number,
+): Promise<PagedResponse<Location>> {
+    const queryParams = new URLSearchParams();
+    appendPaging(queryParams, page, pageSize);
     return fetchApi(
-        "/locations?fields=id&fields=name&fields=external_id&fields=description&fields=type&fields=seats&fields=size&fields=accessibility&fields=building_id&fields=building",
+        appendQuery(
+            "/locations?fields=id&fields=name&fields=external_id&fields=description&fields=type&fields=seats&fields=size&fields=accessibility&fields=building_id&fields=building",
+            queryParams,
+        ),
     );
 }
 
 /**
  * Fetch building data from the API.
+ * @param page - Optional one-based page number.
+ * @param pageSize - Optional number of items per page.
  * @returns The building response data.
  */
-export async function getBuildings(): Promise<{
-    count: number;
-    page: number;
-    limit: number;
-    total_pages: number;
-    items: Building[];
-}> {
-    return fetchApi("/buildings");
+export async function getBuildings(
+    page?: number,
+    pageSize?: number,
+): Promise<PagedResponse<Building>> {
+    const queryParams = new URLSearchParams();
+    appendPaging(queryParams, page, pageSize);
+    return fetchApi(appendQuery("/buildings", queryParams));
 }
 
 /**
  * Fetch semester data from the API.
+ * @param page - Optional one-based page number.
+ * @param pageSize - Optional number of items per page.
  * @returns The semester response data.
  */
-export async function getSemesters(): Promise<{
-    count: number;
-    page: number;
-    limit: number;
-    total_pages: number;
-    items: Semester[];
-}> {
-    return fetchApi("/semesters");
+export async function getSemesters(
+    page?: number,
+    pageSize?: number,
+): Promise<PagedResponse<Semester>> {
+    const queryParams = new URLSearchParams();
+    appendPaging(queryParams, page, pageSize);
+    return fetchApi(appendQuery("/semesters", queryParams));
 }
 
 /**
  * Fetch faculty data from the API.
+ * @param page - Optional one-based page number.
+ * @param pageSize - Optional number of items per page.
  * @returns The faculty response data.
  */
-export async function getFaculties(): Promise<{
-    count: number;
-    page: number;
-    limit: number;
-    total_pages: number;
-    items: Faculty[];
-}> {
-    return fetchApi("/faculties");
+export async function getFaculties(
+    page?: number,
+    pageSize?: number,
+): Promise<PagedResponse<Faculty>> {
+    const queryParams = new URLSearchParams();
+    appendPaging(queryParams, page, pageSize);
+    return fetchApi(appendQuery("/faculties", queryParams));
 }
 
 /**
  * Fetch event type catalog data from the API.
+ * @param page - Optional one-based page number.
+ * @param pageSize - Optional number of items per page.
  * @returns The event type response data.
  */
-export async function getEventTypes(): Promise<{
-    count: number;
-    page: number;
-    limit: number;
-    total_pages: number;
-    items: EventType[];
-}> {
-    return fetchApi("/catalog/event-types");
+export async function getEventTypes(
+    page?: number,
+    pageSize?: number,
+): Promise<PagedResponse<EventType>> {
+    const queryParams = new URLSearchParams();
+    appendPaging(queryParams, page, pageSize);
+    return fetchApi(appendQuery("/catalog/event-types", queryParams));
 }
 
 /**
  * Fetch the distinct module languages from the API.
+ * @param page - Optional one-based page number.
+ * @param pageSize - Optional number of items per page.
  * @returns The distinct module language response data.
  */
-export async function getModuleLanguages(): Promise<{
-    count: number;
-    page: number;
-    limit: number;
-    total_pages: number;
-    items: { language: string }[];
-}> {
-    return fetchApi("/modules/distinct/fields?field=language");
+export async function getModuleLanguages(
+    page?: number,
+    pageSize?: number,
+): Promise<PagedResponse<{ language: string }>> {
+    const queryParams = new URLSearchParams();
+    appendPaging(queryParams, page, pageSize);
+    return fetchApi(appendQuery("/modules/distinct/fields?field=language", queryParams));
 }
 
 /**
  * Fetch the distinct exam types from the API.
+ * @param page - Optional one-based page number.
+ * @param pageSize - Optional number of items per page.
  * @returns The distinct exam type response data.
  */
-export async function getExamTypes(): Promise<{
-    count: number;
-    page: number;
-    limit: number;
-    total_pages: number;
-    items: { name: string }[];
-}> {
-    return fetchApi("/exams/distinct/fields?field=name");
+export async function getExamTypes(
+    page?: number,
+    pageSize?: number,
+): Promise<PagedResponse<{ name: string }>> {
+    const queryParams = new URLSearchParams();
+    appendPaging(queryParams, page, pageSize);
+    return fetchApi(appendQuery("/exams/distinct/fields?field=name", queryParams));
 }

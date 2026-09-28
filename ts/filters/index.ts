@@ -10,4 +10,13 @@ export {
     toStaffOptions,
     type FilterOption,
 } from "./options";
-export { requeryAll, requeryCourses, requeryExams, requeryModules, wireFilterGroup } from "./query";
+export {
+    invalidateTree,
+    refreshTree,
+    registerCollections,
+    requeryAll,
+    requeryCourses,
+    requeryExams,
+    requeryModules,
+    wireFilterGroup,
+} from "./query";
