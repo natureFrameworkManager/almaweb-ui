@@ -8,6 +8,10 @@ main.tree .opened-levels {
 main.tree .opened-levels .opened-level {
     @apply col-1 flex flex-row items-center justify-between rounded-md border border-border ps-1;
 }
+main.tree .opened-levels .opened-level.clickable {
+    @apply cursor-pointer hover:border-primary;
+}
 main.tree .levels .level {
     @apply flex flex-row items-center justify-between rounded-md border border-border p-2;
+    @apply cursor-pointer hover:border-primary;
 }

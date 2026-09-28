@@ -358,7 +358,7 @@ async function ensureTreeModules(): Promise<Module[] | null> {
 export async function refreshTree(paneId: 1 | 2): Promise<void> {
     const modules = await ensureTreeModules();
     if (modules) {
-        displayTree([...modules].sort(byName), paneId);
+        displayTree([...modules].sort(byName), paneId, moduleToView);
     }
 }
 
