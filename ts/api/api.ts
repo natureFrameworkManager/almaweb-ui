@@ -293,7 +293,7 @@ export async function getEvents(
     endTimeMax?: string,
     startDate?: string,
     endDate?: string,
-    building?: number | number[],
+    building?: number,
     semester?: number | number[],
     page?: number,
     pageSize?: number,
@@ -319,12 +319,8 @@ export async function getEvents(
     if (endDate) {
         queryParams.append("date_to", endDate);
     }
-    if (building) {
-        if (Array.isArray(building)) {
-            building.forEach((b) => queryParams.append("building_id", b.toString()));
-        } else {
-            queryParams.append("building_id", building.toString());
-        }
+    if (building !== undefined) {
+        queryParams.append("building_id", building.toString());
     }
     if (semester) {
         if (Array.isArray(semester)) {
@@ -594,7 +590,7 @@ export async function getExamTypes(
  */
 export async function getModuleDetail(id: string): Promise<ModuleDetail> {
     return fetchApi(
-        `/modules/${id}?include=faculty&include=semesters&include=courses&include=courses.type&include=courses.staff&include=courses.events&include=courses.events.location&include=courses.events.location.building&include=courses.events.staff&include=exams&include=exams.staff`,
+        `/modules/${id}?include=faculty&include=semesters&include=degrees&include=degrees.faculty&include=courses&include=courses.type&include=courses.staff&include=courses.events&include=courses.events.location&include=courses.events.location.building&include=courses.events.staff&include=exams&include=exams.staff`,
     );
 }
 

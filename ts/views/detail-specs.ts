@@ -339,7 +339,14 @@ function degreeTabs(detail: DegreeDetail): DetailTab[] {
     return [
         createSectionsTab([
             createSection("Angaben", [
-                createAttrGrid([{ label: "Fakultät", value: displayText(faculty) }]),
+                createAttrGrid([
+                    { label: "Fach", value: displayText(detail.subject) },
+                    { label: "Abschluss", value: displayText(detail.degree) },
+                    { label: "Schulart", value: displayText(detail.school_type) },
+                    { label: "Leistungspunkte", value: displayText(detail.ects) },
+                    { label: "Version", value: displayText(detail.version) },
+                    { label: "Fakultät", value: displayText(faculty) },
+                ]),
             ]),
         ]),
         createTableTab("modules", "Module", moduleColumns, detail.modules ?? [], "Name"),

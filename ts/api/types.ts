@@ -151,6 +151,18 @@ export interface Degree {
     id: number;
     faculty_id: number;
     name: string;
+    /** Program name without degree, school type, version or ECTS. `null` or `""` when unknown. */
+    subject: string | null;
+    /** Degree type such as `B.Sc.` or `M.A.`. `null` or `""` when unknown. */
+    degree: string | null;
+    /** School type of teaching degrees, e.g. `Gymnasium`; `null` for other degrees. */
+    school_type: string | null;
+    /** ECTS parsed from the name, e.g. `60` for "Wahlfach 60 LP". `null` when unknown. */
+    ects: number | null;
+    /** Prüfungsordnung / Immatrikulationsangabe, e.g. `PO 2017`; `null` or `""` when unknown. */
+    version: string | null;
+    /** Extractor confidence: `high`, `medium`, `low` or `none`. */
+    confidence: string | null;
     faculty?: Faculty;
 }
 

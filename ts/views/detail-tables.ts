@@ -203,6 +203,29 @@ export const degreeColumns: Column<Degree>[] = [
         sortValue: (degree) => degree.name,
     },
     {
+        label: "Fach",
+        value: (degree) => displayText(degree.subject),
+        sortValue: (degree) => degree.subject ?? "",
+    },
+    {
+        label: "Abschluss",
+        value: (degree) => displayText(degree.degree),
+        sortValue: (degree) => degree.degree ?? "",
+    },
+    {
+        label: "Schulart",
+        value: (degree) => displayText(degree.school_type),
+    },
+    {
+        label: "LP",
+        value: (degree) => (degree.ects ? `${degree.ects} LP` : EMPTY_VALUE),
+        sortValue: (degree) => degree.ects ?? 0,
+    },
+    {
+        label: "Version",
+        value: (degree) => displayText(degree.version),
+    },
+    {
         label: "Fakultät",
         value: (degree) =>
             displayText(
