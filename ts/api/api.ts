@@ -1,4 +1,15 @@
-import type { Module, Course, Event, Exam, Staff, Location, Semester, Building, EventType, Faculty } from "./types";
+import type {
+    Module,
+    Course,
+    Event,
+    Exam,
+    Staff,
+    Location,
+    Semester,
+    Building,
+    EventType,
+    Faculty,
+} from "./types";
 
 const host = "https://api.casparkroll.de/almaweb/v1";
 
@@ -54,7 +65,7 @@ export async function getModules(
     durationMin?: number,
     durationMax?: number,
     language?: string | string[],
-    semester?: number | number[]
+    semester?: number | number[],
 ): Promise<{
     count: number;
     page: number;
@@ -65,21 +76,21 @@ export async function getModules(
     const queryParams = new URLSearchParams();
     if (name) {
         if (Array.isArray(name)) {
-            name.forEach(n => queryParams.append("name", n));
+            name.forEach((n) => queryParams.append("name", n));
         } else {
             queryParams.append("name", name);
         }
     }
     if (number) {
         if (Array.isArray(number)) {
-            number.forEach(n => queryParams.append("number", n));
+            number.forEach((n) => queryParams.append("number", n));
         } else {
             queryParams.append("number", number);
         }
     }
     if (faculty) {
         if (Array.isArray(faculty)) {
-            faculty.forEach(f => queryParams.append("faculty_id", f.toString()));
+            faculty.forEach((f) => queryParams.append("faculty_id", f.toString()));
         } else {
             queryParams.append("faculty_id", faculty.toString());
         }
@@ -101,19 +112,22 @@ export async function getModules(
     }
     if (language) {
         if (Array.isArray(language)) {
-            language.forEach(l => queryParams.append("language", l));
+            language.forEach((l) => queryParams.append("language", l));
         } else {
             queryParams.append("language", language);
         }
     }
     if (semester) {
         if (Array.isArray(semester)) {
-            semester.forEach(s => queryParams.append("semester_id", s.toString()));
+            semester.forEach((s) => queryParams.append("semester_id", s.toString()));
         } else {
             queryParams.append("semester_id", semester.toString());
         }
     }
-    console.log("/modules?include=faculty&include=courses&include=exams&fields=id&fields=name&fields=number&fields=language&fields=duration_semesters&fields=credits&fields=frequency&fields=path&fields=faculty.name&fields=courses.type&fields=exams.name&" + queryParams.toString());
+    console.log(
+        "/modules?include=faculty&include=courses&include=exams&fields=id&fields=name&fields=number&fields=language&fields=duration_semesters&fields=credits&fields=frequency&fields=path&fields=faculty.name&fields=courses.type&fields=exams.name&" +
+            queryParams.toString(),
+    );
     return fetchLocal(`/ts/api/offline-data/modules.json?${queryParams.toString()}`); // fetchApi("/modules?include=faculty&include=courses&include=exams&fields=id&fields=name&fields=number&fields=language&fields=duration_semesters&fields=credits&fields=frequency&fields=path&fields=faculty.name&fields=courses.type&fields=exams.name");
 }
 
@@ -135,7 +149,7 @@ export async function getCourses(
     staff?: number | number[],
     weekHoursMin?: number,
     weekHoursMax?: number,
-    semester?: number | number[]
+    semester?: number | number[],
 ): Promise<{
     count: number;
     page: number;
@@ -146,21 +160,21 @@ export async function getCourses(
     const queryParams = new URLSearchParams();
     if (name) {
         if (Array.isArray(name)) {
-            name.forEach(n => queryParams.append("name", n));
+            name.forEach((n) => queryParams.append("name", n));
         } else {
             queryParams.append("name", name);
         }
     }
     if (number) {
         if (Array.isArray(number)) {
-            number.forEach(n => queryParams.append("number", n));
+            number.forEach((n) => queryParams.append("number", n));
         } else {
             queryParams.append("number", number);
         }
     }
     if (type) {
         if (Array.isArray(type)) {
-            type.forEach(t => queryParams.append("type", t));
+            type.forEach((t) => queryParams.append("type", t));
         } else {
             queryParams.append("type", type);
         }
@@ -181,12 +195,15 @@ export async function getCourses(
     }
     if (semester) {
         if (Array.isArray(semester)) {
-            semester.forEach(s => queryParams.append("semester_id", s.toString()));
+            semester.forEach((s) => queryParams.append("semester_id", s.toString()));
         } else {
             queryParams.append("semester_id", semester.toString());
         }
     }
-    console.log("/courses?fields=id&fields=name&fields=number&fields=weekday&fields=weekly_hours&fields=language&fields=staff&fields=type.name&" + queryParams.toString());
+    console.log(
+        "/courses?fields=id&fields=name&fields=number&fields=weekday&fields=weekly_hours&fields=language&fields=staff&fields=type.name&" +
+            queryParams.toString(),
+    );
     return fetchLocal("/ts/api/offline-data/courses.json"); // fetchApi("/courses?fields=id&fields=name&fields=number&fields=weekday&fields=weekly_hours&fields=language&fields=staff&fields=type.name");
 }
 
@@ -210,7 +227,7 @@ export async function getEvents(
     startDate?: string,
     endDate?: string,
     building?: number | number[],
-    semester?: number | number[]
+    semester?: number | number[],
 ): Promise<{
     count: number;
     page: number;
@@ -239,19 +256,22 @@ export async function getEvents(
     }
     if (building) {
         if (Array.isArray(building)) {
-            building.forEach(b => queryParams.append("building_id", b.toString()));
+            building.forEach((b) => queryParams.append("building_id", b.toString()));
         } else {
             queryParams.append("building_id", building.toString());
         }
     }
     if (semester) {
         if (Array.isArray(semester)) {
-            semester.forEach(s => queryParams.append("semester_id", s.toString()));
+            semester.forEach((s) => queryParams.append("semester_id", s.toString()));
         } else {
             queryParams.append("semester_id", semester.toString());
         }
     }
-    console.log("/events?fields=id&fields=number&fields=name&fields=start_time&fields=end_time&fields=event_date&fields=location&fields=location.building&fields=staff&" + queryParams.toString());
+    console.log(
+        "/events?fields=id&fields=number&fields=name&fields=start_time&fields=end_time&fields=event_date&fields=location&fields=location.building&fields=staff&" +
+            queryParams.toString(),
+    );
     return fetchLocal("/ts/api/offline-data/events.json"); // fetchApi("/events?fields=id&fields=number&fields=name&fields=start_time&fields=end_time&fields=event_date&fields=location&fields=location.building&fields=staff");
 }
 
@@ -279,7 +299,7 @@ export async function getExams(
     building?: string | string[],
     required?: boolean,
     staff?: number | number[],
-    semester?: number | number[]
+    semester?: number | number[],
 ): Promise<{
     count: number;
     page: number;
@@ -308,7 +328,7 @@ export async function getExams(
     }
     if (building) {
         if (Array.isArray(building)) {
-            building.forEach(b => queryParams.append("building_id", b));
+            building.forEach((b) => queryParams.append("building_id", b));
         } else {
             queryParams.append("building_id", building);
         }
@@ -318,19 +338,22 @@ export async function getExams(
     }
     if (staff) {
         if (Array.isArray(staff)) {
-            staff.forEach(s => queryParams.append("staff_id", s.toString()));
+            staff.forEach((s) => queryParams.append("staff_id", s.toString()));
         } else {
             queryParams.append("staff_id", staff.toString());
         }
     }
     if (semester) {
         if (Array.isArray(semester)) {
-            semester.forEach(s => queryParams.append("semester_id", s.toString()));
+            semester.forEach((s) => queryParams.append("semester_id", s.toString()));
         } else {
             queryParams.append("semester_id", semester.toString());
         }
     }
-    console.log("/exams?fields=id&fields=name&fields=exam_date&fields=start_time&fields=end_time&fields=required&fields=staff&" + queryParams.toString());
+    console.log(
+        "/exams?fields=id&fields=name&fields=exam_date&fields=start_time&fields=end_time&fields=required&fields=staff&" +
+            queryParams.toString(),
+    );
     return fetchLocal("/ts/api/offline-data/exams.json"); // fetchApi("/exams?fields=id&fields=name&fields=exam_date&fields=start_time&fields=end_time&fields=required&fields=staff");
 }
 
@@ -364,6 +387,10 @@ export async function getLocations(): Promise<{
     );
 }
 
+/**
+ * Fetch building data from the API.
+ * @returns The building response data.
+ */
 export async function getBuildings(): Promise<{
     count: number;
     page: number;
@@ -374,6 +401,10 @@ export async function getBuildings(): Promise<{
     return fetchApi("/buildings");
 }
 
+/**
+ * Fetch semester data from the API.
+ * @returns The semester response data.
+ */
 export async function getSemesters(): Promise<{
     count: number;
     page: number;
@@ -384,6 +415,10 @@ export async function getSemesters(): Promise<{
     return fetchApi("/semesters");
 }
 
+/**
+ * Fetch faculty data from the API.
+ * @returns The faculty response data.
+ */
 export async function getFaculties(): Promise<{
     count: number;
     page: number;
@@ -394,6 +429,10 @@ export async function getFaculties(): Promise<{
     return fetchApi("/faculties");
 }
 
+/**
+ * Fetch event type catalog data from the API.
+ * @returns The event type response data.
+ */
 export async function getEventTypes(): Promise<{
     count: number;
     page: number;
