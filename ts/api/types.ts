@@ -102,3 +102,10 @@ export interface Location {
         address: string;
     };
 }
+
+export interface Semester {
+    id: number;
+    name: string;
+    year: number;
+    term: string;
+}
