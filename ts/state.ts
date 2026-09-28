@@ -109,6 +109,15 @@ export type DegreeFilters = {
     degrees: string[];
 };
 
+/**
+ * Values a tri-state facet explicitly excludes, keyed by the id of the filter
+ * container that holds the options.
+ *
+ * The list endpoints only accept include-lists, so an exclusion is translated
+ * into the complement of the excluded values (see `facetInclude`).
+ */
+export type FacetExclusions = Record<string, string[]>;
+
 /** The complete filter section of the state document. */
 export type Filters = {
     global: GlobalFilters;
@@ -117,6 +126,7 @@ export type Filters = {
     event: EventFilters;
     exam: ExamFilters;
     degree: DegreeFilters;
+    excluded: FacetExclusions;
 };
 
 /** View and display settings of a single pane. */
@@ -278,6 +288,7 @@ export function defaultState(): UIState {
                 subject: "",
                 degrees: [],
             },
+            excluded: {},
         },
         slots: {
             active: DEFAULT_SLOT_ID,

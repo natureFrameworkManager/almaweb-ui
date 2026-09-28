@@ -81,3 +81,21 @@ div#filter-options .filter-option-search {
 div#filter-options .filter-option-more {
     @apply cursor-pointer self-start text-label-small text-primary underline;
 }
+
+/* Legend explaining the tri-state facet interaction. */
+div#filter-options .filter-legend {
+    @apply flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-border px-2 py-1;
+    @apply text-label-small text-text/70;
+}
+div#filter-options .filter-legend span {
+    @apply inline-flex items-center gap-x-1;
+}
+div#filter-options .filter-legend .tri-swatch {
+    @apply inline-block h-3 w-3 rounded-[3px] border border-border;
+}
+div#filter-options .filter-legend .tri-swatch[data-state="selected"] {
+    @apply bg-primary;
+}
+div#filter-options .filter-legend .tri-swatch[data-state="hidden"] {
+    @apply bg-secondary;
+}

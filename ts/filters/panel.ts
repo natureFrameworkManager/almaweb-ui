@@ -17,6 +17,15 @@ const OPTION_VISIBLE_LIMIT = 6;
 /** Delay applied before the summary is rebuilt after a filter change. */
 const SUMMARY_DEBOUNCE_MS = 150;
 
+/** Checkbox facets that cycle through neutral, selected and hidden. */
+const TRI_STATE_LISTS = [
+    "filter-semester",
+    "filter-faculty",
+    "filter-language",
+    "filter-type",
+    "filter-degree-types",
+];
+
 /** Callback invoked after a chip or a group reset changed the filters. */
 let controlChangeCallback: (() => void) | null = null;
 
@@ -369,6 +378,38 @@ function enhanceOptionList(container: HTMLElement): void {
 }
 
 /**
+ * Enable click cycling neutral -> selected -> hidden on a facet list.
+ *
+ * The native checkbox toggle is replaced so the third state can be reached.
+ * A synthetic change event keeps the existing listeners in sync.
+ * @param containerId - Identifier of the checkbox list container.
+ */
+function enableTriStateCycling(containerId: string): void {
+    const list = document.getElementById(containerId);
+    if (!list) {
+        return;
+    }
+    list.addEventListener("click", (event) => {
+        const origin = event.target;
+        if (!(origin instanceof Element)) {
+            return;
+        }
+        const input = origin
+            .closest("label.checkbox-item")
+            ?.querySelector<HTMLInputElement>('input[type="checkbox"]');
+        if (!input || input.value === "") {
+            return;
+        }
+        event.preventDefault();
+        const state = input.indeterminate ? "hidden" : input.checked ? "selected" : "neutral";
+        const next = state === "neutral" ? "selected" : state === "selected" ? "hidden" : "neutral";
+        input.checked = next === "selected";
+        input.indeterminate = next === "hidden";
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+}
+
+/**
  * Wire the summary, per-group reset buttons, in-list search and expanders.
  * @param onChange - Callback invoked after a chip or reset changed the filters.
  */
@@ -380,6 +421,7 @@ export function initFilterPanel(onChange: () => void): void {
     document
         .querySelectorAll<HTMLElement>("#filter-options .input-container")
         .forEach(enhanceOptionList);
+    TRI_STATE_LISTS.forEach(enableTriStateCycling);
     const options = document.getElementById("filter-options");
     if (options) {
         const refresh = debounce(refreshFilterSummary, SUMMARY_DEBOUNCE_MS);

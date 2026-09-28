@@ -41,6 +41,7 @@ import {
     type EntryKind,
     type ExamFilters,
     type EventFilters,
+    type FacetExclusions,
     type GlobalFilters,
     type MainView,
     type ModuleFilters,
@@ -304,6 +305,41 @@ function writeCheckedValues(containerId: string, values: (number | string)[]): v
 }
 
 /**
+ * Read the excluded (tri-state "hidden") values of every facet list.
+ * @returns The excluded values keyed by filter container id.
+ */
+function readExcludedValues(): FacetExclusions {
+    const result: FacetExclusions = {};
+    document.querySelectorAll<HTMLElement>("#filter-options .checkbox-list").forEach((list) => {
+        const id = list.id;
+        if (!id) {
+            return;
+        }
+        const hidden = Array.from(list.querySelectorAll<HTMLInputElement>('input[type="checkbox"]'))
+            .filter((input) => input.indeterminate && input.value !== "")
+            .map((input) => input.value);
+        if (hidden.length > 0) {
+            result[id] = hidden;
+        }
+    });
+    return result;
+}
+
+/**
+ * Mark the excluded (tri-state "hidden") values of every facet list.
+ * @param excluded - Excluded values keyed by filter container id.
+ */
+function writeExcludedValues(excluded: FacetExclusions): void {
+    document.querySelectorAll<HTMLElement>("#filter-options .checkbox-list").forEach((list) => {
+        const id = list.id;
+        const hidden = new Set(id ? (excluded[id] ?? []) : []);
+        list.querySelectorAll<HTMLInputElement>('input[type="checkbox"]').forEach((input) => {
+            input.indeterminate = input.value !== "" && hidden.has(input.value);
+        });
+    });
+}
+
+/**
  * Find the inputs of a labelled range filter inside a group.
  * @param groupId - Filter group container id.
  * @param labelText - Visible label of the range filter.
@@ -544,6 +580,7 @@ export function applyFilterState(state: UIState): void {
     applyEventFilters(state.filters.event);
     applyExamFilters(state.filters.exam);
     applyDegreeFilters(state.filters.degree);
+    writeExcludedValues(state.filters.excluded);
 }
 
 /**
@@ -627,6 +664,7 @@ export function captureFilterState(state: UIState = getState()): void {
     captureEventFilters(state.filters.event);
     captureExamFilters(state.filters.exam);
     captureDegreeFilters(state.filters.degree);
+    state.filters.excluded = readExcludedValues();
 }
 
 /**
@@ -1056,13 +1094,17 @@ export function initStateBindings(): void {
  * semesters again is possible by clearing the semester chips.
  */
 function applyDefaultSemester(): void {
-    if (getState().filters.global.semester.length > 0) {
+    const filters = getState().filters;
+    if (
+        filters.global.semester.length > 0 ||
+        (filters.excluded["filter-semester"]?.length ?? 0) > 0
+    ) {
         return;
     }
     const input = document.querySelector<HTMLInputElement>(
         '#filter-semester input[type="checkbox"]:not([value=""])',
     );
-    if (!input) {
+    if (!input || input.indeterminate) {
         return;
     }
     input.checked = true;

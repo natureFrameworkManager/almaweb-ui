@@ -18,6 +18,7 @@ import type {
     Staff,
 } from "../api/types";
 import { setPlaceholderVisible } from "../feedback";
+import { facetInclude } from "./facets";
 import { getActiveMainView } from "../layout";
 import { getState } from "../state";
 import { parseSortLevels, type SortLevel } from "../sort";
@@ -224,14 +225,14 @@ function fetchModulePage(
     return getModules(
         toOptionalValue(getInputValue("search-input-module")),
         toOptionalValue(getInputValue("search-input-module-number")),
-        toOptionalNumbers(getCheckedValues("filter-faculty")),
+        toOptionalNumbers(facetInclude("filter-faculty") ?? []),
         toOptionalValue(getInputValue("filter-responsible-person")),
         credits.min,
         credits.max,
         duration.min,
         duration.max,
-        toOptionalValues(getCheckedValues("filter-language")),
-        toOptionalNumbers(getCheckedValues("filter-semester")),
+        facetInclude("filter-language"),
+        toOptionalNumbers(facetInclude("filter-semester") ?? []),
         page,
         pageSize,
         sort,
@@ -250,11 +251,11 @@ function fetchCoursePage(page: number): Promise<PagedResponse<Course>> {
     return getCourses(
         toOptionalValue(getInputValue("search-input-course")),
         toOptionalValue(getInputValue("search-input-course-number")),
-        toOptionalValues(getCheckedValues("filter-type")),
+        facetInclude("filter-type"),
         toOptionalNumbers(getCheckedValues("filter-instructors")),
         hours.min,
         hours.max,
-        toOptionalNumbers(getCheckedValues("filter-semester")),
+        toOptionalNumbers(facetInclude("filter-semester") ?? []),
         page,
         COLLECTION_PAGE_SIZE,
         sort,
@@ -281,7 +282,7 @@ function fetchEventPage(page: number): Promise<PagedResponse<Event>> {
         toOptionalValue(dates.min),
         toOptionalValue(dates.max),
         building === "" ? undefined : Number(building),
-        toOptionalNumbers(getCheckedValues("filter-semester")),
+        toOptionalNumbers(facetInclude("filter-semester") ?? []),
         page,
         COLLECTION_PAGE_SIZE,
         sort,
@@ -310,7 +311,7 @@ function fetchExamPage(page: number): Promise<PagedResponse<Exam>> {
         toOptionalValues(getCheckedValues("filter-buildings")),
         isChecked("filter-exam-required") ? true : undefined,
         resolveStaffNames(toOptionalNumbers(getCheckedValues("filter-staff")) ?? []),
-        toOptionalNumbers(getCheckedValues("filter-semester")),
+        toOptionalNumbers(facetInclude("filter-semester") ?? []),
         page,
         COLLECTION_PAGE_SIZE,
         sort,
@@ -348,7 +349,7 @@ function fetchDegreePage(page: number): Promise<PagedResponse<Degree>> {
     return getDegrees(
         toOptionalValue(getInputValue("search-input-degree")),
         toOptionalValue(getInputValue("filter-degree-subject")),
-        toOptionalValues(getCheckedValues("filter-degree-types")),
+        facetInclude("filter-degree-types"),
         undefined,
         page,
         COLLECTION_PAGE_SIZE,
