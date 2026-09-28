@@ -280,7 +280,10 @@
                         />
                         <label for="filter-responsible-person">Verantwortliche Person</label>
                     </div>
-                    <div class="input-container range slim">
+                    <div
+                        class="input-container range slim"
+                        data-range="module-credits"
+                    >
                         <p
                             class="field-error"
                             id="error-module-credits"
@@ -300,7 +303,10 @@
                         </div>
                         <label>Leistungspunkte</label>
                     </div>
-                    <div class="input-container range slim">
+                    <div
+                        class="input-container range slim"
+                        data-range="module-duration"
+                    >
                         <p
                             class="field-error"
                             id="error-module-duration"
@@ -382,7 +388,10 @@
                         </div>
                         <label>Kurstyp</label>
                     </div>
-                    <div class="input-container slim">
+                    <div
+                        class="input-container slim"
+                        data-unsupported="Die API unterstützt keine Dozenten-Filterung für Kurse."
+                    >
                         <div
                             class="checkbox-list"
                             id="filter-instructors"
@@ -401,7 +410,10 @@
                         </div>
                         <label>Dozenten in Kursen</label>
                     </div>
-                    <div class="input-container range slim">
+                    <div
+                        class="input-container range slim"
+                        data-range="course-weekly-hours"
+                    >
                         <p
                             class="field-error"
                             id="error-course-hours"
@@ -429,7 +441,10 @@
             >
                 <summary><span class="material-symbols">event</span>Veranstaltungen</summary>
                 <div class="filter-group-content">
-                    <div class="input-container range slim">
+                    <div
+                        class="input-container range slim"
+                        data-range="event-start-time"
+                    >
                         <p
                             class="field-error"
                             id="error-event-start"
@@ -449,7 +464,10 @@
                         </div>
                         <label>Start-Uhrzeit</label>
                     </div>
-                    <div class="input-container range slim">
+                    <div
+                        class="input-container range slim"
+                        data-range="event-end-time"
+                    >
                         <p
                             class="field-error"
                             id="error-event-end"
@@ -469,7 +487,10 @@
                         </div>
                         <label>End-Uhrzeit</label>
                     </div>
-                    <div class="input-container range slim">
+                    <div
+                        class="input-container range slim"
+                        data-range="event-dates"
+                    >
                         <p
                             class="field-error"
                             id="error-event-dates"
@@ -503,6 +524,10 @@
             >
                 <summary><span class="material-symbols">history_edu</span>Prüfungen</summary>
                 <div class="filter-group-content">
+                    <p class="filter-note">
+                        Hinweis: Der globale Semesterfilter wird von der API für Prüfungen nicht
+                        unterstützt.
+                    </p>
                     <div class="input-container">
                         <input
                             id="search-input-exam"
@@ -530,7 +555,10 @@
                         </div>
                         <label>Prüfungsarten</label>
                     </div>
-                    <div class="input-container range slim">
+                    <div
+                        class="input-container range slim"
+                        data-range="exam-start-time"
+                    >
                         <p
                             class="field-error"
                             id="error-exam-start"
@@ -550,7 +578,10 @@
                         </div>
                         <label>Start-Uhrzeit</label>
                     </div>
-                    <div class="input-container range slim">
+                    <div
+                        class="input-container range slim"
+                        data-range="exam-end-time"
+                    >
                         <p
                             class="field-error"
                             id="error-exam-end"
@@ -570,7 +601,10 @@
                         </div>
                         <label>End-Uhrzeit</label>
                     </div>
-                    <div class="input-container range slim">
+                    <div
+                        class="input-container range slim"
+                        data-range="exam-dates"
+                    >
                         <p
                             class="field-error"
                             id="error-exam-dates"
@@ -590,7 +624,10 @@
                         </div>
                         <label>Datumszeitraum</label>
                     </div>
-                    <div class="input-container slim">
+                    <div
+                        class="input-container slim"
+                        data-unsupported="Die API unterstützt keine Gebäude-Filterung für Prüfungen."
+                    >
                         <div
                             class="checkbox-list"
                             id="filter-buildings"

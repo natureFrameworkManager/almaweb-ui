@@ -340,37 +340,32 @@ function writeExcludedValues(excluded: FacetExclusions): void {
 }
 
 /**
- * Find the inputs of a labelled range filter inside a group.
- * @param groupId - Filter group container id.
- * @param labelText - Visible label of the range filter.
+ * Find the inputs of a range filter by its stable data key.
+ * @param key - `data-range` key of the range filter.
  * @returns The range inputs, or an empty list when not found.
  */
-function findRangeInputs(groupId: string, labelText: string): HTMLInputElement[] {
-    const group = document.getElementById(groupId);
-    const ranges = group ? Array.from(group.querySelectorAll(".input-container.range")) : [];
-    const range = ranges.find((item) => item.querySelector("label")?.textContent === labelText);
+function findRangeInputs(key: string): HTMLInputElement[] {
+    const range = document.querySelector(`.input-container.range[data-range="${key}"]`);
     return range ? Array.from(range.querySelectorAll<HTMLInputElement>("input")) : [];
 }
 
 /**
- * Read a labelled range filter.
- * @param groupId - Filter group container id.
- * @param labelText - Visible label of the range filter.
+ * Read a range filter.
+ * @param key - `data-range` key of the range filter.
  * @returns The range values.
  */
-function readRange(groupId: string, labelText: string): Range {
-    const [min, max] = findRangeInputs(groupId, labelText);
+function readRange(key: string): Range {
+    const [min, max] = findRangeInputs(key);
     return { min: min?.value ?? "", max: max?.value ?? "" };
 }
 
 /**
- * Write a labelled range filter.
- * @param groupId - Filter group container id.
- * @param labelText - Visible label of the range filter.
+ * Write a range filter.
+ * @param key - `data-range` key of the range filter.
  * @param range - Range values to write.
  */
-function writeRange(groupId: string, labelText: string, range: Range): void {
-    const [min, max] = findRangeInputs(groupId, labelText);
+function writeRange(key: string, range: Range): void {
+    const [min, max] = findRangeInputs(key);
     if (min) {
         min.value = range.min;
     }
@@ -516,8 +511,8 @@ function applyModuleFilters(filters: ModuleFilters): void {
     writeText("search-input-module-number", filters.number);
     writeCheckedValues("filter-faculty", filters.faculty);
     writeText("filter-responsible-person", filters.responsiblePerson);
-    writeRange("filter-group-module", "Leistungspunkte", filters.credits);
-    writeRange("filter-group-module", "Semesterdauer", filters.duration);
+    writeRange("module-credits", filters.credits);
+    writeRange("module-duration", filters.duration);
     writeCheckedValues("filter-language", filters.languages);
 }
 
@@ -530,7 +525,7 @@ function applyCourseFilters(filters: CourseFilters): void {
     writeText("search-input-course-number", filters.number);
     writeCheckedValues("filter-type", filters.types);
     writeCheckedValues("filter-instructors", filters.instructors);
-    writeRange("filter-group-course", "Wochenstunden", filters.weeklyHours);
+    writeRange("course-weekly-hours", filters.weeklyHours);
 }
 
 /**
@@ -538,9 +533,9 @@ function applyCourseFilters(filters: CourseFilters): void {
  * @param filters - Event filters to write.
  */
 function applyEventFilters(filters: EventFilters): void {
-    writeRange("filter-group-event", "Start-Uhrzeit", filters.startTime);
-    writeRange("filter-group-event", "End-Uhrzeit", filters.endTime);
-    writeRange("filter-group-event", "Datumszeitraum", filters.dates);
+    writeRange("event-start-time", filters.startTime);
+    writeRange("event-end-time", filters.endTime);
+    writeRange("event-dates", filters.dates);
     writeSelectValue("filter-event-buildings", filters.buildings);
 }
 
@@ -551,9 +546,9 @@ function applyEventFilters(filters: EventFilters): void {
 function applyExamFilters(filters: ExamFilters): void {
     writeText("search-input-exam", filters.name);
     writeCheckedValues("filter-examtypes", filters.types);
-    writeRange("filter-group-exam", "Start-Uhrzeit", filters.startTime);
-    writeRange("filter-group-exam", "End-Uhrzeit", filters.endTime);
-    writeRange("filter-group-exam", "Datumszeitraum", filters.dates);
+    writeRange("exam-start-time", filters.startTime);
+    writeRange("exam-end-time", filters.endTime);
+    writeRange("exam-dates", filters.dates);
     writeCheckedValues("filter-buildings", filters.buildings);
     writeTriState("filter-exam-required", filters.required);
     writeCheckedValues("filter-staff", filters.staff);
@@ -600,8 +595,8 @@ function captureModuleFilters(filters: ModuleFilters): void {
     filters.number = readText("search-input-module-number");
     filters.faculty = readNumbers("filter-faculty");
     filters.responsiblePerson = readText("filter-responsible-person");
-    filters.credits = readRange("filter-group-module", "Leistungspunkte");
-    filters.duration = readRange("filter-group-module", "Semesterdauer");
+    filters.credits = readRange("module-credits");
+    filters.duration = readRange("module-duration");
     filters.languages = readCheckedValues("filter-language");
 }
 
@@ -614,7 +609,7 @@ function captureCourseFilters(filters: CourseFilters): void {
     filters.number = readText("search-input-course-number");
     filters.types = readNumbers("filter-type");
     filters.instructors = readNumbers("filter-instructors");
-    filters.weeklyHours = readRange("filter-group-course", "Wochenstunden");
+    filters.weeklyHours = readRange("course-weekly-hours");
 }
 
 /**
@@ -622,9 +617,9 @@ function captureCourseFilters(filters: CourseFilters): void {
  * @param filters - Filter section to update.
  */
 function captureEventFilters(filters: EventFilters): void {
-    filters.startTime = readRange("filter-group-event", "Start-Uhrzeit");
-    filters.endTime = readRange("filter-group-event", "End-Uhrzeit");
-    filters.dates = readRange("filter-group-event", "Datumszeitraum");
+    filters.startTime = readRange("event-start-time");
+    filters.endTime = readRange("event-end-time");
+    filters.dates = readRange("event-dates");
     filters.buildings = readSelectValue("filter-event-buildings");
 }
 
@@ -635,9 +630,9 @@ function captureEventFilters(filters: EventFilters): void {
 function captureExamFilters(filters: ExamFilters): void {
     filters.name = readText("search-input-exam");
     filters.types = readCheckedValues("filter-examtypes");
-    filters.startTime = readRange("filter-group-exam", "Start-Uhrzeit");
-    filters.endTime = readRange("filter-group-exam", "End-Uhrzeit");
-    filters.dates = readRange("filter-group-exam", "Datumszeitraum");
+    filters.startTime = readRange("exam-start-time");
+    filters.endTime = readRange("exam-end-time");
+    filters.dates = readRange("exam-dates");
     filters.buildings = readNumbers("filter-buildings");
     filters.required = readTriState("filter-exam-required");
     filters.staff = readNumbers("filter-staff");

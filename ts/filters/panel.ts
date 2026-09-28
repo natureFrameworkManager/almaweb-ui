@@ -410,6 +410,31 @@ function enableTriStateCycling(containerId: string): void {
 }
 
 /**
+ * Disable and annotate filter controls the API cannot honour.
+ *
+ * Containers marked with `data-unsupported` get a short note and their inputs
+ * are disabled so the UI does not pretend the filter works.
+ */
+function markUnsupportedControls(): void {
+    document
+        .querySelectorAll<HTMLElement>("#filter-options [data-unsupported]")
+        .forEach((container) => {
+            container.classList.add("unsupported");
+            const reason = container.dataset["unsupported"] ?? "Von der API nicht unterstützt.";
+            container.title = reason;
+            container
+                .querySelectorAll<HTMLInputElement | HTMLSelectElement>("input, select")
+                .forEach((control) => {
+                    control.disabled = true;
+                });
+            const note = document.createElement("p");
+            note.className = "filter-note";
+            note.textContent = reason;
+            container.appendChild(note);
+        });
+}
+
+/**
  * Wire the summary, per-group reset buttons, in-list search and expanders.
  * @param onChange - Callback invoked after a chip or reset changed the filters.
  */
@@ -422,6 +447,7 @@ export function initFilterPanel(onChange: () => void): void {
         .querySelectorAll<HTMLElement>("#filter-options .input-container")
         .forEach(enhanceOptionList);
     TRI_STATE_LISTS.forEach(enableTriStateCycling);
+    markUnsupportedControls();
     const options = document.getElementById("filter-options");
     if (options) {
         const refresh = debounce(refreshFilterSummary, SUMMARY_DEBOUNCE_MS);

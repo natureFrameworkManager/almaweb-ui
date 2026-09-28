@@ -399,7 +399,7 @@ export async function getCourseEvents(courseId: number): Promise<PagedResponse<E
  * @returns The exam response data.
  */
 export async function getExams(
-    name?: string,
+    name?: string | string[],
     startTimeMin?: string,
     startTimeMax?: string,
     endTimeMin?: string,
@@ -417,7 +417,11 @@ export async function getExams(
 ): Promise<PagedResponse<Exam>> {
     const queryParams = new URLSearchParams();
     if (name) {
-        queryParams.append("name", name);
+        if (Array.isArray(name)) {
+            name.forEach((n) => queryParams.append("name", n));
+        } else {
+            queryParams.append("name", name);
+        }
     }
     if (startTimeMin) {
         queryParams.append("start_time_from", startTimeMin);

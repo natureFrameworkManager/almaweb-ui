@@ -103,32 +103,22 @@ function getSelectedValue(elementId: string): string {
 }
 
 /**
- * Collect the inputs of a labelled range filter inside a group.
- * @param groupId - Identifier of the filter group container.
- * @param labelText - Visible label of the range filter.
+ * Collect the inputs of a range filter by its stable data key.
+ * @param key - `data-range` key of the range filter.
  * @returns The range inputs, or an empty list when not found.
  */
-function getRangeInputs(groupId: string, labelText: string): HTMLInputElement[] {
-    const group = document.getElementById(groupId);
-    if (!group) {
-        return [];
-    }
-    const ranges = Array.from(group.querySelectorAll(".input-container.range"));
-    const range = ranges.find((item) => item.querySelector("label")?.textContent === labelText);
-    if (!range) {
-        return [];
-    }
-    return Array.from(range.querySelectorAll<HTMLInputElement>("input"));
+function getRangeInputs(key: string): HTMLInputElement[] {
+    const range = document.querySelector(`.input-container.range[data-range="${key}"]`);
+    return range ? Array.from(range.querySelectorAll<HTMLInputElement>("input")) : [];
 }
 
 /**
- * Read the min and max inputs of a labelled range filter inside a group.
- * @param groupId - Identifier of the filter group container.
- * @param labelText - Visible label of the range filter.
+ * Read the min and max inputs of a range filter.
+ * @param key - `data-range` key of the range filter.
  * @returns The raw minimum and maximum values.
  */
-function getRangeValues(groupId: string, labelText: string): { min: string; max: string } {
-    const inputs = getRangeInputs(groupId, labelText);
+function getRangeValues(key: string): { min: string; max: string } {
+    const inputs = getRangeInputs(key);
     return {
         min: inputs.at(0)?.value ?? "",
         max: inputs.at(1)?.value ?? "",
@@ -136,13 +126,12 @@ function getRangeValues(groupId: string, labelText: string): { min: string; max:
 }
 
 /**
- * Read a labelled numeric range filter and parse its bounds.
- * @param groupId - Identifier of the filter group container.
- * @param labelText - Visible label of the range filter.
+ * Read a numeric range filter and parse its bounds.
+ * @param key - `data-range` key of the range filter.
  * @returns The parsed minimum and maximum values.
  */
-function getNumericRange(groupId: string, labelText: string): { min?: number; max?: number } {
-    const { min, max } = getRangeValues(groupId, labelText);
+function getNumericRange(key: string): { min?: number; max?: number } {
+    const { min, max } = getRangeValues(key);
     return {
         min: min === "" || Number.isNaN(Number(min)) ? undefined : Number(min),
         max: max === "" || Number.isNaN(Number(max)) ? undefined : Number(max),
@@ -220,8 +209,8 @@ function fetchModulePage(
     pageSize = COLLECTION_PAGE_SIZE,
 ): Promise<PagedResponse<Module>> {
     const { sort, order } = backendSort("modules");
-    const credits = getNumericRange("filter-group-module", "Leistungspunkte");
-    const duration = getNumericRange("filter-group-module", "Semesterdauer");
+    const credits = getNumericRange("module-credits");
+    const duration = getNumericRange("module-duration");
     return getModules(
         toOptionalValue(getInputValue("search-input-module")),
         toOptionalValue(getInputValue("search-input-module-number")),
@@ -247,7 +236,7 @@ function fetchModulePage(
  */
 function fetchCoursePage(page: number): Promise<PagedResponse<Course>> {
     const { sort, order } = backendSort("courses");
-    const hours = getNumericRange("filter-group-course", "Wochenstunden");
+    const hours = getNumericRange("course-weekly-hours");
     return getCourses(
         toOptionalValue(getInputValue("search-input-course")),
         toOptionalValue(getInputValue("search-input-course-number")),
@@ -270,9 +259,9 @@ function fetchCoursePage(page: number): Promise<PagedResponse<Course>> {
  */
 function fetchEventPage(page: number): Promise<PagedResponse<Event>> {
     const { sort, order } = backendSort("events");
-    const startTime = getRangeValues("filter-group-event", "Start-Uhrzeit");
-    const endTime = getRangeValues("filter-group-event", "End-Uhrzeit");
-    const dates = getRangeValues("filter-group-event", "Datumszeitraum");
+    const startTime = getRangeValues("event-start-time");
+    const endTime = getRangeValues("event-end-time");
+    const dates = getRangeValues("event-dates");
     const building = getSelectedValue("filter-event-buildings");
     return getEvents(
         toOptionalValue(startTime.min),
@@ -297,11 +286,19 @@ function fetchEventPage(page: number): Promise<PagedResponse<Event>> {
  */
 function fetchExamPage(page: number): Promise<PagedResponse<Exam>> {
     const { sort, order } = backendSort("exams");
-    const startTime = getRangeValues("filter-group-exam", "Start-Uhrzeit");
-    const endTime = getRangeValues("filter-group-exam", "End-Uhrzeit");
-    const dates = getRangeValues("filter-group-exam", "Datumszeitraum");
+    const startTime = getRangeValues("exam-start-time");
+    const endTime = getRangeValues("exam-end-time");
+    const dates = getRangeValues("exam-dates");
+    const names = toOptionalValues(
+        [
+            ...new Set([
+                ...getCheckedValues("filter-examtypes"),
+                getInputValue("search-input-exam"),
+            ]),
+        ].filter((value) => value !== ""),
+    );
     return getExams(
-        toOptionalValue(getInputValue("search-input-exam")),
+        names,
         toOptionalValue(startTime.min),
         toOptionalValue(startTime.max),
         toOptionalValue(endTime.min),
@@ -511,68 +508,22 @@ function refreshVisibleTrees(): void {
 
 /** Definition of a range filter that is checked for an inverted bound. */
 type RangeValidation = {
-    groupId: string;
-    label: string;
+    key: string;
     errorId: string;
     kind: "number" | "date";
 };
 
 /** Every range filter that shows an inline error when its min exceeds its max. */
 const RANGE_VALIDATIONS: RangeValidation[] = [
-    {
-        groupId: "filter-group-module",
-        label: "Leistungspunkte",
-        errorId: "error-module-credits",
-        kind: "number",
-    },
-    {
-        groupId: "filter-group-module",
-        label: "Semesterdauer",
-        errorId: "error-module-duration",
-        kind: "number",
-    },
-    {
-        groupId: "filter-group-course",
-        label: "Wochenstunden",
-        errorId: "error-course-hours",
-        kind: "number",
-    },
-    {
-        groupId: "filter-group-event",
-        label: "Start-Uhrzeit",
-        errorId: "error-event-start",
-        kind: "date",
-    },
-    {
-        groupId: "filter-group-event",
-        label: "End-Uhrzeit",
-        errorId: "error-event-end",
-        kind: "date",
-    },
-    {
-        groupId: "filter-group-event",
-        label: "Datumszeitraum",
-        errorId: "error-event-dates",
-        kind: "date",
-    },
-    {
-        groupId: "filter-group-exam",
-        label: "Start-Uhrzeit",
-        errorId: "error-exam-start",
-        kind: "date",
-    },
-    {
-        groupId: "filter-group-exam",
-        label: "End-Uhrzeit",
-        errorId: "error-exam-end",
-        kind: "date",
-    },
-    {
-        groupId: "filter-group-exam",
-        label: "Datumszeitraum",
-        errorId: "error-exam-dates",
-        kind: "date",
-    },
+    { key: "module-credits", errorId: "error-module-credits", kind: "number" },
+    { key: "module-duration", errorId: "error-module-duration", kind: "number" },
+    { key: "course-weekly-hours", errorId: "error-course-hours", kind: "number" },
+    { key: "event-start-time", errorId: "error-event-start", kind: "date" },
+    { key: "event-end-time", errorId: "error-event-end", kind: "date" },
+    { key: "event-dates", errorId: "error-event-dates", kind: "date" },
+    { key: "exam-start-time", errorId: "error-exam-start", kind: "date" },
+    { key: "exam-end-time", errorId: "error-exam-end", kind: "date" },
+    { key: "exam-dates", errorId: "error-exam-dates", kind: "date" },
 ];
 
 /**
@@ -595,7 +546,7 @@ function isRangeInverted(min: string, max: string, kind: RangeValidation["kind"]
 /** Validate every range filter and show inline errors for inverted ranges. */
 export function validateFilterRanges(): void {
     RANGE_VALIDATIONS.forEach((rule) => {
-        const inputs = getRangeInputs(rule.groupId, rule.label);
+        const inputs = getRangeInputs(rule.key);
         const min = inputs.at(0)?.value ?? "";
         const max = inputs.at(1)?.value ?? "";
         const invalid = isRangeInverted(min, max, rule.kind);

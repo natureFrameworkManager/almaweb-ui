@@ -99,3 +99,15 @@ div#filter-options .filter-legend .tri-swatch[data-state="selected"] {
 div#filter-options .filter-legend .tri-swatch[data-state="hidden"] {
     @apply bg-secondary;
 }
+
+/* Filter controls the API cannot honour are disabled and annotated. */
+div#filter-options .input-container.unsupported {
+    @apply opacity-60;
+}
+div#filter-options .input-container.unsupported input,
+div#filter-options .input-container.unsupported select {
+    @apply cursor-not-allowed;
+}
+div#filter-options .filter-note {
+    @apply mt-0.5 text-label-small text-secondary;
+}
