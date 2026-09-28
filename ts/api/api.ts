@@ -163,10 +163,6 @@ export async function getModules(
         }
     }
     appendPaging(queryParams, page, pageSize);
-    console.log(
-        "/modules?include=faculty&include=courses&include=exams&fields=id&fields=name&fields=number&fields=language&fields=duration_semesters&fields=credits&fields=frequency&fields=path&fields=faculty.name&fields=courses.type&fields=exams.name&" +
-            queryParams.toString(),
-    );
     return fetchApi(
         `/modules?include=faculty&include=courses&include=exams&fields=id&fields=name&fields=number&fields=language&fields=duration_semesters&fields=credits&fields=frequency&fields=path&fields=faculty.name&fields=courses.type&fields=exams.name&${queryParams.toString()}`,
     );
@@ -240,11 +236,7 @@ export async function getCourses(
         }
     }
     appendPaging(queryParams, page, pageSize);
-    console.log(
-        "/courses?fields=id&fields=name&fields=number&fields=weekday&fields=weekly_hours&fields=language&fields=staff&fields=type.name&" +
-            queryParams.toString(),
-    );
-    return fetchLocal("/ts/api/offline-data/courses.json"); // fetchApi("/courses?fields=id&fields=name&fields=number&fields=weekday&fields=weekly_hours&fields=language&fields=staff&fields=type.name");
+    return fetchApi(`/courses?fields=id&fields=name&fields=number&fields=weekday&fields=weekly_hours&fields=language&fields=staff&fields=type.name&${queryParams.toString()}`);
 }
 
 /**
@@ -307,11 +299,7 @@ export async function getEvents(
         }
     }
     appendPaging(queryParams, page, pageSize);
-    console.log(
-        "/events?fields=id&fields=number&fields=name&fields=start_time&fields=end_time&fields=event_date&fields=location&fields=location.building&fields=staff&" +
-            queryParams.toString(),
-    );
-    return fetchLocal("/ts/api/offline-data/events.json"); // fetchApi("/events?fields=id&fields=number&fields=name&fields=start_time&fields=end_time&fields=event_date&fields=location&fields=location.building&fields=staff");
+    return fetchApi(`events?fields=id&fields=number&fields=name&fields=start_time&fields=end_time&fields=event_date&fields=location&fields=location.building&fields=staff&${queryParams.toString()}`);
 }
 
 /**
@@ -416,10 +404,6 @@ export async function getExams(
         }
     }
     appendPaging(queryParams, page, pageSize);
-    console.log(
-        "/exams?fields=id&fields=name&fields=exam_date&fields=start_time&fields=end_time&fields=required&fields=staff&" +
-            queryParams.toString(),
-    );
     return fetchApi(
         `/exams?fields=id&fields=name&fields=exam_date&fields=start_time&fields=end_time&fields=required&fields=staff&${queryParams.toString()}`,
     );
