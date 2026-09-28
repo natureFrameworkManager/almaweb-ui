@@ -34,6 +34,8 @@ export function examToView(exam: Exam): EntityView {
         number: null,
         listInfos,
         cardInfos: baseInfos(),
+        detailsId: String(exam.id),
+        detailsKind: "exam",
         entityKind: "exam",
         entityId: exam.id,
     };

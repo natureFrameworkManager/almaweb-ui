@@ -1460,14 +1460,19 @@
             </footer>
         </dialog>
 
-        <!-- Detail dialog (native <dialog>, filled by ts/views/module-detail.ts) -->
+        <!-- Detail dialog (native <dialog>, filled by ts/views/detail-dialog.ts) -->
         <dialog
             id="detail-dialog"
             class="dialog detail-dialog wide"
             popover
         >
             <header class="dialog-header">
-                <h1 class="dialog-title">Modul-Details</h1>
+                <h1
+                    class="dialog-title"
+                    id="detail-title"
+                >
+                    Modul-Details
+                </h1>
                 <button
                     class="btn slim material-symbols dialog-close"
                     popovertarget="detail-dialog"

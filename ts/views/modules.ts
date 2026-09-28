@@ -93,6 +93,7 @@ export function moduleToView(module: Module): EntityView {
         listInfos: getModuleListInfos(module),
         cardInfos: getModuleCardInfos(module),
         detailsId: String(module.id),
+        detailsKind: "module",
         entityKind: "module",
         entityId: module.id,
         lp: module.credits,

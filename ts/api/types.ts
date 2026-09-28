@@ -46,6 +46,7 @@ export interface Event {
     location: Location;
     staff: Staff[];
     courses?: Course[];
+    semesters?: Semester[];
 }
 
 export interface EventDetail extends Event {
@@ -150,6 +151,7 @@ export interface Degree {
     id: number;
     faculty_id: number;
     name: string;
+    faculty?: Faculty;
 }
 
 export interface DegreeDetail extends Degree {

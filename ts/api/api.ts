@@ -614,7 +614,7 @@ export async function getFacultyDetail(id: string): Promise<FacultyDetail> {
  */
 export async function getSemesterDetail(id: string): Promise<SemesterDetail> {
     return fetchApi(
-        `/semesters/${id}?include=modules&include=modules.faculty&include=modules.courses.type&include=modules.courses.staff&include=modules.exams&include=courses&include=courses.type&include=courses.staff&include=events&include=events.location&include=events.location.building&include=events.staff&include=exams&include=exams.staff`,
+        `/semesters/${id}?include=modules&include=modules.faculty&include=modules.courses.type&include=modules.courses.staff&include=modules.exams&include=courses&include=courses.type&include=courses.staff&include=events&include=events.location&include=events.location.building&include=events.staff&include=events.courses&include=events.courses.type&include=exams&include=exams.staff`,
     );
 }
 

@@ -1,11 +1,15 @@
 import type { EntryKind } from "../state";
 
+/** Entity kinds that can be shown in the detail dialog. */
+export type DetailKind = EntryKind | "building" | "faculty" | "semester" | "degree";
+
 export type EntityView = {
     name: string;
     number: string | null;
     listInfos: InfoSpec[];
     cardInfos: InfoSpec[];
     detailsId?: string;
+    detailsKind?: DetailKind;
     entityKind?: EntryKind;
     entityId?: number;
     /** Credit points of the entity, when it has any. */
@@ -123,6 +127,9 @@ function createDetailsButton(view: EntityView): HTMLButtonElement {
     const button = createActionButton("btn", "Mehr Details");
     if (view.detailsId) {
         button.dataset["detailsId"] = view.detailsId;
+        if (view.detailsKind) {
+            button.dataset["detailsKind"] = view.detailsKind;
+        }
         button.setAttribute("popovertarget", "detail-dialog");
         button.setAttribute("popovertargetaction", "toggle");
     }

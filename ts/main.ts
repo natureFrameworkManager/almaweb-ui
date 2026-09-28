@@ -47,7 +47,8 @@ import { handleThemeChange, initTheme } from "./theme";
 import {
     ensurePaneCollections,
     initCollectionScrolling,
-    initModuleDetail,
+    initDetailDialog,
+    registerDetailSpecs,
     setActiveType,
 } from "./views";
 
@@ -91,8 +92,9 @@ function handleViewModeChange(): void {
 }
 
 registerCollections();
+registerDetailSpecs();
 initCollectionScrolling();
-initModuleDetail();
+initDetailDialog();
 
 registerCalendarLoader(ensureCalendar);
 loadInitialState();

@@ -87,6 +87,7 @@
 .dialog:has(.dialog-tabs > span.active[data-tab="requirements"])
     .tab-content[data-tab="requirements"],
 .dialog:has(.dialog-tabs > span.active[data-tab="details"]) .tab-content[data-tab="details"],
+.dialog:has(.dialog-tabs > span.active[data-tab="modules"]) .tab-content[data-tab="modules"],
 .dialog:has(.dialog-tabs > span.active[data-tab="courses"]) .tab-content[data-tab="courses"],
 .dialog:has(.dialog-tabs > span.active[data-tab="exams"]) .tab-content[data-tab="exams"],
 .dialog:has(.dialog-tabs > span.active[data-tab="events"]) .tab-content[data-tab="events"],

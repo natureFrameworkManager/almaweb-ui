@@ -32,6 +32,8 @@ export function eventToView(event: Event): EntityView {
         number: event.number,
         listInfos,
         cardInfos,
+        detailsId: String(event.id),
+        detailsKind: "event",
         entityKind: "event",
         entityId: event.id,
     };

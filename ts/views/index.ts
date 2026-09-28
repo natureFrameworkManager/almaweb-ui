@@ -2,6 +2,7 @@ export {
     addInfoIfPresent,
     createActionButton,
     syncEntityContainer,
+    type DetailKind,
     type EntityKind,
     type EntityView,
     type InfoSpec,
@@ -20,9 +21,10 @@ export {
     setActiveType,
 } from "./collection";
 export { courseToView } from "./courses";
+export { initDetailDialog, openDetail } from "./detail-dialog";
+export { registerDetailSpecs } from "./detail-specs";
 export { eventToView } from "./events";
 export { examToView } from "./exams";
 export { locationToView } from "./locations";
 export { moduleToView } from "./modules";
-export { initModuleDetail, openModuleDetail } from "./module-detail";
 export { staffToView } from "./staff";
