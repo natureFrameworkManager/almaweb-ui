@@ -37,7 +37,12 @@ import {
 import { getActiveMainView, switchMainView, switchViewMode } from "./layout";
 import { wireSwitcher } from "./switcher";
 import { handleThemeChange, initTheme } from "./theme";
-import { ensurePaneCollections, initCollectionScrolling, setActiveType } from "./views";
+import {
+    ensurePaneCollections,
+    initCollectionScrolling,
+    initModuleDetail,
+    setActiveType,
+} from "./views";
 
 /** Calendars created lazily the first time a pane shows them. */
 const calendars: Partial<Record<1 | 2, Calendar>> = {};
@@ -80,6 +85,7 @@ function handleViewModeChange(): void {
 
 registerCollections();
 initCollectionScrolling();
+initModuleDetail();
 
 wireSwitcher("#display-changer1", (view) => handlePaneView(1, view));
 wireSwitcher("#display-changer2", (view) => handlePaneView(2, view));

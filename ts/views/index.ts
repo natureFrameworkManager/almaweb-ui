@@ -22,4 +22,5 @@ export { eventToView } from "./events";
 export { examToView } from "./exams";
 export { locationToView } from "./locations";
 export { moduleToView } from "./modules";
+export { initModuleDetail, openModuleDetail } from "./module-detail";
 export { staffToView } from "./staff";

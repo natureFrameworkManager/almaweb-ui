@@ -92,5 +92,6 @@ export function moduleToView(module: Module): EntityView {
         number: module.number,
         listInfos: getModuleListInfos(module),
         cardInfos: getModuleCardInfos(module),
+        detailsId: String(module.id),
     };
 }

@@ -3,6 +3,7 @@ export type EntityView = {
     number: string | null;
     listInfos: InfoSpec[];
     cardInfos: InfoSpec[];
+    detailsId?: string;
 };
 
 export type InfoSpec = {
@@ -90,6 +91,21 @@ function createListItem(view: EntityView): HTMLLIElement {
 }
 
 /**
+ * Create the button that opens the shared detail dialog for an entity.
+ * @param view - Entity view data.
+ * @returns The created details button.
+ */
+function createDetailsButton(view: EntityView): HTMLButtonElement {
+    const button = createActionButton("btn", "Mehr Details");
+    if (view.detailsId) {
+        button.dataset["detailsId"] = view.detailsId;
+        button.setAttribute("popovertarget", "detail-dialog");
+        button.setAttribute("popovertargetaction", "toggle");
+    }
+    return button;
+}
+
+/**
  * Create the card representation of an entity.
  * @param view - Entity view data.
  * @returns The created card.
@@ -105,7 +121,7 @@ function createCard(view: EntityView): HTMLDivElement {
 
     const btnCon = document.createElement("div");
     btnCon.className = "btn-con";
-    btnCon.appendChild(createActionButton("btn", "Mehr Details"));
+    btnCon.appendChild(createDetailsButton(view));
     btnCon.appendChild(createActionButton("btn material-symbols", "save"));
     card.appendChild(btnCon);
 

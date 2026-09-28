@@ -1433,7 +1433,7 @@
             </footer>
         </dialog>
 
-        <!-- Detail dialog (native <dialog>, opened via the "Mehr Details" buttons) -->
+        <!-- Detail dialog (native <dialog>, filled by ts/views/module-detail.ts) -->
         <dialog
             id="detail-dialog"
             class="dialog detail-dialog wide"
@@ -1450,382 +1450,37 @@
                     close
                 </button>
             </header>
-            <div class="dialog-body">
-                <h1>Algorithmen und Datenstrukturen 1</h1>
-                <h2>10-201-2011</h2>
-                <div class="dialog-tabs">
+            <div
+                class="dialog-body"
+                id="detail-body"
+            >
+                <h1
+                    class="detail-name"
+                    id="detail-name"
+                ></h1>
+                <h2
+                    class="detail-number"
+                    id="detail-number"
+                ></h2>
+                <div
+                    class="dialog-tabs"
+                    id="detail-tabs"
+                >
                     <span
                         data-tab="details"
                         class="active"
                         >Details</span
                     >
-                    <span data-tab="courses">Kurse <span class="count-badge">3</span></span>
-                    <span data-tab="exams">Prüfungen <span class="count-badge">2</span></span>
+                    <span data-tab="courses">Kurse <span class="count-badge">0</span></span>
+                    <span data-tab="exams">Prüfungen <span class="count-badge">0</span></span>
                     <span data-tab="events"
-                        >Veranstaltungen <span class="count-badge">4</span></span
+                        >Veranstaltungen <span class="count-badge">0</span></span
                     >
-                    <span data-tab="staff">Dozenten <span class="count-badge">5</span></span>
-                    <span data-tab="locations">Räume <span class="count-badge">3</span></span>
-                    <span data-tab="buildings">Gebäude <span class="count-badge">2</span></span>
-                    <span data-tab="degrees">Studiengänge <span class="count-badge">3</span></span>
-                    <span data-tab="semester">Semester <span class="count-badge">3</span></span>
-                </div>
-
-                <!-- Details tab: all fields of the data point -->
-                <div
-                    class="tab-content"
-                    data-tab="details"
-                >
-                    <section class="dialog-section">
-                        <h2 class="section-title">Angaben</h2>
-                        <dl class="attr-grid">
-                            <div class="attr">
-                                <dt>Modulnummer</dt>
-                                <dd>10-201-2011</dd>
-                            </div>
-                            <div class="attr">
-                                <dt>Leistungspunkte</dt>
-                                <dd>10 LP</dd>
-                            </div>
-                            <div class="attr">
-                                <dt>Dauer</dt>
-                                <dd>1 Semester</dd>
-                            </div>
-                            <div class="attr">
-                                <dt>Häufigkeit</dt>
-                                <dd>jedes Wintersemester</dd>
-                            </div>
-                            <div class="attr">
-                                <dt>Sprache</dt>
-                                <dd>Deutsch</dd>
-                            </div>
-                            <div class="attr">
-                                <dt>Fakultät</dt>
-                                <dd>Fakultät für Mathematik und Informatik</dd>
-                            </div>
-                        </dl>
-                    </section>
-                    <section class="dialog-section">
-                        <h2 class="section-title">Inhalte &amp; Voraussetzungen</h2>
-                        <div class="table-wrap">
-                            <dl class="attr-table">
-                                <div class="attr-row">
-                                    <dt>Modulpfad</dt>
-                                    <dd>
-                                        Root &gt; Informatik &gt; Informatik (Bachelor of Science)
-                                        &gt; Pflichtmodule
-                                    </dd>
-                                </div>
-                                <div class="attr-row">
-                                    <dt>Inhalte</dt>
-                                    <dd>Sortieralgorithmen, Graphenalgorithmen, Bäume, Hashing</dd>
-                                </div>
-                                <div class="attr-row">
-                                    <dt>Qualifikationsziele</dt>
-                                    <dd>
-                                        Grundlegende Kenntnisse über Algorithmen und Datenstrukturen
-                                    </dd>
-                                </div>
-                                <div class="attr-row">
-                                    <dt>Zulassungsvoraussetzungen</dt>
-                                    <dd>Grundlagen der Programmierung</dd>
-                                </div>
-                                <div class="attr-row">
-                                    <dt>Prüfungsvorleistungen</dt>
-                                    <dd>Bestehen der Übungsaufgaben</dd>
-                                </div>
-                                <div class="attr-row">
-                                    <dt>Empfohlene Vorkenntnisse</dt>
-                                    <dd class="empty">-</dd>
-                                </div>
-                            </dl>
-                        </div>
-                    </section>
-                </div>
-                <!-- Linked courses: one table with the course fields as columns -->
-                <div
-                    class="tab-content"
-                    data-tab="courses"
-                >
-                    <div class="table-wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Nummer</th>
-                                    <th>Name</th>
-                                    <th>Typ</th>
-                                    <th>Tag</th>
-                                    <th>SWS</th>
-                                    <th>Sprache</th>
-                                    <th>Dozenten</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>10-201-2011-V01</td>
-                                    <td>Algorithmen und Datenstrukturen 1 - Vorlesung</td>
-                                    <td>Vorlesung</td>
-                                    <td>Montag</td>
-                                    <td>2</td>
-                                    <td>Deutsch</td>
-                                    <td>Max Mustermann</td>
-                                </tr>
-                                <tr>
-                                    <td>10-201-2011-Ü02</td>
-                                    <td>Algorithmen und Datenstrukturen 1 - Übung</td>
-                                    <td>Übung</td>
-                                    <td>Mittwoch</td>
-                                    <td>2</td>
-                                    <td>Deutsch</td>
-                                    <td>Erika Musterfrau</td>
-                                </tr>
-                                <tr>
-                                    <td>10-201-2011-SE01</td>
-                                    <td>Algorithmen und Datenstrukturen 1 - Seminar</td>
-                                    <td>Seminar</td>
-                                    <td>Freitag</td>
-                                    <td>1</td>
-                                    <td>Deutsch</td>
-                                    <td>Max Mustermann</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <!-- Linked exams: one table with the exam fields as columns -->
-                <div
-                    class="tab-content"
-                    data-tab="exams"
-                >
-                    <div class="table-wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Nummer</th>
-                                    <th>Name</th>
-                                    <th>Datum</th>
-                                    <th>Zeit</th>
-                                    <th>Pflicht</th>
-                                    <th>Dozenten</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>10-201-2011-P01</td>
-                                    <td>Klausur Algorithmen und Datenstrukturen 1</td>
-                                    <td>12.02.2027</td>
-                                    <td>10:00 - 12:00</td>
-                                    <td>Ja</td>
-                                    <td>Max Mustermann</td>
-                                </tr>
-                                <tr>
-                                    <td>10-201-2011-P02</td>
-                                    <td>Hausarbeit Algorithmen und Datenstrukturen 1</td>
-                                    <td class="empty">-</td>
-                                    <td class="empty">-</td>
-                                    <td>Nein</td>
-                                    <td>Erika Musterfrau</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <!-- Linked events: one table with the event fields as columns -->
-                <div
-                    class="tab-content"
-                    data-tab="events"
-                >
-                    <div class="table-wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Datum</th>
-                                    <th>Zeit</th>
-                                    <th>Typ</th>
-                                    <th>Ort</th>
-                                    <th>Dozenten</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>21.10.2026</td>
-                                    <td>08:15 - 09:45</td>
-                                    <td>Vorlesung</td>
-                                    <td>Hörsaal 1 (Gebäude A)</td>
-                                    <td>Max Mustermann</td>
-                                </tr>
-                                <tr>
-                                    <td>23.10.2026</td>
-                                    <td>10:15 - 11:45</td>
-                                    <td>Übung</td>
-                                    <td>Seminarraum 2 (Gebäude B)</td>
-                                    <td>Erika Musterfrau</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <!-- Linked staff: one table with the staff fields as columns -->
-                <div
-                    class="tab-content"
-                    data-tab="staff"
-                >
-                    <div class="table-wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Kontakt</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Max Mustermann</td>
-                                    <td class="empty">-</td>
-                                </tr>
-                                <tr>
-                                    <td>Erika Musterfrau</td>
-                                    <td class="empty">-</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <!-- Linked locations: one table with the location fields as columns -->
-                <div
-                    class="tab-content"
-                    data-tab="locations"
-                >
-                    <div class="table-wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Typ</th>
-                                    <th>Plätze</th>
-                                    <th>Gebäude</th>
-                                    <th>Barrierefrei</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Hörsaal 1</td>
-                                    <td>Hörsaal</td>
-                                    <td>120</td>
-                                    <td>Gebäude A - Musterstraße 1</td>
-                                    <td>Ja</td>
-                                </tr>
-                                <tr>
-                                    <td>Seminarraum 2</td>
-                                    <td>Seminarraum</td>
-                                    <td>30</td>
-                                    <td>Gebäude B</td>
-                                    <td>Nein</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <!-- Linked buildings: one table with the building fields as columns -->
-                <div
-                    class="tab-content"
-                    data-tab="buildings"
-                >
-                    <div class="table-wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Kurzname</th>
-                                    <th>Adresse</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Gebäude A</td>
-                                    <td>A</td>
-                                    <td>Musterstraße 1</td>
-                                </tr>
-                                <tr>
-                                    <td>Gebäude B</td>
-                                    <td>B</td>
-                                    <td>Musterstraße 2</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <!-- Linked degrees: one table with the degree fields as columns -->
-                <div
-                    class="tab-content"
-                    data-tab="degrees"
-                >
-                    <div class="table-wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Abschluss</th>
-                                    <th>Fakultät</th>
-                                    <th>Pflichtmodule</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Informatik</td>
-                                    <td>Bachelor of Science</td>
-                                    <td>Fakultät für Mathematik und Informatik</td>
-                                    <td>6</td>
-                                </tr>
-                                <tr>
-                                    <td>Informatik</td>
-                                    <td>Master of Science</td>
-                                    <td>Fakultät für Mathematik und Informatik</td>
-                                    <td>4</td>
-                                </tr>
-                                <tr>
-                                    <td>Wirtschaftsinformatik</td>
-                                    <td>Bachelor of Science</td>
-                                    <td>Fakultät für Wirtschaftswissenschaften</td>
-                                    <td>5</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <!-- Linked semesters: one table with the semester fields as columns -->
-                <div
-                    class="tab-content"
-                    data-tab="semester"
-                >
-                    <div class="table-wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Jahr</th>
-                                    <th>Termin</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Wintersemester 2026/27</td>
-                                    <td>2026</td>
-                                    <td>Wintersemester</td>
-                                </tr>
-                                <tr>
-                                    <td>Sommersemester 2027</td>
-                                    <td>2027</td>
-                                    <td>Sommersemester</td>
-                                </tr>
-                                <tr>
-                                    <td>Wintersemester 2027/28</td>
-                                    <td>2027</td>
-                                    <td>Wintersemester</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <span data-tab="staff">Dozenten <span class="count-badge">0</span></span>
+                    <span data-tab="locations">Räume <span class="count-badge">0</span></span>
+                    <span data-tab="buildings">Gebäude <span class="count-badge">0</span></span>
+                    <span data-tab="degrees">Studiengänge <span class="count-badge">0</span></span>
+                    <span data-tab="semester">Semester <span class="count-badge">0</span></span>
                 </div>
             </div>
             <footer class="dialog-footer">
@@ -1838,13 +1493,12 @@
                     <span class="material-symbols">open_in_new</span>
                     Original-Datensatz in ALMA
                 </a>
-                <!-- Not saved state: drop the "saved" class/aria-pressed and use
-                     bookmark_add + "In Slot speichern". -->
                 <button
-                    class="btn save-toggle saved"
-                    aria-pressed="true"
+                    class="btn save-toggle"
+                    id="detail-save-toggle"
+                    aria-pressed="false"
                 >
-                    <span class="material-symbols">bookmark</span>Im Slot gespeichert
+                    <span class="material-symbols">bookmark_add</span>In Slot speichern
                 </button>
             </footer>
         </dialog>
