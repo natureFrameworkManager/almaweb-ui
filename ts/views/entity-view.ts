@@ -1,9 +1,13 @@
+import type { EntryKind } from "../state";
+
 export type EntityView = {
     name: string;
     number: string | null;
     listInfos: InfoSpec[];
     cardInfos: InfoSpec[];
     detailsId?: string;
+    entityKind?: EntryKind;
+    entityId?: number;
 };
 
 export type InfoSpec = {
@@ -73,6 +77,24 @@ export function createActionButton(className: string, text: string): HTMLButtonE
 }
 
 /**
+ * Create the save toggle button of an entity.
+ *
+ * The button carries the entity kind and id so the state layer can save it into
+ * the active save slot regardless of the entity type.
+ * @param view - Entity view data.
+ * @returns The created save button.
+ */
+function createSaveButton(view: EntityView): HTMLButtonElement {
+    const button = createActionButton("btn material-symbols save-toggle", "save");
+    if (view.entityKind !== undefined && view.entityId !== undefined) {
+        button.dataset["saveKind"] = view.entityKind;
+        button.dataset["saveRef"] = String(view.entityId);
+        button.setAttribute("aria-pressed", "false");
+    }
+    return button;
+}
+
+/**
  * Create the list representation of an entity.
  * @param view - Entity view data.
  * @returns The created list item.
@@ -85,7 +107,7 @@ function createListItem(view: EntityView): HTMLLIElement {
         appendHeading(item, "h2", view.number);
     }
     appendInfoContainer(item, view.listInfos);
-    item.appendChild(createActionButton("btn material-symbols", "save"));
+    item.appendChild(createSaveButton(view));
 
     return item;
 }
@@ -122,7 +144,7 @@ function createCard(view: EntityView): HTMLDivElement {
     const btnCon = document.createElement("div");
     btnCon.className = "btn-con";
     btnCon.appendChild(createDetailsButton(view));
-    btnCon.appendChild(createActionButton("btn material-symbols", "save"));
+    btnCon.appendChild(createSaveButton(view));
     card.appendChild(btnCon);
 
     return card;

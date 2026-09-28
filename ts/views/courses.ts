@@ -30,5 +30,7 @@ export function courseToView(course: Course): EntityView {
         number: course.number,
         listInfos,
         cardInfos: baseInfos(),
+        entityKind: "course",
+        entityId: course.id,
     };
 }

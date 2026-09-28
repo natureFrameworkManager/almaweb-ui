@@ -7,5 +7,12 @@ import type { EntityView } from "./entity-view";
  * @returns Entity view data.
  */
 export function staffToView(staff: Staff): EntityView {
-    return { name: staff.name, number: null, listInfos: [], cardInfos: [] };
+    return {
+        name: staff.name,
+        number: null,
+        listInfos: [],
+        cardInfos: [],
+        entityKind: "staff",
+        entityId: staff.id,
+    };
 }

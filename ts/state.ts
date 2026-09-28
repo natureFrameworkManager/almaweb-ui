@@ -12,12 +12,6 @@ export const STATE_VERSION = 1;
 /** Local storage key holding the complete serialised UI state. */
 const STATE_STORAGE_KEY = "almaweb.state";
 
-/** Legacy local storage key holding the flat set of saved data point keys. */
-const LEGACY_SAVED_KEY = "almaweb.saved";
-
-/** Legacy local storage key holding the selected theme. */
-const LEGACY_THEME_KEY = "almaweb-theme";
-
 /** Query parameter holding the base64url encoded state. */
 const QUERY_STATE_PARAM = "d";
 
@@ -59,7 +53,7 @@ export type CalendarView =
 export type CalendarColorMode = "type" | "module" | "course" | "staff" | "location";
 
 /** Kinds of entities that can be stored in a save slot. */
-export type EntryKind = "module" | "course" | "event" | "exam";
+export type EntryKind = "module" | "course" | "event" | "exam" | "staff" | "location";
 
 /** An inclusive filter range; an empty string means "no bound". */
 export type Range = { min: string; max: string };
@@ -180,7 +174,7 @@ export type UIState = {
 };
 
 /** Entity kinds that are valid in a saved data point key. */
-const ENTRY_KINDS: EntryKind[] = ["module", "course", "event", "exam"];
+const ENTRY_KINDS: EntryKind[] = ["module", "course", "event", "exam", "staff", "location"];
 
 /**
  * Create an empty filter range.
@@ -267,15 +261,6 @@ export function defaultState(): UIState {
 }
 
 /**
- * Check whether a stored value is a supported theme mode.
- * @param value - Stored theme value.
- * @returns Whether the value is a supported theme mode.
- */
-function isThemeMode(value: string | null): value is ThemeMode {
-    return value === "system" || value === "dark" || value === "light";
-}
-
-/**
  * Merge a partial state into a base state, keeping base values for missing keys.
  *
  * Objects are merged recursively, arrays are replaced as a whole and primitives
@@ -343,66 +328,11 @@ function readStoredState(): unknown | null {
 }
 
 /**
- * Read the legacy flat list of saved data point keys.
- * @returns The legacy saved data point keys.
- */
-function readLegacySavedKeys(): string[] {
-    try {
-        const raw = localStorage.getItem(LEGACY_SAVED_KEY);
-        return raw ? (JSON.parse(raw) as string[]) : [];
-    } catch (error) {
-        console.error("Failed to read legacy saved state:", error);
-        return [];
-    }
-}
-
-/**
- * Build the partial state that migrates the legacy local storage keys.
- *
- * Saved data points used to live in a flat set under `almaweb.saved`; they are
- * moved into the entries of the active save slot. The legacy keys are left in
- * place so no data is destroyed during the migration.
- * @returns The migrated partial state.
- */
-function migrateLegacy(): Partial<UIState> {
-    const legacy: Partial<UIState> = {};
-    const theme = localStorage.getItem(LEGACY_THEME_KEY);
-    if (isThemeMode(theme)) {
-        legacy.theme = theme;
-    }
-    const entries = readLegacySavedKeys()
-        .map(parseSavedKey)
-        .filter((entry): entry is SaveSlotEntry => entry !== null);
-    if (entries.length > 0) {
-        legacy.slots = {
-            active: DEFAULT_SLOT_ID,
-            items: [
-                {
-                    id: DEFAULT_SLOT_ID,
-                    name: "Mein Studienplan",
-                    entries,
-                    requirements: { totalLp: DEFAULT_TOTAL_LP, modules: [] },
-                },
-                createSlot("slot-2", "Save-Slot 2"),
-                createSlot("slot-3", "Save-Slot 3"),
-            ],
-        };
-    }
-    return legacy;
-}
-
-/**
- * Load the UI state from local storage, migrating legacy keys on first run.
+ * Load the UI state from local storage, filling in any missing defaults.
  * @returns The loaded UI state.
  */
 export function loadState(): UIState {
-    const defaults = defaultState();
-    const stored = readStoredState();
-    if (stored === null) {
-        return mergeState(defaults, migrateLegacy());
-    }
-    // TODO: run version migrations here once STATE_VERSION is bumped.
-    return mergeState(defaults, stored);
+    return mergeState(defaultState(), readStoredState() ?? {});
 }
 
 /**
@@ -562,67 +492,4 @@ export function applyShareState(search?: string): boolean {
     }
     setState(mergeState(defaultState(), partial));
     return true;
-}
-
-/**
- * Apply the layout, pane and calendar display settings to the live UI.
- * @param state - State to read from.
- */
-export function applyDisplayState(state: UIState): void {
-    void state;
-    // TODO: switchViewMode(state.display.viewMode);
-    // TODO: per pane: switchMainView(paneId, state.display.panes[paneId].mainView) and
-    //       setActiveType(paneId, state.display.panes[paneId].type).
-    // TODO: apply state.calendar.view, colorMode and customMap to the FullCalendar instances.
-}
-
-/**
- * Hydrate the filter DOM controls from the state.
- * @param state - State to read from.
- */
-export function applyFilterState(state: UIState): void {
-    void state;
-    // TODO: write state.filters back into #search-input-*, #filter-*, and the
-    //       labelled range inputs, then trigger the existing debounced re-query.
-}
-
-/**
- * Hydrate the save-slot selector and dialog from the state.
- * @param state - State to read from.
- */
-export function applySlotState(state: UIState): void {
-    void state;
-    // TODO: populate .save-slot-selector from state.slots.items, select state.slots.active,
-    //       render the entries and required modules of the active slot in #save-slot-dialog.
-}
-
-/**
- * Apply every section of a state document to the live UI.
- * @param state - State to apply.
- */
-export function applyState(state: UIState): void {
-    // TODO: call applyDisplayState/applyFilterState/applySlotState once the bindings exist.
-    void state;
-}
-
-/**
- * Read the current UI controls back into a state document.
- *
- * Stub: the display, filter and save-slot controls are not bound to the state
- * yet, so this currently returns an unchanged copy of the shared state.
- * @returns The captured state document.
- */
-export function captureState(): UIState {
-    // TODO: mirror applyState and read every control back into the state.
-    return getState();
-}
-
-/**
- * Initialise the shared state and persist it, applying migrated legacy keys.
- * @returns The initialised state.
- */
-export function initState(): UIState {
-    const state = setState(loadState());
-    // TODO: applyState(state) once the display, filter and save-slot bindings are implemented.
-    return state;
 }

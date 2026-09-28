@@ -29,5 +29,12 @@ export function examToView(exam: Exam): EntityView {
         listInfos.push({ className: "exam-staff", text: staffNames });
     }
 
-    return { name: exam.name, number: null, listInfos, cardInfos: baseInfos() };
+    return {
+        name: exam.name,
+        number: null,
+        listInfos,
+        cardInfos: baseInfos(),
+        entityKind: "exam",
+        entityId: exam.id,
+    };
 }

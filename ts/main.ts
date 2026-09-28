@@ -35,7 +35,13 @@ import {
     wireFilterGroup,
 } from "./filters";
 import { getActiveMainView, switchMainView, switchViewMode } from "./layout";
-import { initState } from "./state";
+import { getState } from "./state";
+import {
+    initStateBindings,
+    loadInitialState,
+    refreshStateFilters,
+    registerCalendarLoader,
+} from "./state-bind";
 import { wireSwitcher } from "./switcher";
 import { handleThemeChange, initTheme } from "./theme";
 import {
@@ -54,7 +60,7 @@ const calendars: Partial<Record<1 | 2, Calendar>> = {};
  */
 function ensureCalendar(paneId: 1 | 2): void {
     if (!calendars[paneId]) {
-        calendars[paneId] = initCal(`calendar-container${paneId}`);
+        calendars[paneId] = initCal(`calendar-container${paneId}`, getState().calendar.view);
     }
 }
 
@@ -84,13 +90,12 @@ function handleViewModeChange(): void {
     });
 }
 
-initState();
-
 registerCollections();
 initCollectionScrolling();
 initModuleDetail();
 
-// TODO: wire #share-button to writeStateToQuery() and #export-button to captureState() + a JSON download.
+registerCalendarLoader(ensureCalendar);
+loadInitialState();
 
 wireSwitcher("#display-changer1", (view) => handlePaneView(1, view));
 wireSwitcher("#display-changer2", (view) => handlePaneView(2, view));
@@ -104,8 +109,7 @@ wireSwitcher("#view-switcher", (view) => {
 wireSwitcher("#type-switcher1", (type) => setActiveType(1, type));
 wireSwitcher("#type-switcher2", (type) => setActiveType(2, type));
 initTheme();
-switchViewMode("single");
-setActiveType(1, "modules");
+initStateBindings();
 
 /* getEvents()
     .then((events) => {
@@ -123,64 +127,63 @@ setActiveType(1, "modules");
         console.error("Failed to fetch events:", error);
     }); */
 
-getStaff()
-    .then((staff) => {
-        appendCheckboxOptions("filter-instructors", toStaffOptions(staff.items));
-        appendCheckboxOptions("filter-staff", toStaffOptions(staff.items));
-    })
-    .catch((error) => {
-        console.error("Failed to fetch staff:", error);
-    });
+/** Fetch the filter options; the state filters are re-applied once they exist. */
+const filterOptionLoads = [
+    getStaff()
+        .then((staff) => {
+            appendCheckboxOptions("filter-instructors", toStaffOptions(staff.items));
+            appendCheckboxOptions("filter-staff", toStaffOptions(staff.items));
+        })
+        .catch((error) => {
+            console.error("Failed to fetch staff:", error);
+        }),
+    getSemesters()
+        .then((semesters) => {
+            appendCheckboxOptions("filter-semester", toSemesterOptions(semesters.items));
+        })
+        .catch((error) => {
+            console.error("Failed to fetch semesters:", error);
+        }),
+    getFaculties()
+        .then((faculties) => {
+            appendCheckboxOptions("filter-faculty", toFacultyOptions(faculties.items));
+        })
+        .catch((error) => {
+            console.error("Failed to fetch faculties:", error);
+        }),
+    getEventTypes()
+        .then((eventTypes) => {
+            appendCheckboxOptions("filter-type", toEventTypeOptions(eventTypes.items));
+        })
+        .catch((error) => {
+            console.error("Failed to fetch event types:", error);
+        }),
+    getBuildings()
+        .then((buildings) => {
+            const options = toBuildingOptions(buildings.items);
+            appendCheckboxOptions("filter-buildings", options);
+            appendSelectOptions("filter-event-buildings", options);
+        })
+        .catch((error) => {
+            console.error("Failed to fetch buildings:", error);
+        }),
+    getModuleLanguages()
+        .then((languages) => {
+            appendCheckboxOptions("filter-language", toLanguageOptions(languages.items));
+        })
+        .catch((error) => {
+            console.error("Failed to fetch languages:", error);
+        }),
+    getExamTypes()
+        .then((examTypes) => {
+            appendCheckboxOptions("filter-examtypes", toExamTypeOptions(examTypes.items));
+        })
+        .catch((error) => {
+            console.error("Failed to fetch exam types:", error);
+        }),
+];
 
-getSemesters()
-    .then((semesters) => {
-        appendCheckboxOptions("filter-semester", toSemesterOptions(semesters.items));
-    })
-    .catch((error) => {
-        console.error("Failed to fetch semesters:", error);
-    });
-
-getFaculties()
-    .then((faculties) => {
-        appendCheckboxOptions("filter-faculty", toFacultyOptions(faculties.items));
-    })
-    .catch((error) => {
-        console.error("Failed to fetch faculties:", error);
-    });
-
-getEventTypes()
-    .then((eventTypes) => {
-        appendCheckboxOptions("filter-type", toEventTypeOptions(eventTypes.items));
-    })
-    .catch((error) => {
-        console.error("Failed to fetch event types:", error);
-    });
-
-getBuildings()
-    .then((buildings) => {
-        const options = toBuildingOptions(buildings.items);
-        appendCheckboxOptions("filter-buildings", options);
-        appendSelectOptions("filter-event-buildings", options);
-    })
-    .catch((error) => {
-        console.error("Failed to fetch buildings:", error);
-    });
-
-getModuleLanguages()
-    .then((languages) => {
-        appendCheckboxOptions("filter-language", toLanguageOptions(languages.items));
-    })
-    .catch((error) => {
-        console.error("Failed to fetch languages:", error);
-    });
-
-getExamTypes()
-    .then((examTypes) => {
-        appendCheckboxOptions("filter-examtypes", toExamTypeOptions(examTypes.items));
-    })
-    .catch((error) => {
-        console.error("Failed to fetch exam types:", error);
-    });
+void Promise.allSettled(filterOptionLoads).then(refreshStateFilters);
 
 wireFilterGroup("filter-group-global", requeryAll);
 wireFilterGroup("filter-group-module", requeryModules);

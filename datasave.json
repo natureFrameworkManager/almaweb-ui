@@ -1,0 +1,196 @@
+{
+    "$id": "datasave.json",
+    "version": 1,
+    "app": "almaweb-ui",
+    "_readme": [
+        "Canonical data-save document for the almaweb-ui state layer.",
+        "It normalises every UI setting into plain JSON (arrays/objects only, no",
+        "Set/Map) so one object can be:",
+        "  1. read/written to localStorage under the \"almaweb.state\" key,",
+        "  2. edited by hand in devtools without helper code,",
+        "  3. compacted and base64url-encoded into the ?d= query parameter to",
+        "     build a share link.",
+        "Server responses (degrees/modules/events/staff/locations/semesters) are",
+        "NOT part of this document, they are cached separately.",
+        "A saved data point is stored in the entries of the currently active save",
+        "slot, so switching slots changes which points are reported as saved.",
+        "An entry kind is one of: module, course, event, exam, staff, location.",
+        "The #share-button writes this document into ?d= and the clipboard."
+    ],
+    "localStorage": {
+        "stateKey": "almaweb.state",
+        "_note": "Single JSON blob holding the complete \"state\" object below."
+    },
+    "url": {
+        "param": "d",
+        "versionParam": "v",
+        "strategy": "base64url(JSON.stringify(state))",
+        "omitDefaults": true,
+        "arrayFormat": "comma-joined numeric/string ids",
+        "_note": "Always keep ?v so older links can be migrated. Form (a): ?v=1&d=<base64url of full state>. Form (b): ?v=1 plus short keys from the dictionary below for a readable link.",
+        "dictionary": {
+            "top": {
+                "theme": "t",
+                "language": "l",
+                "display": "d",
+                "calendar": "c",
+                "filters": "f",
+                "slots": "s"
+            },
+            "display": {
+                "viewMode": "m",
+                "panes": "p",
+                "mainView": "v",
+                "type": "y",
+                "sort": "o"
+            },
+            "calendar": {
+                "view": "v",
+                "colorMode": "c",
+                "customMap": "x",
+                "pinnedEvents": "pe"
+            },
+            "filters": {
+                "global": "g",
+                "module": "mo",
+                "course": "co",
+                "event": "ev",
+                "exam": "ex",
+                "name": "n",
+                "number": "no",
+                "faculty": "fa",
+                "responsiblePerson": "rp",
+                "credits": "cr",
+                "duration": "du",
+                "languages": "la",
+                "types": "ty",
+                "instructors": "in",
+                "weeklyHours": "wh",
+                "startTime": "st",
+                "endTime": "et",
+                "dates": "dt",
+                "buildings": "bu",
+                "required": "rq",
+                "staff": "sf",
+                "semester": "se",
+                "min": "i",
+                "max": "a"
+            },
+            "slots": {
+                "active": "a",
+                "items": "i",
+                "id": "d",
+                "name": "n",
+                "entries": "e",
+                "requirements": "r",
+                "totalLp": "t",
+                "modules": "m",
+                "kind": "k",
+                "ref": "f",
+                "lp": "l",
+                "done": "o"
+            }
+        }
+    },
+    "state": {
+        "theme": "system",
+        "language": "de",
+        "display": {
+            "viewMode": "single",
+            "panes": {
+                "1": {
+                    "mainView": "list",
+                    "type": "modules",
+                    "sort": []
+                },
+                "2": {
+                    "mainView": "list",
+                    "type": "modules",
+                    "sort": []
+                }
+            }
+        },
+        "calendar": {
+            "view": "listMonth",
+            "colorMode": "type",
+            "customMap": {},
+            "pinnedEvents": []
+        },
+        "filters": {
+            "global": {
+                "semester": []
+            },
+            "module": {
+                "name": "",
+                "number": "",
+                "faculty": [],
+                "responsiblePerson": "",
+                "credits": { "min": "", "max": "" },
+                "duration": { "min": "", "max": "" },
+                "languages": []
+            },
+            "course": {
+                "name": "",
+                "number": "",
+                "types": [],
+                "instructors": [],
+                "weeklyHours": { "min": "", "max": "" }
+            },
+            "event": {
+                "startTime": { "min": "", "max": "" },
+                "endTime": { "min": "", "max": "" },
+                "dates": { "min": "", "max": "" },
+                "buildings": ""
+            },
+            "exam": {
+                "types": [],
+                "startTime": { "min": "", "max": "" },
+                "endTime": { "min": "", "max": "" },
+                "dates": { "min": "", "max": "" },
+                "buildings": [],
+                "required": "neutral",
+                "staff": []
+            }
+        },
+        "slots": {
+            "active": "slot-1",
+            "items": [
+                {
+                    "id": "slot-1",
+                    "name": "Mein Studienplan",
+                    "entries": [
+                        { "kind": "module", "ref": 2011 },
+                        { "kind": "course", "ref": 201101 },
+                        { "kind": "event", "ref": 20110101 },
+                        { "kind": "exam", "ref": 2011 },
+                        { "kind": "staff", "ref": 42 },
+                        { "kind": "location", "ref": 7 }
+                    ],
+                    "requirements": {
+                        "totalLp": 30,
+                        "modules": [
+                            { "ref": 2011, "lp": 10, "done": true },
+                            { "ref": 2001, "lp": 5, "done": true },
+                            { "ref": 1001, "lp": 5, "done": false },
+                            { "ref": 1002, "lp": 5, "done": false },
+                            { "ref": 2014, "lp": 5, "done": false }
+                        ]
+                    }
+                },
+                {
+                    "id": "slot-2",
+                    "name": "Save-Slot 2",
+                    "entries": [],
+                    "requirements": { "totalLp": 30, "modules": [] }
+                },
+                {
+                    "id": "slot-3",
+                    "name": "Save-Slot 3",
+                    "entries": [],
+                    "requirements": { "totalLp": 30, "modules": [] }
+                }
+            ],
+            "_note": "entries holds the saved data points of this slot; the slot whose id equals slots.active is the target of the save toggles"
+        }
+    }
+}

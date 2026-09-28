@@ -27,5 +27,12 @@ export function eventToView(event: Event): EntityView {
         { className: "event-location", text: event.location.name },
     ];
 
-    return { name: event.name || event.location.name, number: event.number, listInfos, cardInfos };
+    return {
+        name: event.name || event.location.name,
+        number: event.number,
+        listInfos,
+        cardInfos,
+        entityKind: "event",
+        entityId: event.id,
+    };
 }

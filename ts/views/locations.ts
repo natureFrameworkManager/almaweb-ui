@@ -35,5 +35,7 @@ export function locationToView(location: Location): EntityView {
         number: location.external_id,
         listInfos: getLocationInfos(location, true),
         cardInfos: getLocationInfos(location, false),
+        entityKind: "location",
+        entityId: location.id,
     };
 }

@@ -5,13 +5,16 @@ import multiMonthPlugin from "fullcalendar/multimonth";
 import themePlugin from "fullcalendar/themes/monarch";
 import timeGridPlugin from "fullcalendar/timegrid";
 
+import type { CalendarView } from "./state";
+
 /**
  * Create and render a FullCalendar instance for a pane.
  * @param elementId - Calendar element ID.
+ * @param initialView - Calendar view to show first.
  * @returns The rendered calendar instance.
  * @throws {Error} If the calendar element does not exist.
  */
-export function initCal(elementId: string): Calendar {
+export function initCal(elementId: string, initialView: CalendarView = "listMonth"): Calendar {
     const calendarElement = document.querySelector(`#${elementId}`) as HTMLElement | null;
     if (!calendarElement) {
         throw new Error(`Calendar element with ID "${elementId}" not found.`);
@@ -19,7 +22,7 @@ export function initCal(elementId: string): Calendar {
 
     const calendar = new Calendar(calendarElement, {
         height: "100%",
-        initialView: "listMonth",
+        initialView,
         locale: "de",
         eventMaxStack: 4,
         initialDate: new Date().toISOString().split("T")[0],
