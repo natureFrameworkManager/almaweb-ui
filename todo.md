@@ -95,11 +95,6 @@ in the mockups but not implemented.
   a placeholder; compare mode shows only this heading. → Implement slot
   comparison (LP totals, conflicts, shared entries).
 
-- [ ] **P2 — Calendar customization is unimplemented.**
-  `calendar.colorMode`, `customMap` and `pinnedEvents` are declared and defaulted
-  (`ts/state.ts:126-131`) but **never read or written** anywhere. No UI exists
-  for event colour modes, custom colour mapping, or pinning events.
-
 - [ ] **P2 — "Datenstand" is always "unbekannt".**
   `#last-updated-timestamp` shows a hard-coded `unbekannt`
   (`index.html:69`); the updating feature was removed (commit `01c4b61`).
@@ -210,11 +205,6 @@ in the mockups but not implemented.
 
 ## 5. Code quality / technical debt
 
-- [ ] **P1 — No automated tests.**
-  `package.json` has no `test` script and there is no test framework. The state
-  layer, sort, filters, key parsing and API URL building are highly testable and
-  currently unprotected.
-
 - [ ] **P1 — No README / contributor docs.**
   No `README.md`. Add setup, scripts (`dev`, `build`, `typecheck`, `lint`,
   `format`), API host configuration and architecture overview.
@@ -251,9 +241,6 @@ in the mockups but not implemented.
 - [ ] **P1 — Make the API host configurable.**
   Replace the hard-coded `localhost` host with an environment variable and
   document it; ensure the production default points at the real API.
-
-- [ ] **P2 — Regenerate/verify `openapi.json` against the live server.**
-  (see §1) and add a CI step so the committed spec stays current.
 
 - [ ] **P2 — CI checks.**
   No CI config found. Add a pipeline running `typecheck`, `lint`,
