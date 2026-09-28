@@ -1,0 +1,125 @@
+/*
+ * Shared shell for the native <dialog> based modal dialogs (save slot and detail view).
+ *
+ * The dialogs are native <dialog> elements that use the popover API, so they can
+ * be opened and closed without JavaScript by pointing a button's `popovertarget`
+ * at the dialog id. The visible tab is switched purely with :has().
+ */
+.dialog {
+    @apply m-auto flex max-h-[85vh] min-h-0 w-[min(760px,92vw)] flex-col overflow-hidden p-0;
+    @apply rounded-lg border border-border bg-background text-text shadow-2xl;
+}
+/* Keep the dialog hidden while it is not shown as a popover. */
+.dialog:not(:popover-open) {
+    display: none;
+}
+.dialog.wide {
+    @apply w-[min(1040px,94vw)];
+}
+/* The backdrop uses the app background colour. */
+.dialog::backdrop {
+    @apply bg-background/50;
+}
+
+.dialog > header.dialog-header {
+    @apply flex flex-row items-center justify-between gap-x-3 border-b border-border px-4 py-3;
+    @apply bg-primary/5 dark:bg-primary/15;
+}
+.dialog > header.dialog-header h1.dialog-title {
+    @apply min-w-0 font-header text-title-large font-semibold;
+}
+.dialog > header.dialog-header button.dialog-close {
+    @apply shrink-0;
+}
+
+.dialog > div.dialog-body {
+    @apply flex min-h-0 flex-1 flex-col gap-y-4 overflow-y-auto p-4;
+}
+
+.dialog > footer.dialog-footer {
+    @apply flex flex-row flex-wrap items-center justify-end gap-x-2 gap-y-1 border-t border-border px-3 py-2;
+    @apply bg-primary/5 dark:bg-primary/15;
+}
+.dialog > footer.dialog-footer .spacer {
+    @apply me-auto;
+}
+
+/* Generic sections used inside the dialogs. */
+.dialog-section {
+    @apply flex flex-col gap-y-2;
+}
+.dialog-section > h2.section-title {
+    @apply flex flex-row items-center gap-x-2 text-title-medium font-semibold;
+}
+.dialog .count-badge {
+    @apply rounded-full px-2 py-0.5 text-label-small font-semibold;
+}
+.dialog-section > h2.section-title .count-badge {
+    @apply bg-primary text-background;
+}
+.dialog-tabs .count-badge {
+    @apply bg-primary/15 px-1.5 text-primary;
+}
+.dialog-section > p.section-hint {
+    @apply text-body-small text-text/70;
+}
+
+/* In-dialog tab bar, styled like the list header type switcher. */
+.dialog-tabs {
+    @apply flex flex-row flex-wrap items-end gap-x-1 border-b border-border;
+}
+.dialog-tabs > span {
+    @apply inline-flex cursor-pointer flex-row items-center border-b-2 border-transparent px-3 py-1 text-label-large text-nowrap;
+    @apply hover:border-primary hover:text-primary;
+}
+.dialog-tabs > span.active {
+    @apply border-primary font-semibold text-primary;
+}
+
+/* Show the tab content matching the active tab without JavaScript. */
+.dialog .tab-content {
+    display: none;
+}
+.dialog .tab-content {
+    @apply flex-col gap-y-4;
+}
+.dialog:has(.dialog-tabs > span.active[data-tab="entries"]) .tab-content[data-tab="entries"],
+.dialog:has(.dialog-tabs > span.active[data-tab="requirements"])
+    .tab-content[data-tab="requirements"],
+.dialog:has(.dialog-tabs > span.active[data-tab="details"]) .tab-content[data-tab="details"],
+.dialog:has(.dialog-tabs > span.active[data-tab="courses"]) .tab-content[data-tab="courses"],
+.dialog:has(.dialog-tabs > span.active[data-tab="exams"]) .tab-content[data-tab="exams"],
+.dialog:has(.dialog-tabs > span.active[data-tab="events"]) .tab-content[data-tab="events"],
+.dialog:has(.dialog-tabs > span.active[data-tab="staff"]) .tab-content[data-tab="staff"],
+.dialog:has(.dialog-tabs > span.active[data-tab="locations"]) .tab-content[data-tab="locations"],
+.dialog:has(.dialog-tabs > span.active[data-tab="buildings"]) .tab-content[data-tab="buildings"],
+.dialog:has(.dialog-tabs > span.active[data-tab="degrees"]) .tab-content[data-tab="degrees"],
+.dialog:has(.dialog-tabs > span.active[data-tab="semester"]) .tab-content[data-tab="semester"] {
+    display: flex;
+}
+
+/* Scrollable wrapper + generic data table for the linked data. */
+.table-wrap {
+    @apply overflow-x-auto rounded-md border border-border;
+}
+.table-wrap > table {
+    @apply w-full border-collapse text-body-small;
+}
+.table-wrap > table th {
+    @apply border-b border-border px-2 py-1 text-left text-label-medium font-semibold text-nowrap;
+    @apply bg-primary/5 dark:bg-primary/15;
+}
+.table-wrap > table td {
+    @apply border-b border-border px-2 py-1 align-top;
+}
+.table-wrap > table tbody tr:last-child td {
+    @apply border-b-0;
+}
+.table-wrap > table tbody tr:hover {
+    @apply bg-primary/5 dark:bg-primary/10;
+}
+/* Missing values are rendered as a muted dash. */
+.table-wrap td.empty,
+.table-wrap dd.empty {
+    @apply text-text/40;
+}

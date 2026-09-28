@@ -1,0 +1,58 @@
+/*
+ * Detail dialog: shows all fields of a single data point in the details tab and
+ * the linked data as per-type tables, plus the save toggle and the original link.
+ */
+
+/* The data point name and number sit above the tab bar. */
+.detail-dialog .dialog-body > h1 {
+    @apply font-header text-headline-small font-semibold text-wrap;
+}
+.detail-dialog .dialog-body > h2 {
+    @apply -mt-3 text-title-medium text-text/70;
+}
+
+/* Short values as cards ... */
+.detail-dialog dl.attr-grid {
+    @apply m-0 grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-2;
+}
+.detail-dialog dl.attr-grid div.attr {
+    @apply flex flex-col gap-y-0.5 rounded-md border border-border px-3 py-2;
+}
+.detail-dialog dl.attr-grid dt {
+    @apply text-label-small tracking-wide text-text/60 uppercase;
+}
+.detail-dialog dl.attr-grid dd {
+    @apply m-0 text-body-medium font-medium text-wrap;
+}
+
+/* ... long or optional values as table rows */
+.detail-dialog dl.attr-table {
+    @apply m-0;
+}
+.detail-dialog dl.attr-table div.attr-row {
+    @apply grid grid-cols-[minmax(8rem,12rem)_minmax(0,1fr)] gap-x-3 border-b border-border px-3 py-2 last:border-b-0;
+}
+.detail-dialog dl.attr-table dt {
+    @apply text-label-medium font-semibold text-text/60;
+}
+.detail-dialog dl.attr-table dd {
+    @apply m-0 text-body-medium text-wrap;
+}
+.detail-dialog dd.empty {
+    @apply text-text/40;
+}
+
+/* Save toggle: a single button that reflects the saved state */
+.detail-dialog .save-toggle.saved {
+    @apply bg-accent text-text dark:text-background;
+    @apply hover:bg-accent/80;
+}
+
+/* Link to the original data source */
+.detail-dialog .original-link {
+    @apply inline-flex w-fit flex-row items-center gap-x-1 text-label-large font-semibold text-primary;
+    @apply hover:underline;
+}
+.detail-dialog .original-link span.material-symbols {
+    @apply text-[16px];
+}

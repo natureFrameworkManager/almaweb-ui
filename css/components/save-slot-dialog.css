@@ -1,0 +1,120 @@
+/*
+ * Save slot dialog: rename the slot, list or remove the saved data points and
+ * plan the required modules of the degree with their summed up LP.
+ */
+
+/* Slot name */
+.save-slot-dialog .slot-name-row {
+    @apply flex flex-row items-end gap-x-2;
+}
+.save-slot-dialog .slot-name-row .input-container {
+    @apply flex-1;
+}
+
+/* Saved data points: fixed first column so the text aligns for every type badge. */
+.save-slot-dialog .slot-entry-list {
+    @apply m-0 flex list-none flex-col gap-y-1 p-0;
+}
+.save-slot-dialog .slot-entry {
+    @apply grid grid-cols-[6.5rem_minmax(0,1fr)_auto_auto] items-center gap-x-3;
+    @apply rounded-md border border-border px-2 py-2;
+}
+.save-slot-dialog .slot-entry .entry-type {
+    @apply w-full justify-center rounded-full border border-border px-2 py-0.5 text-center text-label-small font-semibold uppercase;
+    @apply bg-primary/5 dark:bg-primary/15;
+}
+.save-slot-dialog .slot-entry .entry-main {
+    @apply flex min-w-0 flex-col;
+}
+.save-slot-dialog .slot-entry .entry-name {
+    @apply truncate text-body-medium font-semibold;
+}
+.save-slot-dialog .slot-entry .entry-meta {
+    @apply truncate text-body-small text-text/60;
+}
+.save-slot-dialog .slot-entry .entry-lp {
+    @apply shrink-0 text-label-large font-semibold text-primary;
+}
+/* LP of non-module data points is inferred from the module, hence the parentheses. */
+.save-slot-dialog .slot-entry .entry-lp.inferred {
+    @apply text-body-medium font-normal text-text/50;
+}
+
+/* LP counter: sum of the LP across all required modules */
+.save-slot-dialog .lp-summary {
+    @apply flex flex-row items-center gap-x-4 rounded-md border border-border p-3;
+    @apply bg-primary/5 dark:bg-primary/15;
+}
+.save-slot-dialog .lp-summary .lp-total {
+    @apply flex shrink-0 items-baseline gap-x-1 font-header text-display-small font-bold text-primary;
+}
+.save-slot-dialog .lp-summary .lp-total small {
+    @apply font-sans text-title-medium font-semibold text-text;
+}
+.save-slot-dialog .lp-summary .lp-details {
+    @apply flex min-w-0 flex-1 flex-col gap-y-1;
+}
+.save-slot-dialog .lp-summary .lp-caption {
+    @apply text-body-small text-text/70;
+}
+.save-slot-dialog .lp-summary .lp-bar {
+    @apply h-2 w-full overflow-hidden rounded-full bg-border/40;
+}
+.save-slot-dialog .lp-summary .lp-bar-fill {
+    @apply h-full rounded-full bg-accent;
+}
+.save-slot-dialog .lp-summary .lp-breakdown {
+    @apply flex flex-row flex-wrap gap-2 pt-0.5;
+}
+.save-slot-dialog .lp-summary .lp-breakdown span.info {
+    @apply w-fit rounded-full border border-border px-2 py-0.5 text-body-small;
+    @apply bg-background text-text;
+}
+
+/* Required modules: a degree usually plans about six modules per semester, so
+   the cards flow into a grid that is roughly six columns wide. */
+.save-slot-dialog .requirement-grid {
+    @apply m-0 grid list-none grid-cols-2 gap-2 p-0 sm:grid-cols-3 md:grid-cols-6;
+}
+.save-slot-dialog .requirement-card {
+    @apply flex flex-col gap-y-1 rounded-md border border-border p-2;
+}
+.save-slot-dialog .requirement-card .requirement-head {
+    @apply flex flex-row items-center justify-between;
+}
+.save-slot-dialog .requirement-card input[type="checkbox"] {
+    @apply h-4 w-4 shrink-0 cursor-pointer accent-primary;
+}
+.save-slot-dialog .requirement-card .material-symbols {
+    @apply text-[18px] text-text/30;
+}
+.save-slot-dialog .requirement-card .req-name {
+    @apply text-body-medium font-semibold text-wrap;
+}
+.save-slot-dialog .requirement-card .req-number {
+    @apply text-body-small text-text/60;
+}
+.save-slot-dialog .requirement-card .req-lp {
+    @apply mt-auto text-label-medium font-semibold text-text/70;
+}
+/* Finished modules get the primary accent and a struck through name */
+.save-slot-dialog .requirement-card.finished {
+    @apply border-primary bg-primary/10;
+}
+.save-slot-dialog .requirement-card.finished .material-symbols {
+    @apply text-primary;
+}
+.save-slot-dialog .requirement-card.finished .req-name {
+    @apply text-primary line-through;
+}
+.save-slot-dialog .requirement-card.placeholder {
+    @apply cursor-pointer items-center justify-center border-dashed text-center text-text/60;
+    @apply hover:border-primary hover:text-primary;
+}
+.save-slot-dialog .requirement-card.placeholder .material-symbols {
+    @apply text-[24px];
+}
+/* The requirement tab needs the wider layout for the six column grid. */
+.save-slot-dialog:has(.dialog-tabs span.active[data-tab="requirements"]) {
+    @apply w-[min(1040px,94vw)];
+}

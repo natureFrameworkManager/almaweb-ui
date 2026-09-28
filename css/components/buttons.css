@@ -7,6 +7,18 @@
 .btn.slim {
     @apply px-2 py-1;
 }
+.btn.secondary {
+    @apply bg-secondary text-text dark:text-background;
+    @apply hover:bg-secondary/80;
+}
+.btn.ghost {
+    @apply border border-border bg-transparent text-text;
+    @apply hover:bg-primary/10;
+}
+.btn.danger {
+    @apply border border-border bg-transparent text-text;
+    @apply hover:border-red-500 hover:text-red-500;
+}
 .btn.slim.material-symbols {
     @apply text-[16px];
 }

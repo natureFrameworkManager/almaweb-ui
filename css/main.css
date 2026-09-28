@@ -18,3 +18,7 @@
 @import "./components/type-switcher.css";
 @import "./components/list-card.css";
 @import "./components/tree.css";
+
+@import "./components/dialog.css";
+@import "./components/save-slot-dialog.css";
+@import "./components/detail-dialog.css";
