@@ -382,7 +382,6 @@ export function registerDetailSpecs(): void {
         fetch: getStaffDetail,
         name: (detail) => detail.name,
         number: () => null,
-        saveKind: "staff",
         tabs: staffTabs,
     });
     registerDetail({
@@ -391,7 +390,6 @@ export function registerDetailSpecs(): void {
         fetch: getLocationDetail,
         name: (detail) => detail.name,
         number: (detail) => detail.external_id,
-        saveKind: "location",
         tabs: locationTabs,
     });
     registerDetail({

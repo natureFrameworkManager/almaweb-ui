@@ -14,7 +14,5 @@ export function staffToView(staff: Staff): EntityView {
         cardInfos: [],
         detailsId: String(staff.id),
         detailsKind: "staff",
-        entityKind: "staff",
-        entityId: staff.id,
     };
 }

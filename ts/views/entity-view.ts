@@ -82,20 +82,24 @@ export function createActionButton(className: string, text: string): HTMLButtonE
     return button;
 }
 
+/** Entity kinds that can be saved into a slot; staff and locations cannot be saved. */
+const SAVABLE_ENTITY_KINDS: readonly EntryKind[] = ["module", "course", "event", "exam"];
+
 /**
  * Create the save toggle button of an entity.
  *
  * The button carries the entity kind and id so the state layer can save it into
- * the active save slot regardless of the entity type.
+ * the active save slot. Staff and locations cannot be saved, so they get no button.
  * @param view - Entity view data.
  * @returns The created save button, or null when the entity cannot be saved.
  */
 function createSaveButton(view: EntityView): HTMLButtonElement | null {
-    if (view.entityKind === undefined || view.entityId === undefined) {
+    const kind = view.entityKind;
+    if (kind === undefined || view.entityId === undefined || !SAVABLE_ENTITY_KINDS.includes(kind)) {
         return null;
     }
     const button = createActionButton("btn material-symbols save-toggle", "save");
-    button.dataset["saveKind"] = view.entityKind;
+    button.dataset["saveKind"] = kind;
     button.dataset["saveRef"] = String(view.entityId);
     button.setAttribute("aria-pressed", "false");
     return button;
