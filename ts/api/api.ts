@@ -442,3 +442,23 @@ export async function getEventTypes(): Promise<{
 }> {
     return fetchApi("/catalog/event-types");
 }
+
+export async function getModuleLanguages(): Promise<{
+    count: number;
+    page: number;
+    limit: number;
+    total_pages: number;
+    items: { language: string }[];
+}> {
+    return fetchApi("/modules/distinct/fields?field=language");
+}
+
+export async function getExamTypes(): Promise<{
+    count: number;
+    page: number;
+    limit: number;
+    total_pages: number;
+    items: { name: string }[];
+}> {
+    return fetchApi("/exams/distinct/fields?field=name");
+}
