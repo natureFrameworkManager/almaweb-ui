@@ -7,7 +7,7 @@
  */
 
 import { refreshCalendarEvents } from "./calendar";
-import { refreshTree, requeryAll, validateFilterRanges } from "./filters";
+import { refreshFilterSummary, refreshTree, requeryAll, validateFilterRanges } from "./filters";
 import { showToast } from "./feedback";
 import { switchMainView, switchViewMode } from "./layout";
 import { isSaved, toggleSaved } from "./saved";
@@ -1048,11 +1048,34 @@ export function initStateBindings(): void {
     initSortDialog();
 }
 
+/**
+ * Preselect the newest semester when no semester filter is active yet.
+ *
+ * This mirrors the planner pattern of starting on the current term instead of
+ * "all semesters", so results are already narrowed on first load. Selecting all
+ * semesters again is possible by clearing the semester chips.
+ */
+function applyDefaultSemester(): void {
+    if (getState().filters.global.semester.length > 0) {
+        return;
+    }
+    const input = document.querySelector<HTMLInputElement>(
+        '#filter-semester input[type="checkbox"]:not([value=""])',
+    );
+    if (!input) {
+        return;
+    }
+    input.checked = true;
+    captureState();
+}
+
 /** Re-apply the filters after asynchronous option loading and reload the data. */
 export function refreshStateFilters(): void {
     applyFilterState(getState());
+    applyDefaultSemester();
     validateFilterRanges();
     requeryAll();
+    refreshFilterSummary();
 }
 
 /**

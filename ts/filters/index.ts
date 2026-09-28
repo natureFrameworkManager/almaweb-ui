@@ -13,6 +13,7 @@ export {
     toStaffOptions,
     type FilterOption,
 } from "./options";
+export { initFilterPanel, refreshFilterSummary } from "./panel";
 export {
     initTreeRetry,
     invalidateTree,

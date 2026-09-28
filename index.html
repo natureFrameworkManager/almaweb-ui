@@ -11,7 +11,13 @@
         />
 
         <!-- Umami Analytics -->
-        <script defer src="https://analytics.casparkroll.de/script.js" data-website-id="f6f72a74-7872-4a4d-9fbd-3a5c1f87049e" data-performance="true" data-do-not-track="true"></script>
+        <script
+            defer
+            src="https://analytics.casparkroll.de/script.js"
+            data-website-id="f6f72a74-7872-4a4d-9fbd-3a5c1f87049e"
+            data-performance="true"
+            data-do-not-track="true"
+        ></script>
 
         <title>Document</title>
     </head>
@@ -163,6 +169,17 @@
                     <span class="material-symbols">close</span>
                 </button>
             </div>
+            <div
+                class="filter-summary"
+                id="filter-summary"
+                hidden
+            >
+                <span class="filter-summary-label">Aktive Filter</span>
+                <div
+                    class="filter-summary-chips"
+                    id="filter-summary-chips"
+                ></div>
+            </div>
             <details
                 class="filter-group"
                 id="filter-group-global"
@@ -194,7 +211,6 @@
             <details
                 class="filter-group"
                 id="filter-group-module"
-                open
             >
                 <summary><span class="material-symbols">extension</span>Modulfilter</summary>
                 <div class="filter-group-content">
@@ -305,7 +321,6 @@
             <details
                 class="filter-group"
                 id="filter-group-course"
-                open
             >
                 <summary><span class="material-symbols">book</span>Kurse</summary>
                 <div class="filter-group-content">
@@ -388,7 +403,6 @@
             <details
                 class="filter-group"
                 id="filter-group-event"
-                open
             >
                 <summary><span class="material-symbols">event</span>Veranstaltungen</summary>
                 <div class="filter-group-content">
@@ -463,7 +477,6 @@
             <details
                 class="filter-group"
                 id="filter-group-exam"
-                open
             >
                 <summary><span class="material-symbols">history_edu</span>Prüfungen</summary>
                 <div class="filter-group-content">
@@ -605,7 +618,6 @@
             <details
                 class="filter-group"
                 id="filter-group-degree"
-                open
             >
                 <summary><span class="material-symbols">school</span>Studiengänge</summary>
                 <div class="filter-group-content">

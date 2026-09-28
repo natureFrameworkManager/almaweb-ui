@@ -18,7 +18,9 @@ import { ensureCalendar, refreshCalendarEvents } from "./calendar";
 import {
     appendCheckboxOptions,
     appendSelectOptions,
+    initFilterPanel,
     initTreeRetry,
+    refreshFilterSummary,
     refreshTree,
     registerCollections,
     requeryAll,
@@ -43,6 +45,7 @@ import { initFilterSheet } from "./filter-sheet";
 import { applyViewMode, getActiveMainView, switchMainView, switchViewMode } from "./layout";
 import { getState } from "./state";
 import {
+    captureState,
     initStateBindings,
     loadInitialState,
     refreshStateFilters,
@@ -200,7 +203,20 @@ const filterOptionLoads = [
         }),
 ];
 
-void Promise.allSettled(filterOptionLoads).then(refreshStateFilters);
+/**
+ * Persist and re-run the queries after a filter chip or a group reset changed
+ * the filter controls.
+ */
+function handleFilterControlChange(): void {
+    captureState();
+    requeryAll();
+    refreshFilterSummary();
+}
+
+void Promise.allSettled(filterOptionLoads).then(() => {
+    initFilterPanel(handleFilterControlChange);
+    refreshStateFilters();
+});
 
 wireFilterGroup("filter-group-global", requeryAll);
 wireFilterGroup("filter-group-module", requeryModules);

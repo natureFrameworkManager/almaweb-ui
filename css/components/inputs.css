@@ -45,6 +45,9 @@
 .input-container div.checkbox-list label.checkbox-item input[type="checkbox"] {
     @apply h-4 w-4 accent-primary;
 }
+.input-container div.checkbox-list label.checkbox-item.option-hidden {
+    @apply hidden;
+}
 .input-container:has(input[type="checkbox"]):not(:has(div.checkbox-list)) {
     @apply flex flex-row items-center gap-x-3 ps-3;
 }
