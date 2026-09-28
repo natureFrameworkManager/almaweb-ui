@@ -23,7 +23,7 @@ import type {
     SortOrder,
 } from "./types";
 
-const host = "https://api.casparkroll.de/almaweb/v1";
+const host = "http://localhost:8009";
 
 /**
  * Fetch JSON data from the remote API.
@@ -336,7 +336,7 @@ export async function getEvents(
     appendSort(queryParams, sort, order);
     appendPaging(queryParams, page, pageSize);
     return fetchApi(
-        `events?fields=id&fields=number&fields=name&fields=start_time&fields=end_time&fields=event_date&fields=location&fields=location.building&fields=staff&${queryParams.toString()}`,
+        `/events?fields=id&fields=number&fields=name&fields=start_time&fields=end_time&fields=event_date&fields=location&fields=location.building&fields=staff&${queryParams.toString()}`,
     );
 }
 

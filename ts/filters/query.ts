@@ -1,5 +1,5 @@
-import { getCourses, getExams, getLocations, getModules, getStaff } from "../api/api";
-import type { Course, Exam, Location, Module, PagedResponse, Staff } from "../api/types";
+import { getCourses, getEvents, getExams, getLocations, getModules, getStaff } from "../api/api";
+import type { Course, Event, Exam, Location, Module, PagedResponse, Staff } from "../api/types";
 import { setPlaceholderVisible } from "../feedback";
 import { getActiveMainView } from "../layout";
 import { getState } from "../state";
@@ -8,6 +8,7 @@ import { clearTree, displayTree } from "../tree";
 import {
     COLLECTION_PAGE_SIZE,
     courseToView,
+    eventToView,
     examToView,
     getActiveType,
     locationToView,
@@ -15,6 +16,7 @@ import {
     registerCollection,
     reloadCollection,
     staffToView,
+    type EntityView,
 } from "../views";
 
 /** Debounce delay applied before re-querying filtered data. */
@@ -68,6 +70,16 @@ function getInputValue(elementId: string): string {
 function isChecked(elementId: string): boolean {
     const input = document.getElementById(elementId) as HTMLInputElement | null;
     return input?.checked ?? false;
+}
+
+/**
+ * Read the selected value of a select element.
+ * @param elementId - Identifier of the select element.
+ * @returns The selected value, or an empty string when the element is missing.
+ */
+function getSelectedValue(elementId: string): string {
+    const select = document.getElementById(elementId) as HTMLSelectElement | null;
+    return select ? select.value : "";
 }
 
 /**
@@ -232,6 +244,33 @@ function fetchCoursePage(page: number): Promise<PagedResponse<Course>> {
 }
 
 /**
+ * Fetch one page of events using the current filter values.
+ * @param page - Page number to load.
+ * @returns The event page.
+ */
+function fetchEventPage(page: number): Promise<PagedResponse<Event>> {
+    const { sort, order } = backendSort("events");
+    const startTime = getRangeValues("filter-group-event", "Start-Uhrzeit");
+    const endTime = getRangeValues("filter-group-event", "End-Uhrzeit");
+    const dates = getRangeValues("filter-group-event", "Datumszeitraum");
+    const building = getSelectedValue("filter-event-buildings");
+    return getEvents(
+        toOptionalValue(startTime.min),
+        toOptionalValue(startTime.max),
+        toOptionalValue(endTime.min),
+        toOptionalValue(endTime.max),
+        toOptionalValue(dates.min),
+        toOptionalValue(dates.max),
+        building === "" ? undefined : Number(building),
+        toOptionalNumbers(getCheckedValues("filter-semester")),
+        page,
+        COLLECTION_PAGE_SIZE,
+        sort,
+        order,
+    );
+}
+
+/**
  * Fetch one page of exams using the current filter values.
  * @param page - Page number to load.
  * @returns The exam page.
@@ -279,33 +318,28 @@ function fetchLocationPage(page: number): Promise<PagedResponse<Location>> {
     return getLocations(page, COLLECTION_PAGE_SIZE, sort, order);
 }
 
+/**
+ * Register a paged collection that is sorted by name on the client.
+ * @param type - Entity type selector value.
+ * @param fetchPage - Page fetcher using the current filter values.
+ * @param toView - Converter from a record to the shared entity view model.
+ */
+function registerType<T extends NamedRecord>(
+    type: string,
+    fetchPage: (page: number) => Promise<PagedResponse<T>>,
+    toView: (item: T) => EntityView,
+): void {
+    registerCollection(type, { fetchPage, toView, sort: byName });
+}
+
 /** Register the paged collections backing the list and card views. */
 export function registerCollections(): void {
-    registerCollection("modules", {
-        fetchPage: fetchModulePage,
-        toView: moduleToView,
-        sort: byName,
-    });
-    registerCollection("courses", {
-        fetchPage: fetchCoursePage,
-        toView: courseToView,
-        sort: byName,
-    });
-    registerCollection("exams", {
-        fetchPage: fetchExamPage,
-        toView: examToView,
-        sort: byName,
-    });
-    registerCollection("staff", {
-        fetchPage: fetchStaffPage,
-        toView: staffToView,
-        sort: byName,
-    });
-    registerCollection("locations", {
-        fetchPage: fetchLocationPage,
-        toView: locationToView,
-        sort: byName,
-    });
+    registerType("modules", fetchModulePage, moduleToView);
+    registerType("courses", fetchCoursePage, courseToView);
+    registerType("events", fetchEventPage, eventToView);
+    registerType("exams", fetchExamPage, examToView);
+    registerType("staff", fetchStaffPage, staffToView);
+    registerType("locations", fetchLocationPage, locationToView);
 }
 
 /** Re-query module data using the current filter values. */
@@ -320,6 +354,11 @@ export function requeryCourses(): void {
     reloadCollection("courses");
 }
 
+/** Re-query event data using the current filter values. */
+export function requeryEvents(): void {
+    reloadCollection("events");
+}
+
 /** Re-query exam data using the current filter values. */
 export function requeryExams(): void {
     reloadCollection("exams");
@@ -329,6 +368,7 @@ export function requeryExams(): void {
 export function requeryAll(): void {
     requeryModules();
     requeryCourses();
+    requeryEvents();
     requeryExams();
 }
 

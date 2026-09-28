@@ -17,6 +17,7 @@ export {
     registerCollections,
     requeryAll,
     requeryCourses,
+    requeryEvents,
     requeryExams,
     requeryModules,
     validateFilterRanges,

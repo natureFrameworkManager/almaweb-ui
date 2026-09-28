@@ -22,6 +22,7 @@ import {
     registerCollections,
     requeryAll,
     requeryCourses,
+    requeryEvents,
     requeryExams,
     requeryModules,
     toBuildingOptions,
@@ -192,4 +193,5 @@ void Promise.allSettled(filterOptionLoads).then(refreshStateFilters);
 wireFilterGroup("filter-group-global", requeryAll);
 wireFilterGroup("filter-group-module", requeryModules);
 wireFilterGroup("filter-group-course", requeryCourses);
+wireFilterGroup("filter-group-event", requeryEvents);
 wireFilterGroup("filter-group-exam", requeryExams);
