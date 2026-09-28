@@ -102,3 +102,9 @@ export interface PagedResponse<T> {
     total_pages: number;
     items: T[];
 }
+
+export interface ModuleDetail extends Module { 
+    semesters: Semester[];
+    exams: Exam[];
+    courses: Course[];
+}
