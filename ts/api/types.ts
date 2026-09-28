@@ -30,6 +30,9 @@ export interface Course {
 }
 
 export interface CourseDetail extends Course {
+    status?: Status;
+    semesters?: Semester[];
+    modules?: Module[];
     events: Event[];
 }
 
@@ -42,6 +45,12 @@ export interface Event {
     event_date: string;
     location: Location;
     staff: Staff[];
+    courses?: Course[];
+}
+
+export interface EventDetail extends Event {
+    semesters: Semester[];
+    courses: Course[];
 }
 
 export interface Exam {
@@ -55,9 +64,22 @@ export interface Exam {
     location?: Location;
 }
 
+export interface ExamDetail extends Exam {
+    module_id: number;
+    semesters: Semester[];
+    module?: Module;
+}
+
 export interface Staff {
     id: number;
     name: string;
+}
+
+export interface StaffDetail extends Staff {
+    modules: Module[];
+    courses: Course[];
+    events: Event[];
+    exams: Exam[];
 }
 
 export interface Location {
@@ -71,6 +93,11 @@ export interface Location {
     accessibility: string;
     building_id: number;
     building: Building;
+    events?: Event[];
+}
+
+export interface LocationDetail extends Location {
+    events: Event[];
 }
 
 export interface Semester {
@@ -80,10 +107,22 @@ export interface Semester {
     term: string;
 }
 
+export interface SemesterDetail extends Semester {
+    modules: Module[];
+    courses: Course[];
+    events: Event[];
+    exams: Exam[];
+}
+
 export interface Faculty {
     id: number;
     name: string;
     prefix: number;
+}
+
+export interface FacultyDetail extends Faculty {
+    modules: Module[];
+    degrees: Degree[];
 }
 
 export interface Building {
@@ -93,7 +132,16 @@ export interface Building {
     address: string;
 }
 
+export interface BuildingDetail extends Building {
+    locations: Location[];
+}
+
 export interface EventType {
+    id: number;
+    name: string;
+}
+
+export interface Status {
     id: number;
     name: string;
 }
@@ -102,6 +150,11 @@ export interface Degree {
     id: number;
     faculty_id: number;
     name: string;
+}
+
+export interface DegreeDetail extends Degree {
+    faculty?: Faculty;
+    modules: Module[];
 }
 
 export interface PagedResponse<T> {

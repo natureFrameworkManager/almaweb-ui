@@ -11,6 +11,15 @@ import type {
     Faculty,
     PagedResponse,
     ModuleDetail,
+    CourseDetail,
+    EventDetail,
+    ExamDetail,
+    StaffDetail,
+    LocationDetail,
+    BuildingDetail,
+    FacultyDetail,
+    SemesterDetail,
+    DegreeDetail,
 } from "./types";
 
 const host = "https://api.casparkroll.de/almaweb/v1";
@@ -519,4 +528,112 @@ export async function getModuleDetail(id: string): Promise<ModuleDetail> {
     return fetchApi(
         `/modules/${id}?include=faculty&include=semesters&include=courses&include=courses.type&include=courses.staff&include=courses.events&include=courses.events.location&include=courses.events.location.building&include=courses.events.staff&include=exams&include=exams.staff`,
     );
+}
+
+/**
+ * Fetch the full detail record of a single course.
+ * @param id - Course id.
+ * @returns The course detail response data.
+ */
+export async function getCourseDetail(id: string): Promise<CourseDetail> {
+    return fetchApi(
+        `/courses/${id}?include=type&include=status&include=staff&include=semesters&include=modules&include=modules.faculty&include=modules.exams&include=events&include=events.location&include=events.location.building&include=events.staff`,
+    );
+}
+
+/**
+ * Fetch the full detail record of a single event.
+ * @param id - Event id.
+ * @returns The event detail response data.
+ */
+export async function getEventDetail(id: string): Promise<EventDetail> {
+    return fetchApi(
+        `/events/${id}?include=location&include=location.building&include=staff&include=semesters&include=courses&include=courses.type&include=courses.staff`,
+    );
+}
+
+/**
+ * Fetch the full detail record of a single exam.
+ * @param id - Exam id.
+ * @returns The exam detail response data.
+ */
+export async function getExamDetail(id: string): Promise<ExamDetail> {
+    return fetchApi(
+        `/exams/${id}?include=staff&include=semesters&include=module&include=module.faculty&include=module.courses&include=module.courses.type&include=module.courses.staff`,
+    );
+}
+
+/**
+ * Fetch the full detail record of a single staff member.
+ * @param id - Staff id.
+ * @returns The staff detail response data.
+ */
+export async function getStaffDetail(id: string): Promise<StaffDetail> {
+    return fetchApi(
+        `/staff/${id}?include=modules&include=modules.faculty&include=modules.courses&include=modules.courses.type&include=modules.exams&include=courses&include=courses.type&include=events&include=events.location&include=events.location.building&include=events.courses&include=events.courses.type&include=exams`,
+    );
+}
+
+/**
+ * Fetch the full detail record of a single location.
+ * @param id - Location id.
+ * @returns The location detail response data.
+ */
+export async function getLocationDetail(id: string): Promise<LocationDetail> {
+    return fetchApi(
+        `/locations/${id}?include=building&include=events&include=events.staff&include=events.semesters&include=events.courses&include=events.courses.type`,
+    );
+}
+
+/**
+ * Fetch the full detail record of a single building.
+ * @param id - Building id.
+ * @returns The building detail response data.
+ */
+export async function getBuildingDetail(id: string): Promise<BuildingDetail> {
+    return fetchApi(
+        `/buildings/${id}?include=locations&include=locations.events&include=locations.events.staff&include=locations.events.courses&include=locations.events.courses.type`,
+    );
+}
+
+/**
+ * Fetch the full detail record of a single faculty.
+ * @param id - Faculty id.
+ * @returns The faculty detail response data.
+ */
+export async function getFacultyDetail(id: string): Promise<FacultyDetail> {
+    return fetchApi(
+        `/faculties/${id}?include=modules&include=modules.courses&include=modules.courses.type&include=modules.exams&include=degrees`,
+    );
+}
+
+/**
+ * Fetch the full detail record of a single semester.
+ * @param id - Semester id.
+ * @returns The semester detail response data.
+ */
+export async function getSemesterDetail(id: string): Promise<SemesterDetail> {
+    return fetchApi(
+        `/semesters/${id}?include=modules&include=modules.faculty&include=modules.courses.type&include=modules.courses.staff&include=modules.exams&include=courses&include=courses.type&include=courses.staff&include=events&include=events.location&include=events.location.building&include=events.staff&include=exams&include=exams.staff`,
+    );
+}
+
+/**
+ * Fetch the full detail record of a single degree.
+ * @param id - Degree id.
+ * @returns The degree detail response data.
+ */
+export async function getDegreeDetail(id: string): Promise<DegreeDetail> {
+    return fetchApi(
+        `/degrees/${id}?include=faculty&include=modules&include=modules.faculty&include=modules.courses.type&include=modules.exams`,
+    );
+}
+
+/**
+ * Fetch the full detail record of a single event type.
+ * @param id - Event type id.
+ * @returns The event type detail response data.
+ */
+export async function getEventTypeDetail(id: string): Promise<EventType> {
+    return fetchApi(`/catalog/event-types/${id}`);
 }
