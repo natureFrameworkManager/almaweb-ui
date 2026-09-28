@@ -23,7 +23,7 @@ import type {
     SortOrder,
 } from "./types";
 
-const host = "http://localhost:8009";
+const host = "https://api.casparkroll.de/almaweb/v1";
 
 /**
  * Fetch JSON data from the remote API.
