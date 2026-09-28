@@ -10,6 +10,24 @@ import type { Event } from "./api/types";
 import { getActiveSlot, type CalendarView, type EntryKind } from "./state";
 
 /**
+ * Build the calendar toolbar for a given viewport width.
+ *
+ * Narrow screens get fewer view buttons so the toolbar does not overflow.
+ * @param width - Viewport width in pixels.
+ * @returns The FullCalendar header toolbar configuration.
+ */
+function calendarToolbar(width: number): { left: string; center: string; right: string } {
+    if (width < 640) {
+        return { left: "prev,next", center: "title", right: "today,listMonth,dayGridMonth" };
+    }
+    return {
+        left: "prev,next today",
+        center: "title",
+        right: "listWeek,listMonth,dayGridMonth,timeGridWeek,timeGridDay",
+    };
+}
+
+/**
  * Create and render a FullCalendar instance for a pane.
  * @param elementId - Calendar element ID.
  * @param initialView - Calendar view to show first.
@@ -29,11 +47,7 @@ export function initCal(elementId: string, initialView: CalendarView = "listMont
         eventMaxStack: 4,
         initialDate: new Date().toISOString().split("T")[0],
         listDayFormat: { day: "numeric" },
-        headerToolbar: {
-            left: "prev,next today",
-            center: "title",
-            right: "listWeek,listMonth,dayGridMonth,timeGridWeek,timeGridDay",
-        },
+        headerToolbar: calendarToolbar(window.innerWidth),
         buttons: {
             listWeek: { text: "Liste Woche" },
             listMonth: { text: "Liste Monat" },
@@ -51,6 +65,13 @@ export function initCal(elementId: string, initialView: CalendarView = "listMont
 
 /** Calendars created lazily the first time a pane shows them. */
 const calendars: Partial<Record<1 | 2, Calendar>> = {};
+
+/** Keep every created calendar's toolbar in sync with the viewport width. */
+window.addEventListener("resize", () => {
+    Object.values(calendars).forEach((calendar) => {
+        calendar?.setOption("headerToolbar", calendarToolbar(window.innerWidth));
+    });
+});
 
 /**
  * Return the calendar of a pane, creating and rendering it on first use.

@@ -1,30 +1,69 @@
 main.list-card-view {
-    @apply flex min-h-0 max-w-full min-w-0 flex-col overflow-x-hidden overflow-y-auto px-2 py-2;
+    @apply min-h-0 max-w-full min-w-0 flex-col overflow-x-hidden overflow-y-auto px-2 py-2;
 }
 main.calendar {
-    @apply flex min-h-0 max-w-full min-w-0 flex-col overflow-hidden px-2 py-2;
+    @apply min-h-0 max-w-full min-w-0 flex-col overflow-hidden px-2 py-2;
 }
 main.tree {
-    @apply flex min-h-0 max-w-full min-w-0 flex-col overflow-x-hidden overflow-y-auto px-2 py-2;
+    @apply min-h-0 max-w-full min-w-0 flex-col overflow-x-hidden overflow-y-auto px-2 py-2;
 }
 main.calendar .calendar-container {
     @apply h-full min-h-0 w-full min-w-0 flex-1;
 }
+main#compare {
+    @apply min-h-0 overflow-y-auto px-2 py-2;
+}
+
+/* Every pane is hidden by default; the active sub-view is revealed below. A pane
+   occupies the single content column on small screens and a grid column from
+   the `lg` breakpoint upwards. */
 main#list-card-view1,
 main#calendar1,
-main#tree1 {
-    @apply col-2 row-2;
-}
+main#tree1,
 main#list-card-view2,
 main#calendar2,
-main#tree2 {
-    @apply col-3 row-2;
-}
-body[data-view-mode="single"] main#list-card-view1,
-body[data-view-mode="single"] main#calendar1,
-body[data-view-mode="single"] main#tree1 {
-    grid-column: 2 / 4;
-}
+main#tree2,
 main#compare {
-    @apply col-start-2 col-end-4 row-2 min-h-0 overflow-y-auto px-2 py-2;
+    @apply col-1 row-2;
+    display: none;
+}
+
+/* The primary pane shows the sub-view selected in its display changer. */
+body[data-pane1-view="list"] main#list-card-view1,
+body[data-pane1-view="cards"] main#list-card-view1,
+body[data-pane1-view="calendar"] main#calendar1,
+body[data-pane1-view="tree"] main#tree1 {
+    display: flex;
+    @apply lg:col-2 lg:row-2;
+}
+
+/* A single pane uses the full content width next to the sidebar. */
+body[data-effective-view-mode="single"] main#list-card-view1,
+body[data-effective-view-mode="single"] main#calendar1,
+body[data-effective-view-mode="single"] main#tree1 {
+    @apply lg:col-start-2 lg:col-end-4;
+}
+
+/* The secondary pane is rendered in the split layout; below `lg` it stacks
+   below the first pane, from `lg` it sits in the second content column. */
+body[data-effective-view-mode="split"][data-pane2-view="list"] main#list-card-view2,
+body[data-effective-view-mode="split"][data-pane2-view="cards"] main#list-card-view2,
+body[data-effective-view-mode="split"][data-pane2-view="calendar"] main#calendar2,
+body[data-effective-view-mode="split"][data-pane2-view="tree"] main#tree2 {
+    display: flex;
+    @apply col-1 row-3 lg:col-3 lg:row-2;
+}
+
+/* The compare layout replaces both panes and is available at every width. */
+body[data-effective-view-mode="compare"] main#compare {
+    display: block;
+    @apply col-1 row-2 lg:col-start-2 lg:col-end-4;
+}
+body[data-effective-view-mode="compare"] main#list-card-view1,
+body[data-effective-view-mode="compare"] main#calendar1,
+body[data-effective-view-mode="compare"] main#tree1,
+body[data-effective-view-mode="compare"] main#list-card-view2,
+body[data-effective-view-mode="compare"] main#calendar2,
+body[data-effective-view-mode="compare"] main#tree2 {
+    display: none;
 }

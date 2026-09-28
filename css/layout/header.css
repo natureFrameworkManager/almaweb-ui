@@ -1,22 +1,14 @@
+/* Mobile: a wrapping bar with the filter trigger, the view switcher, an overflow
+   trigger and one view changer per visible pane. From `lg` this becomes the
+   original two-row header grid with all controls inline. */
 header#top-header {
-    @apply border-b border-border;
-    @apply col-start-2 col-end-4 row-1 pe-2 pt-3 pb-2;
-    @apply grid grid-cols-[1fr_max-content_1fr] grid-rows-[max-content_max-content] gap-y-2;
+    @apply col-1 row-1 flex flex-row flex-wrap items-center gap-x-2 gap-y-1;
+    @apply border-b border-border px-2 py-2;
+    @apply lg:col-start-2 lg:col-end-4 lg:grid lg:items-stretch lg:gap-x-0 lg:gap-y-2 lg:ps-0 lg:pe-2 lg:pt-3 lg:pb-2;
 }
 header#top-header nav {
     @apply flex flex-row items-end;
     @apply px-2;
-}
-header#top-header nav#display-changer1 {
-    @apply col-start-1 col-end-3 row-2;
-}
-header#top-header nav#display-changer2 {
-    @apply col-3 row-2 justify-end;
-}
-body[data-view-mode="single"] header#top-header nav#display-changer2,
-body[data-view-mode="compare"] header#top-header nav#display-changer1,
-body[data-view-mode="compare"] header#top-header nav#display-changer2 {
-    display: none;
 }
 header#top-header nav item {
     @apply cursor-pointer px-2 text-lg;
@@ -26,14 +18,11 @@ header#top-header nav item {
 header#top-header nav item.active {
     @apply border-b-2 border-primary;
 }
-header#top-header div#view-switcher {
-    @apply col-2 row-1 flex flex-row items-center justify-center;
-}
 header#top-header div#additional-controls {
-    @apply col-3 row-1 flex flex-row items-center justify-end gap-x-2;
+    @apply flex flex-row items-center justify-end gap-x-2;
 }
 header#top-header div#additional-controls div#last-updated-con {
-    @apply flex flex-row flex-nowrap items-center gap-x-1 text-nowrap;
+    @apply flex flex-row flex-nowrap items-center gap-x-1 text-nowrap text-text;
 }
 header#top-header div#additional-controls div#last-updated-con span.material-symbols {
     @apply text-[16px];
@@ -45,5 +34,65 @@ header#top-header div#additional-controls button span.material-symbols {
     @apply text-[18px];
 }
 header#top-header div#save-slot-options {
-    @apply col-1 row-1 flex flex-row-reverse items-center justify-end gap-x-2 ps-2;
+    @apply flex flex-row-reverse items-center justify-end gap-x-2 ps-2;
+}
+
+/* Mobile ordering: triggers and switcher share the first row, each pane's view
+   changer gets its own full-width, horizontally scrollable row. */
+header#top-header #filter-toggle {
+    @apply order-1 shrink-0 lg:hidden;
+}
+header#top-header div#view-switcher {
+    @apply order-2 flex flex-row items-center justify-center lg:col-2 lg:row-1;
+}
+header#top-header #controls-toggle {
+    @apply order-3 ms-auto shrink-0 lg:hidden;
+}
+header#top-header nav#display-changer1 {
+    @apply order-4 min-w-0 basis-full flex-nowrap overflow-x-auto lg:col-start-1 lg:col-end-3 lg:row-2 lg:overflow-visible;
+}
+header#top-header nav#display-changer2 {
+    @apply order-5 hidden min-w-0 basis-full flex-nowrap overflow-x-auto lg:col-3 lg:row-2 lg:justify-end lg:overflow-visible;
+}
+
+/* The comparison layout has no per-pane changers. */
+body[data-effective-view-mode="compare"] header#top-header nav#display-changer1 {
+    display: none;
+}
+
+/* The secondary pane is only switchable while it is shown. */
+body[data-effective-view-mode="split"] header#top-header nav#display-changer2 {
+    @apply flex;
+}
+
+/* The overflow popover panel, shown on small screens via the popover API.
+   The UA stylesheet centres popovers with `inset: 0; margin: auto`, so the
+   inset and auto margins are reset to pin the panel to the top right corner.
+   The explicit text colour overrides the UA `[popover] { color: CanvasText }`,
+   which would otherwise render dark text on the dark theme background. */
+#secondary-controls:popover-open {
+    @apply fixed top-14 right-2 bottom-auto left-auto m-0 flex max-w-[min(24rem,92vw)] flex-col gap-y-3;
+    @apply rounded-lg border border-border bg-background p-3 text-text shadow-2xl;
+    @apply lg:hidden;
+}
+/* Large screens: the controls are inline, so dissolve the popover container and
+   let its children join the header grid. */
+header#top-header #secondary-controls[popover] {
+    @apply lg:contents;
+}
+/* Anything in the menu stretches to the full width on small screens. */
+header#top-header #secondary-controls #additional-controls {
+    @apply max-lg:flex-col max-lg:items-stretch max-lg:gap-y-2;
+    @apply lg:col-3 lg:row-1;
+}
+header#top-header #secondary-controls #save-slot-options {
+    @apply max-lg:flex-col-reverse max-lg:items-stretch max-lg:gap-y-2 max-lg:ps-0;
+    @apply lg:col-1 lg:row-1;
+}
+
+/* The data status and the switchers are the exception: they sit on the right. */
+header#top-header #secondary-controls #additional-controls #last-updated-con,
+header#top-header #secondary-controls #additional-controls #language-switcher,
+header#top-header #secondary-controls #additional-controls #dark-mode-toggle {
+    @apply max-lg:self-end;
 }

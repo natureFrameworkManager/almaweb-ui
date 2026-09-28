@@ -1,25 +1,47 @@
 const activeMainViews: Record<1 | 2, string> = { 1: "list", 2: "list" };
 
-// List/cards switching within a pane is handled purely by CSS reacting to the "active" class; here we
-// only need to toggle which top-level main (list-card-view/calendar/tree) is visible per pane.
+/** Layout modes supported by the application. */
+type ViewMode = "single" | "split" | "compare";
+
 /**
- * Set the display state for a group of pane elements.
- * @param elements - Pane elements to update.
- * @param visible - Whether the elements should be visible.
+ * Read the stored layout preference from the body.
+ * @returns The layout mode the user selected, defaulting to single.
  */
-function setPaneViewVisibility(elements: HTMLElement[], visible: boolean): void {
-    elements.forEach((element) => {
-        element.style.display = visible ? "" : "none";
+function preferredViewMode(): ViewMode {
+    const mode = document.body.dataset.viewMode;
+    return mode === "split" || mode === "compare" ? mode : "single";
+}
+
+/**
+ * Mirror the current layout mode on the view switcher.
+ * @param mode - Layout mode that is rendered.
+ */
+function syncViewSwitcher(mode: ViewMode): void {
+    document.querySelectorAll("#view-switcher [data-view]").forEach((option) => {
+        option.classList.toggle("active", (option as HTMLElement).dataset["view"] === mode);
     });
 }
 
 /**
- * Check whether a pane is visible in the current layout mode.
+ * Reflect the layout mode on the body so the responsive CSS can react.
+ *
+ * Every mode is available at any width, so the rendered mode is simply mirrored
+ * from the stored preference into `data-effective-view-mode`; the stored
+ * preference stays in `data-view-mode`.
+ */
+export function applyViewMode(): void {
+    const mode = preferredViewMode();
+    document.body.dataset.effectiveViewMode = mode;
+    syncViewSwitcher(mode);
+}
+
+/**
+ * Check whether a pane is rendered in the effective layout mode.
  * @param paneId - Pane identifier.
  * @returns Whether the pane is visible.
  */
 export function isPaneVisible(paneId: 1 | 2): boolean {
-    const viewMode = document.body.dataset.viewMode ?? "single";
+    const viewMode = document.body.dataset.effectiveViewMode ?? "single";
     return paneId === 1 ? viewMode !== "compare" : viewMode === "split";
 }
 
@@ -33,66 +55,36 @@ export function getActiveMainView(paneId: 1 | 2): string {
 }
 
 /**
- * Check whether a view is rendered by the list/card container.
- * @param view - View name.
- * @returns Whether the view uses the list/card container.
+ * Publish the active sub-view of a pane on the body for the CSS to render.
+ * @param paneId - Pane identifier.
+ * @param view - View name to activate.
  */
-function isListCardView(view: string): boolean {
-    return view === "list" || view === "cards";
-}
-
-/**
- * Update the visibility of one named pane view.
- * @param element - Pane element to update.
- * @param paneIsVisible - Whether the pane is visible.
- * @param view - Current view name.
- * @param expectedView - View name represented by the element.
- */
-function updatePaneView(
-    element: HTMLElement,
-    paneIsVisible: boolean,
-    view: string,
-    expectedView: string,
-): void {
-    setPaneViewVisibility([element], paneIsVisible && view === expectedView);
+function setPaneView(paneId: 1 | 2, view: string): void {
+    document.body.dataset[paneId === 1 ? "pane1View" : "pane2View"] = view;
 }
 
 /**
  * Switch one pane between its list, calendar, and tree views.
+ *
+ * The active view is published as a body data attribute; which pane is visible
+ * is decided by the CSS from the effective layout mode, so the rendering can
+ * adapt to the viewport without the behaviour layer writing any inline styles.
  * @param paneId - Pane identifier.
  * @param view - View name to activate.
  */
 export function switchMainView(paneId: 1 | 2, view: string): void {
-    const listCardView = document.querySelector(`#list-card-view${paneId}`) as HTMLElement | null;
-    const calendarView = document.querySelector(`#calendar${paneId}`) as HTMLElement | null;
-    const treeView = document.querySelector(`#tree${paneId}`) as HTMLElement | null;
-
-    if (!listCardView || !calendarView || !treeView) {
-        console.error("One or more view elements are missing.");
-        return;
-    }
-
     activeMainViews[paneId] = view;
-    const paneIsVisible = isPaneVisible(paneId);
-
-    setPaneViewVisibility([listCardView], paneIsVisible && isListCardView(view));
-    updatePaneView(calendarView, paneIsVisible, view, "calendar");
-    updatePaneView(treeView, paneIsVisible, view, "tree");
+    setPaneView(paneId, view);
 }
 
 /**
  * Switch between single, split, and comparison layouts.
+ *
+ * The requested mode is stored as the preference; the renderable mode is derived
+ * from the viewport width by {@link applyViewMode}.
  * @param mode - Layout mode to activate.
  */
-export function switchViewMode(mode: "single" | "split" | "compare") {
+export function switchViewMode(mode: ViewMode): void {
     document.body.dataset.viewMode = mode;
-    switchMainView(1, activeMainViews[1]);
-    switchMainView(2, activeMainViews[2]);
-
-    const compareView = document.querySelector("#compare") as HTMLElement | null;
-    if (!compareView) {
-        console.error("Compare view is missing.");
-        return;
-    }
-    compareView.style.display = mode === "compare" ? "" : "none";
+    applyViewMode();
 }

@@ -5,16 +5,19 @@
  * be opened and closed without JavaScript by pointing a button's `popovertarget`
  * at the dialog id. The visible tab is switched purely with :has().
  */
+/* Small screens: the dialog is a full-screen sheet; from `md` it becomes the
+   centred, rounded modal. */
 .dialog {
-    @apply m-auto flex max-h-[85vh] min-h-0 w-[min(760px,92vw)] flex-col overflow-hidden p-0;
-    @apply rounded-lg border border-border bg-background text-text shadow-2xl;
+    @apply m-auto flex h-dvh max-h-none min-h-0 w-full max-w-none flex-col overflow-hidden p-0;
+    @apply rounded-none border-0 bg-background text-text shadow-2xl;
+    @apply md:h-auto md:max-h-[85vh] md:w-[min(760px,92vw)] md:rounded-lg md:border md:border-border;
 }
 /* Keep the dialog hidden while it is not shown as a popover. */
 .dialog:not(:popover-open) {
     display: none;
 }
 .dialog.wide {
-    @apply w-[min(1040px,94vw)];
+    @apply md:w-[min(1040px,94vw)];
 }
 /* The backdrop uses the app background colour. */
 .dialog::backdrop {
@@ -22,7 +25,7 @@
 }
 
 .dialog > header.dialog-header {
-    @apply flex flex-row items-center justify-between gap-x-3 border-b border-border px-4 py-3;
+    @apply flex flex-row items-center justify-between gap-x-3 border-b border-border px-3 py-2 md:px-4 md:py-3;
     @apply bg-primary/5 dark:bg-primary/15;
 }
 .dialog > header.dialog-header h1.dialog-title {
@@ -33,7 +36,7 @@
 }
 
 .dialog > div.dialog-body {
-    @apply flex min-h-0 flex-1 flex-col gap-y-4 overflow-y-auto p-4;
+    @apply flex min-h-0 flex-1 flex-col gap-y-4 overflow-y-auto p-3 md:p-4;
 }
 
 .dialog > footer.dialog-footer {
@@ -66,7 +69,8 @@
 
 /* In-dialog tab bar, styled like the list header type switcher. */
 .dialog-tabs {
-    @apply flex flex-row flex-wrap items-end gap-x-1 border-b border-border;
+    @apply flex flex-row flex-nowrap items-end gap-x-1 overflow-x-auto border-b border-border;
+    @apply md:flex-wrap md:overflow-visible;
 }
 .dialog-tabs > span {
     @apply inline-flex cursor-pointer flex-row items-center border-b-2 border-transparent px-3 py-1 text-label-large text-nowrap;
@@ -101,7 +105,7 @@
 
 /* Scrollable wrapper + generic data table for the linked data. */
 .table-wrap {
-    @apply max-h-[60vh] overflow-auto rounded-md border border-border;
+    @apply max-h-none overflow-auto rounded-md border border-border md:max-h-[60vh];
     scrollbar-gutter: stable;
 }
 .table-wrap > table {

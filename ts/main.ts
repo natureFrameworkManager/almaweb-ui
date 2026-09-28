@@ -34,7 +34,8 @@ import {
     wireFilterGroup,
 } from "./filters";
 import { reportError } from "./feedback";
-import { getActiveMainView, switchMainView, switchViewMode } from "./layout";
+import { initFilterSheet } from "./filter-sheet";
+import { applyViewMode, getActiveMainView, switchMainView, switchViewMode } from "./layout";
 import { getState } from "./state";
 import {
     initStateBindings,
@@ -116,6 +117,19 @@ wireSwitcher("#type-switcher2", (type) => {
 });
 initTheme();
 initStateBindings();
+initFilterSheet();
+
+/** Re-derive the layout mode whenever the viewport crosses a layout breakpoint. */
+const layoutQueries = [
+    window.matchMedia("(min-width: 64rem)"),
+    window.matchMedia("(min-width: 80rem)"),
+];
+layoutQueries.forEach((query) => {
+    query.addEventListener("change", () => {
+        applyViewMode();
+        handleViewModeChange();
+    });
+});
 
 /** Fetch the filter options; the state filters are re-applied once they exist. */
 const filterOptionLoads = [

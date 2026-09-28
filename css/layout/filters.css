@@ -1,9 +1,16 @@
+/* The filter panel is a bottom sheet on small screens and a static sidebar from
+   the `lg` breakpoint upwards. The background is composited with color-mix()
+   against the app background so the sheet stays opaque over the panes. */
 div#filter-options {
-    @apply border-r border-border;
-    @apply col-1 row-start-1 row-end-3;
-    @apply flex flex-col;
-    @apply max-h-screen min-h-0 overflow-y-auto;
-    @apply bg-primary/5;
+    @apply fixed inset-x-0 bottom-0 z-40 flex min-h-0 flex-col overflow-y-auto;
+    @apply max-h-[80dvh] rounded-t-2xl border-t border-border pb-[env(safe-area-inset-bottom)] shadow-2xl;
+    @apply translate-y-full transition-transform duration-200;
+    @apply lg:static lg:z-auto lg:col-1 lg:row-start-1 lg:row-end-3 lg:max-h-screen lg:translate-y-0;
+    @apply lg:rounded-none lg:border-t-0 lg:border-r lg:border-border lg:pb-0 lg:shadow-none;
+    background-color: color-mix(in oklab, var(--color-primary) 5%, var(--color-background));
+}
+body.filter-open div#filter-options {
+    @apply translate-y-0;
 }
 div#filter-options details.filter-group summary {
     @apply cursor-pointer list-none;
@@ -28,4 +35,19 @@ div#filter-options details.filter-group summary span.material-symbols {
 }
 div#filter-options details.filter-group div.filter-group-content {
     @apply flex flex-col gap-y-2 px-1 pb-3;
+}
+
+/* The sheet header, handle and backdrop only exist while it is a bottom sheet. */
+div#filter-options .filter-sheet-header {
+    @apply flex flex-row items-center justify-between px-2 pt-2 lg:hidden;
+}
+div#filter-options .filter-sheet-handle {
+    @apply h-1 w-10 rounded-full bg-border;
+}
+#filter-backdrop {
+    @apply pointer-events-none fixed inset-0 z-30 opacity-0 transition-opacity duration-200 lg:hidden;
+    background-color: color-mix(in oklab, var(--color-background) 55%, transparent);
+}
+body.filter-open #filter-backdrop {
+    @apply pointer-events-auto opacity-100;
 }

@@ -11,18 +11,23 @@
         />
         <title>Document</title>
     </head>
-    <body>
+    <body
+        data-view-mode="single"
+        data-effective-view-mode="single"
+        data-pane1-view="list"
+        data-pane2-view="list"
+    >
         <header id="top-header">
-            <nav id="display-changer2">
-                <item
-                    class="active"
-                    data-view="list"
-                    >Liste</item
-                >
-                <item data-view="cards">Kacheln</item>
-                <item data-view="calendar">Kalender</item>
-                <item data-view="tree">Navigationsbaum</item>
-            </nav>
+            <button
+                id="filter-toggle"
+                class="btn ghost slim"
+                type="button"
+                aria-label="Filter öffnen"
+                aria-expanded="false"
+                aria-controls="filter-options"
+            >
+                <span class="material-symbols">filter_alt</span>
+            </button>
             <nav id="display-changer1">
                 <item
                     class="active"
@@ -45,72 +50,115 @@
                 <span data-view="split">Geteilt</span>
                 <span data-view="compare">Vergleichen</span>
             </div>
-            <div id="additional-controls">
-                <div id="last-updated-con">
-                    Datenstand:<span id="last-updated-timestamp">unbekannt</span>
-                </div>
-                <div
-                    class="switcher"
-                    id="language-switcher"
+            <nav id="display-changer2">
+                <item
+                    class="active"
+                    data-view="list"
+                    >Liste</item
                 >
-                    <span
-                        data-lang="de"
-                        class="active"
-                        >DE</span
+                <item data-view="cards">Kacheln</item>
+                <item data-view="calendar">Kalender</item>
+                <item data-view="tree">Navigationsbaum</item>
+            </nav>
+            <div
+                id="secondary-controls"
+                popover
+            >
+                <div id="additional-controls">
+                    <div id="last-updated-con">
+                        Datenstand:<span id="last-updated-timestamp">unbekannt</span>
+                    </div>
+                    <div
+                        class="switcher"
+                        id="language-switcher"
                     >
-                    <span data-lang="en">EN</span>
-                </div>
-                <div
-                    class="switcher material-symbols"
-                    id="dark-mode-toggle"
-                >
-                    <span
-                        data-mode="system"
-                        class="active"
-                        >desktop_windows</span
+                        <span
+                            data-lang="de"
+                            class="active"
+                            >DE</span
+                        >
+                        <span data-lang="en">EN</span>
+                    </div>
+                    <div
+                        class="switcher material-symbols"
+                        id="dark-mode-toggle"
                     >
-                    <span data-mode="dark">dark_mode</span>
-                    <span data-mode="light">light_mode</span>
+                        <span
+                            data-mode="system"
+                            class="active"
+                            >desktop_windows</span
+                        >
+                        <span data-mode="dark">dark_mode</span>
+                        <span data-mode="light">light_mode</span>
+                    </div>
+                    <button
+                        id="share-button"
+                        class="btn"
+                    >
+                        <span class="material-symbols">share</span>Teilen
+                    </button>
+                    <button
+                        id="export-button"
+                        class="btn"
+                    >
+                        <span class="material-symbols">file_download</span>Export
+                    </button>
+                    <button
+                        id="reset-button"
+                        class="btn ghost"
+                        popovertarget="reset-dialog"
+                        popovertargetaction="toggle"
+                    >
+                        <span class="material-symbols">restart_alt</span>Zurücksetzen
+                    </button>
                 </div>
-                <button
-                    id="share-button"
-                    class="btn"
-                >
-                    <span class="material-symbols">share</span>Teilen
-                </button>
-                <button
-                    id="export-button"
-                    class="btn"
-                >
-                    <span class="material-symbols">file_download</span>Export
-                </button>
-                <button
-                    id="reset-button"
-                    class="btn ghost"
-                    popovertarget="reset-dialog"
-                    popovertargetaction="toggle"
-                >
-                    <span class="material-symbols">restart_alt</span>Zurücksetzen
-                </button>
-            </div>
-            <div id="save-slot-options">
-                <div class="input-container">
-                    <select class="save-slot-selector">
-                        <option>Save-Slot 1</option>
-                        <option>Save-Slot 2</option>
-                        <option>Save-Slot 3</option>
-                    </select>
+                <div id="save-slot-options">
+                    <div class="input-container">
+                        <select class="save-slot-selector">
+                            <option>Save-Slot 1</option>
+                            <option>Save-Slot 2</option>
+                            <option>Save-Slot 3</option>
+                        </select>
+                    </div>
+                    <button
+                        class="btn slim"
+                        popovertarget="save-slot-dialog"
+                        popovertargetaction="toggle"
+                    >
+                        Slot <span class="material-symbols">settings</span>
+                    </button>
                 </div>
-                <button
-                    class="btn slim"
-                    popovertarget="save-slot-dialog"
-                    popovertargetaction="toggle"
-                >
-                    Slot <span class="material-symbols">settings</span>
-                </button>
             </div>
+            <button
+                id="controls-toggle"
+                class="btn ghost slim"
+                type="button"
+                popovertarget="secondary-controls"
+                popovertargetaction="toggle"
+                aria-label="Weitere Optionen"
+            >
+                <span class="material-symbols">more_vert</span>
+            </button>
         </header>
+        <div
+            id="filter-backdrop"
+            aria-hidden="true"
+        ></div>
         <div id="filter-options">
+            <div class="filter-sheet-header">
+                <span
+                    class="filter-sheet-handle"
+                    aria-hidden="true"
+                ></span>
+                <button
+                    id="filter-close"
+                    class="btn ghost slim"
+                    type="button"
+                    aria-label="Filter schließen"
+                >
+                    <span class="material-symbols">close</span>
+                </button>
+            </div>
             <details
                 class="filter-group"
                 id="filter-group-global"
@@ -1220,7 +1268,6 @@
         <main
             class="calendar"
             id="calendar1"
-            style="display: none"
         >
             <div
                 class="calendar-container"
@@ -1238,7 +1285,6 @@
         <main
             class="calendar"
             id="calendar2"
-            style="display: none"
         >
             <div
                 class="calendar-container"
@@ -1256,7 +1302,6 @@
         <main
             class="tree"
             id="tree1"
-            style="display: none"
         >
             <div
                 class="opened-levels"
@@ -1312,7 +1357,6 @@
         <main
             class="tree"
             id="tree2"
-            style="display: none"
         >
             <div
                 class="opened-levels"
@@ -1365,10 +1409,7 @@
                 </button>
             </div>
         </main>
-        <main
-            id="compare"
-            style="display: none"
-        >
+        <main id="compare">
             <h1>Compare Save slots</h1>
         </main>
         <!-- Save slot options dialog (native <dialog>, opened via the "Slot" button) -->

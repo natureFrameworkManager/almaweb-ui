@@ -16,8 +16,9 @@
     @apply m-0 flex list-none flex-col gap-y-1 p-0;
 }
 .save-slot-dialog .slot-entry {
-    @apply grid grid-cols-[6.5rem_minmax(0,1fr)_auto_auto] items-center gap-x-3;
+    @apply grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 gap-y-1;
     @apply rounded-md border border-border px-2 py-2;
+    @apply md:grid-cols-[6.5rem_minmax(0,1fr)_auto_auto] md:gap-y-0;
 }
 .save-slot-dialog .slot-entry .entry-type {
     @apply w-full justify-center rounded-full border border-border px-2 py-0.5 text-center text-label-small font-semibold uppercase;
@@ -42,8 +43,9 @@
 
 /* LP counter: sum of the LP across all required modules */
 .save-slot-dialog .lp-summary {
-    @apply flex flex-row items-center gap-x-4 rounded-md border border-border p-3;
+    @apply flex flex-row flex-wrap items-center gap-x-4 gap-y-2 rounded-md border border-border p-3;
     @apply bg-primary/5 dark:bg-primary/15;
+    @apply md:flex-nowrap md:gap-y-0;
 }
 .save-slot-dialog .lp-summary .lp-total {
     @apply flex shrink-0 items-baseline gap-x-1 font-header text-display-small font-bold text-primary;
@@ -110,7 +112,7 @@
 }
 /* The requirement tab needs the wider layout for the six column grid. */
 .save-slot-dialog:has(.dialog-tabs span.active[data-tab="requirements"]) {
-    @apply w-[min(1040px,94vw)];
+    @apply w-full md:w-[min(1040px,94vw)];
 }
 
 /* Action buttons in the dialog header. */
