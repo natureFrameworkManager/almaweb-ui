@@ -495,6 +495,16 @@ export function readStateFromQuery(search?: string): Partial<UIState> | null {
 }
 
 /**
+ * Check whether a query string carries a shared state document.
+ * @param search - Query string to read, defaulting to the current location.
+ * @returns Whether the share parameter is present.
+ */
+export function hasSharedState(search?: string): boolean {
+    const params = new URLSearchParams(search ?? globalThis.location?.search ?? "");
+    return params.has(QUERY_STATE_PARAM);
+}
+
+/**
  * Merge a shared state from the query string into the current state.
  * @param search - Query string to read, defaulting to the current location.
  * @returns Whether a shared state was found and applied.

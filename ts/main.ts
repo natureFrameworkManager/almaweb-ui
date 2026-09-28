@@ -19,6 +19,7 @@ import { initCal } from "./calendar";
 import {
     appendCheckboxOptions,
     appendSelectOptions,
+    initTreeRetry,
     refreshTree,
     registerCollections,
     requeryAll,
@@ -34,6 +35,7 @@ import {
     toStaffOptions,
     wireFilterGroup,
 } from "./filters";
+import { reportError } from "./feedback";
 import { getActiveMainView, switchMainView, switchViewMode } from "./layout";
 import { getState } from "./state";
 import {
@@ -97,6 +99,7 @@ initCollectionScrolling();
 initDetailDialog();
 
 registerCalendarLoader(ensureCalendar);
+initTreeRetry();
 loadInitialState();
 
 wireSwitcher("#display-changer1", (view) => handlePaneView(1, view));
@@ -137,28 +140,28 @@ const filterOptionLoads = [
             appendCheckboxOptions("filter-staff", toStaffOptions(staff.items));
         })
         .catch((error) => {
-            console.error("Failed to fetch staff:", error);
+            reportError("Filteroptionen konnten nicht geladen werden.", error);
         }),
     getSemesters()
         .then((semesters) => {
             appendCheckboxOptions("filter-semester", toSemesterOptions(semesters.items));
         })
         .catch((error) => {
-            console.error("Failed to fetch semesters:", error);
+            reportError("Filteroptionen konnten nicht geladen werden.", error);
         }),
     getFaculties()
         .then((faculties) => {
             appendCheckboxOptions("filter-faculty", toFacultyOptions(faculties.items));
         })
         .catch((error) => {
-            console.error("Failed to fetch faculties:", error);
+            reportError("Filteroptionen konnten nicht geladen werden.", error);
         }),
     getEventTypes()
         .then((eventTypes) => {
             appendCheckboxOptions("filter-type", toEventTypeOptions(eventTypes.items));
         })
         .catch((error) => {
-            console.error("Failed to fetch event types:", error);
+            reportError("Filteroptionen konnten nicht geladen werden.", error);
         }),
     getBuildings()
         .then((buildings) => {
@@ -167,21 +170,21 @@ const filterOptionLoads = [
             appendSelectOptions("filter-event-buildings", options);
         })
         .catch((error) => {
-            console.error("Failed to fetch buildings:", error);
+            reportError("Filteroptionen konnten nicht geladen werden.", error);
         }),
     getModuleLanguages()
         .then((languages) => {
             appendCheckboxOptions("filter-language", toLanguageOptions(languages.items));
         })
         .catch((error) => {
-            console.error("Failed to fetch languages:", error);
+            reportError("Filteroptionen konnten nicht geladen werden.", error);
         }),
     getExamTypes()
         .then((examTypes) => {
             appendCheckboxOptions("filter-examtypes", toExamTypeOptions(examTypes.items));
         })
         .catch((error) => {
-            console.error("Failed to fetch exam types:", error);
+            reportError("Filteroptionen konnten nicht geladen werden.", error);
         }),
 ];
 

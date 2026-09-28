@@ -1,3 +1,4 @@
+import { setPlaceholderVisible, showToast } from "../feedback";
 import { isSaved, toggleSaved } from "../saved";
 import type { EntryKind } from "../state";
 import type { DetailKind } from "./entity-view";
@@ -402,6 +403,12 @@ let dialogSaveButton: HTMLButtonElement | null = null;
 /** Save key of the entity currently shown in the dialog. */
 let currentKey: string | null = null;
 
+/** The detail dialog element. */
+let detailDialog: HTMLElement | null = null;
+
+/** Last requested record, used to retry after a failed load. */
+let lastRequest: { kind: string; id: string } | null = null;
+
 /**
  * Activate a single tab in the dialog tab bar.
  * @param tab - Tab name to activate.
@@ -484,6 +491,20 @@ function renderDetail<T>(spec: DetailSpec<T>, detail: T, id: string): void {
     updateSaveButton();
 }
 
+/** Remove the previously rendered record so a new one does not flash stale data. */
+function clearDetailContent(): void {
+    dialogBody?.querySelectorAll(".tab-content").forEach((content) => content.remove());
+    dialogTabs?.replaceChildren();
+    if (dialogName) {
+        dialogName.textContent = "";
+    }
+    if (dialogNumber) {
+        dialogNumber.textContent = "";
+    }
+    currentKey = null;
+    updateSaveButton();
+}
+
 /**
  * Fetch and show the detail dialog of an entity.
  * @param kind - Entity kind to display.
@@ -495,22 +516,41 @@ export async function openDetail(kind: string, id: string): Promise<void> {
         console.error(`No detail dialog registered for kind "${kind}".`);
         return;
     }
+    lastRequest = { kind, id };
+    if (dialogTitle) {
+        dialogTitle.textContent = spec.heading;
+    }
+    clearDetailContent();
+    setPlaceholderVisible("detail-error", false);
+    setPlaceholderVisible("detail-loading", true);
+    detailDialog?.setAttribute("aria-busy", "true");
     try {
         const detail = await spec.fetch(id);
         renderDetail(spec, detail, id);
     } catch (error) {
         console.error(`Failed to fetch ${kind} detail:`, error);
+        setPlaceholderVisible("detail-error", true);
+    } finally {
+        setPlaceholderVisible("detail-loading", false);
+        detailDialog?.removeAttribute("aria-busy");
     }
 }
 
 /** Wire the detail dialog tabs, the save toggle and the details buttons. */
 export function initDetailDialog(): void {
+    detailDialog = document.getElementById("detail-dialog");
     dialogBody = document.querySelector<HTMLElement>("#detail-body");
     dialogTabs = document.querySelector<HTMLElement>("#detail-tabs");
     dialogName = document.querySelector<HTMLElement>("#detail-name");
     dialogNumber = document.querySelector<HTMLElement>("#detail-number");
     dialogTitle = document.querySelector<HTMLElement>("#detail-title");
     dialogSaveButton = document.querySelector<HTMLButtonElement>("#detail-save-toggle");
+
+    document.getElementById("detail-retry")?.addEventListener("click", () => {
+        if (lastRequest) {
+            void openDetail(lastRequest.kind, lastRequest.id);
+        }
+    });
 
     dialogTabs?.addEventListener("click", (event) => {
         const target = event.target;
@@ -527,7 +567,15 @@ export function initDetailDialog(): void {
         if (currentKey === null) {
             return;
         }
-        toggleSaved(currentKey);
+        const result = toggleSaved(currentKey);
+        if (result === "unavailable") {
+            showToast("Kein Speicher-Slot aktiv – bitte zuerst einen Slot anlegen.", "error");
+        } else {
+            showToast(
+                result === "saved" ? "Im Slot gespeichert." : "Aus dem Slot entfernt.",
+                result === "saved" ? "success" : "info",
+            );
+        }
         updateSaveButton();
     });
 

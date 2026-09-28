@@ -1,7 +1,8 @@
 import { getCourses, getExams, getLocations, getModules, getStaff } from "../api/api";
 import type { Course, Exam, Location, Module, PagedResponse, Staff } from "../api/types";
+import { setPlaceholderVisible } from "../feedback";
 import { getActiveMainView } from "../layout";
-import { displayTree } from "../tree";
+import { clearTree, displayTree } from "../tree";
 import {
     COLLECTION_PAGE_SIZE,
     courseToView,
@@ -356,10 +357,31 @@ async function ensureTreeModules(): Promise<Module[] | null> {
  * @param paneId - Pane identifier.
  */
 export async function refreshTree(paneId: 1 | 2): Promise<void> {
+    setPlaceholderVisible(`tree-loading${paneId}`, true);
+    setPlaceholderVisible(`tree-error${paneId}`, false);
+    setPlaceholderVisible(`tree-empty${paneId}`, false);
     const modules = await ensureTreeModules();
-    if (modules) {
-        displayTree([...modules].sort(byName), paneId, moduleToView);
+    setPlaceholderVisible(`tree-loading${paneId}`, false);
+    if (!modules) {
+        setPlaceholderVisible(`tree-error${paneId}`, true);
+        return;
     }
+    if (modules.length === 0) {
+        clearTree(paneId);
+        setPlaceholderVisible(`tree-empty${paneId}`, true);
+        return;
+    }
+    displayTree([...modules].sort(byName), paneId, moduleToView);
+}
+
+/** Wire the retry buttons of the tree error states. */
+export function initTreeRetry(): void {
+    ([1, 2] as const).forEach((paneId) => {
+        document.getElementById(`tree-retry${paneId}`)?.addEventListener("click", () => {
+            invalidateTree();
+            void refreshTree(paneId);
+        });
+    });
 }
 
 /** Refresh the navigation tree of every pane that currently shows it. */
@@ -368,6 +390,108 @@ function refreshVisibleTrees(): void {
         if (getActiveMainView(paneId) === "tree") {
             void refreshTree(paneId);
         }
+    });
+}
+
+/** Definition of a range filter that is checked for an inverted bound. */
+type RangeValidation = {
+    groupId: string;
+    label: string;
+    errorId: string;
+    kind: "number" | "date";
+};
+
+/** Every range filter that shows an inline error when its min exceeds its max. */
+const RANGE_VALIDATIONS: RangeValidation[] = [
+    {
+        groupId: "filter-group-module",
+        label: "Leistungspunkte",
+        errorId: "error-module-credits",
+        kind: "number",
+    },
+    {
+        groupId: "filter-group-module",
+        label: "Semesterdauer",
+        errorId: "error-module-duration",
+        kind: "number",
+    },
+    {
+        groupId: "filter-group-course",
+        label: "Wochenstunden",
+        errorId: "error-course-hours",
+        kind: "number",
+    },
+    {
+        groupId: "filter-group-event",
+        label: "Start-Uhrzeit",
+        errorId: "error-event-start",
+        kind: "date",
+    },
+    {
+        groupId: "filter-group-event",
+        label: "End-Uhrzeit",
+        errorId: "error-event-end",
+        kind: "date",
+    },
+    {
+        groupId: "filter-group-event",
+        label: "Datumszeitraum",
+        errorId: "error-event-dates",
+        kind: "date",
+    },
+    {
+        groupId: "filter-group-exam",
+        label: "Start-Uhrzeit",
+        errorId: "error-exam-start",
+        kind: "date",
+    },
+    {
+        groupId: "filter-group-exam",
+        label: "End-Uhrzeit",
+        errorId: "error-exam-end",
+        kind: "date",
+    },
+    {
+        groupId: "filter-group-exam",
+        label: "Datumszeitraum",
+        errorId: "error-exam-dates",
+        kind: "date",
+    },
+];
+
+/**
+ * Check whether a range has a minimum that exceeds its maximum.
+ *
+ * Numbers are compared numerically; ISO dates and `HH:MM` times sort correctly
+ * as plain strings.
+ * @param min - Minimum input value.
+ * @param max - Maximum input value.
+ * @param kind - How the values are compared.
+ * @returns Whether the range is inverted.
+ */
+function isRangeInverted(min: string, max: string, kind: RangeValidation["kind"]): boolean {
+    if (min === "" || max === "") {
+        return false;
+    }
+    return kind === "number" ? Number(min) > Number(max) : min > max;
+}
+
+/** Validate every range filter and show inline errors for inverted ranges. */
+export function validateFilterRanges(): void {
+    RANGE_VALIDATIONS.forEach((rule) => {
+        const inputs = getRangeInputs(rule.groupId, rule.label);
+        const min = inputs.at(0)?.value ?? "";
+        const max = inputs.at(1)?.value ?? "";
+        const invalid = isRangeInverted(min, max, rule.kind);
+        const error = document.getElementById(rule.errorId);
+        if (error) {
+            error.textContent = invalid
+                ? "Der Minimalwert darf den Maximalwert nicht überschreiten."
+                : "";
+        }
+        inputs.forEach((input) =>
+            input.closest(".input-container")?.classList.toggle("invalid", invalid),
+        );
     });
 }
 
@@ -383,6 +507,10 @@ export function wireFilterGroup(groupId: string, onChange: () => void): void {
         return;
     }
     const debounced = debounce(onChange, FILTER_DEBOUNCE_MS);
-    group.addEventListener("input", debounced);
-    group.addEventListener("change", debounced);
+    const handleChange = (): void => {
+        validateFilterRanges();
+        debounced();
+    };
+    group.addEventListener("input", handleChange);
+    group.addEventListener("change", handleChange);
 }

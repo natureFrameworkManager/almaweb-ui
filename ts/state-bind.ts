@@ -6,7 +6,8 @@
  * separate from `state.ts` leaves the state model free of DOM access.
  */
 
-import { refreshTree, requeryAll } from "./filters";
+import { refreshTree, requeryAll, validateFilterRanges } from "./filters";
+import { showToast } from "./feedback";
 import { switchMainView, switchViewMode } from "./layout";
 import { isSaved, toggleSaved } from "./saved";
 import {
@@ -16,6 +17,7 @@ import {
     DEFAULT_SLOT_ID,
     getActiveSlot,
     getState,
+    hasSharedState,
     loadState,
     parseSavedKey,
     saveState,
@@ -113,6 +115,69 @@ function requirementAddOptions(slot: SaveSlot): { ref: number; label: string }[]
 
 /** Lazy calendar creator registered by the application bootstrap. */
 let calendarLoader: (paneId: PaneId) => void = () => {};
+
+/** Action to run once the user accepts the currently open confirmation dialog. */
+let confirmAction: (() => void) | null = null;
+
+/** Content of a destructive-action confirmation. */
+type ConfirmOptions = {
+    title: string;
+    message: string;
+    detail?: string;
+    acceptLabel?: string;
+};
+
+/**
+ * Open the shared confirmation dialog for a destructive action.
+ *
+ * Falls back to running the action immediately when the dialog markup is
+ * missing, so a missing dialog never blocks the action.
+ * @param options - Text shown in the dialog.
+ * @param onAccept - Action to run when the user accepts.
+ */
+function openConfirm(options: ConfirmOptions, onAccept: () => void): void {
+    const dialog = document.getElementById("confirm-dialog");
+    if (!dialog || typeof dialog.showPopover !== "function") {
+        onAccept();
+        return;
+    }
+    const title = document.getElementById("confirm-title");
+    const message = document.getElementById("confirm-message");
+    const detail = document.getElementById("confirm-detail");
+    const accept = document.getElementById("confirm-accept");
+    if (title) {
+        title.textContent = options.title;
+    }
+    if (message) {
+        message.textContent = options.message;
+    }
+    if (detail) {
+        detail.textContent = options.detail ?? "";
+        detail.hidden = options.detail === undefined || options.detail === "";
+    }
+    if (accept) {
+        accept.textContent = options.acceptLabel ?? "Bestätigen";
+    }
+    confirmAction = onAccept;
+    dialog.showPopover();
+}
+
+/** Wire the accept and cancel handling of the confirmation dialog. */
+function initConfirmDialog(): void {
+    const dialog = document.getElementById("confirm-dialog");
+    document.getElementById("confirm-accept")?.addEventListener("click", () => {
+        const action = confirmAction;
+        confirmAction = null;
+        dialog?.hidePopover();
+        action?.();
+    });
+    dialog?.addEventListener("toggle", (event) => {
+        const state = (event as Event & { newState?: string }).newState;
+        if (state === "closed") {
+            confirmAction = null;
+        }
+    });
+}
 
 /**
  * Register the callback that creates the calendar of a pane on demand.
@@ -779,6 +844,19 @@ function renderActiveSlot(state: UIState): void {
     writeText("save-slot-name", slot.name);
     renderSlotEntries(slot);
     renderSlotRequirements(slot);
+    validateSlotLp();
+}
+
+/** Validate the editable total credit point target and show an inline error. */
+function validateSlotLp(): void {
+    const input = document.getElementById("slot-total-lp") as HTMLInputElement | null;
+    const error = document.getElementById("error-slot-total-lp");
+    if (!input || !error) {
+        return;
+    }
+    const value = Number(input.value);
+    const invalid = input.value.trim() === "" || !Number.isFinite(value) || value < 0;
+    error.textContent = invalid ? "Bitte gib einen Zielwert von mindestens 0 LP ein." : "";
 }
 
 /**
@@ -850,8 +928,13 @@ export function applyState(state: UIState): void {
  * @returns The loaded state.
  */
 export function loadInitialState(): UIState {
+    const shared = hasSharedState();
     if (applyShareState()) {
+        showToast("Geteilte Ansicht geladen.", "info");
         return getState();
+    }
+    if (shared) {
+        showToast("Der geteilte Link konnte nicht gelesen werden.", "error");
     }
     return setState(loadState());
 }
@@ -914,12 +997,14 @@ export function initStateBindings(): void {
     wireDisplayCapture();
     initSaveButtons();
     initSlotControls();
+    initConfirmDialog();
     initShareButton();
 }
 
 /** Re-apply the filters after asynchronous option loading and reload the data. */
 export function refreshStateFilters(): void {
     applyFilterState(getState());
+    validateFilterRanges();
     requeryAll();
 }
 
@@ -954,9 +1039,32 @@ function handleSaveClick(button: HTMLElement): void {
     if (kind === undefined || !Number.isFinite(ref)) {
         return;
     }
-    toggleSaved(`${kind}:${ref}`);
+    const result = toggleSaved(`${kind}:${ref}`);
+    if (result === "unavailable") {
+        showToast("Kein Speicher-Slot aktiv – bitte zuerst einen Slot anlegen.", "error");
+    } else {
+        showToast(
+            result === "saved" ? "Im Slot gespeichert." : "Aus dem Slot entfernt.",
+            result === "saved" ? "success" : "info",
+        );
+    }
     syncSaveButtons();
     renderActiveSlot(getState());
+}
+
+/** Whether a save-button sync is already scheduled for the next frame. */
+let saveSyncScheduled = false;
+
+/** Schedule a save-button sync, coalescing DOM bursts into a single frame. */
+function scheduleSaveSync(): void {
+    if (saveSyncScheduled) {
+        return;
+    }
+    saveSyncScheduled = true;
+    requestAnimationFrame(() => {
+        saveSyncScheduled = false;
+        syncSaveButtons();
+    });
 }
 
 /** Wire the save buttons of every rendered data type. */
@@ -972,7 +1080,7 @@ function initSaveButtons(): void {
             handleSaveClick(button);
         }
     });
-    const observer = new MutationObserver(syncSaveButtons);
+    const observer = new MutationObserver(scheduleSaveSync);
     ([1, 2] as const).forEach((paneId) => {
         const pane = document.getElementById(`list-card-view${paneId}`);
         if (pane) {
@@ -1000,6 +1108,7 @@ function removeEntry(key: string): void {
     });
     renderActiveSlot(getState());
     syncSaveButtons();
+    showToast("Eintrag entfernt.", "info");
 }
 
 /** Remove every saved data point from the active slot. */
@@ -1012,6 +1121,7 @@ function clearActiveSlot(): void {
     });
     renderActiveSlot(getState());
     syncSaveButtons();
+    showToast("Slot geleert.", "info");
 }
 
 /** Delete the active slot and select the first remaining one. */
@@ -1026,6 +1136,7 @@ function deleteActiveSlot(): void {
     renderSlotSelector(getState());
     renderActiveSlot(getState());
     syncSaveButtons();
+    showToast("Slot gelöscht.", "info");
 }
 
 /**
@@ -1059,6 +1170,7 @@ function createNewSlot(): void {
     renderSlotSelector(state);
     renderActiveSlot(state);
     syncSaveButtons();
+    showToast("Neuer Slot angelegt.", "success");
 }
 
 /** Add the selected module to the requirements of the active slot. */
@@ -1076,6 +1188,7 @@ function addRequirement(): void {
         }
     });
     renderActiveSlot(getState());
+    showToast("Pflichtmodul hinzugefügt.", "success");
 }
 
 /**
@@ -1095,6 +1208,7 @@ function removeRequirement(ref: number): void {
         }
     });
     renderActiveSlot(getState());
+    showToast("Pflichtmodul entfernt.", "info");
 }
 
 /**
@@ -1128,11 +1242,29 @@ function handleSlotClick(event: Event): void {
     } else if (target.closest("#requirement-add")) {
         addRequirement();
     } else if (target.closest("#save-slot-clear")) {
-        clearActiveSlot();
+        openConfirm(
+            {
+                title: "Slot leeren",
+                message: "Alle gespeicherten Einträge dieses Slots werden entfernt.",
+                detail: "Pflichtmodule und deren Fortschritt bleiben erhalten.",
+                acceptLabel: "Slot leeren",
+            },
+            clearActiveSlot,
+        );
     } else if (target.closest("#save-slot-delete")) {
-        deleteActiveSlot();
+        openConfirm(
+            {
+                title: "Slot löschen",
+                message: "Der aktive Slot und alle seine Einträge werden gelöscht.",
+                detail: "Diese Aktion kann nicht rückgängig gemacht werden.",
+                acceptLabel: "Slot löschen",
+            },
+            deleteActiveSlot,
+        );
     } else if (target.closest("#save-slot-save")) {
         saveState(captureState());
+        document.getElementById("save-slot-dialog")?.hidePopover();
+        showToast("Slot gespeichert.", "success");
     }
 }
 
@@ -1152,8 +1284,10 @@ function handleSlotChange(event: Event): void {
         target.dataset["requirementLp"] !== undefined
     ) {
         renderActiveSlot(getState());
+        validateSlotLp();
     } else if (target.id === "save-slot-name") {
         renderSlotSelector(getState());
+        showToast("Slot-Name gespeichert.", "success");
     }
 }
 
@@ -1192,30 +1326,29 @@ export function createShareLink(): string {
     return writeStateToQuery(captureState());
 }
 
-/**
- * Copy a fresh share link to the clipboard and put it into the address bar.
- * @param button - Share button used for the temporary feedback.
- */
-async function shareState(button: HTMLElement): Promise<void> {
+/** Copy a fresh share link to the clipboard and put it into the address bar. */
+async function shareState(): Promise<void> {
     const link = createShareLink();
     globalThis.history.replaceState(null, "", link);
-    if (navigator.clipboard) {
-        try {
-            await navigator.clipboard.writeText(link);
-        } catch (error) {
-            console.warn("Failed to copy the share link:", error);
-        }
+    if (!navigator.clipboard) {
+        showToast("Die Adresse enthält jetzt den geteilten Zustand.", "info");
+        return;
     }
-    button.title = "Link kopiert!";
-    setTimeout(() => {
-        button.removeAttribute("title");
-    }, 1500);
+    try {
+        await navigator.clipboard.writeText(link);
+        showToast("Link in die Zwischenablage kopiert.", "success");
+    } catch (error) {
+        console.warn("Failed to copy the share link:", error);
+        showToast(
+            "Link konnte nicht kopiert werden – die Adresse wurde aktualisiert.",
+            "error",
+        );
+    }
 }
 
 /** Wire the share button. */
 function initShareButton(): void {
-    const button = document.getElementById("share-button");
-    button?.addEventListener("click", () => {
-        void shareState(button);
+    document.getElementById("share-button")?.addEventListener("click", () => {
+        void shareState();
     });
 }

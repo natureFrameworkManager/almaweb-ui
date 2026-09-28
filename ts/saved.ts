@@ -24,34 +24,37 @@ export function isSaved(key: string): boolean {
     return slot ? slot.entries.some((item) => matches(item, entry)) : false;
 }
 
+/** Outcome of toggling a data point in the active save slot. */
+export type SaveToggleResult = "saved" | "removed" | "unavailable";
+
 /**
  * Toggle the saved state of a data point inside the active save slot.
  *
  * Saving a data point adds it to the entries of the currently active save slot
  * instead of a flat list, so switching slots changes what is reported as saved.
  * @param key - Data point key such as `module:2011`.
- * @returns Whether the data point is saved after toggling.
+ * @returns Whether the data point was saved, removed, or no slot was available.
  */
-export function toggleSaved(key: string): boolean {
+export function toggleSaved(key: string): SaveToggleResult {
     const entry = parseSavedKey(key);
     if (entry === null) {
-        return false;
+        return "unavailable";
     }
-    let nowSaved = false;
+    let result: SaveToggleResult = "unavailable";
     updateState((state) => {
         const slot = state.slots.items.find((item) => item.id === state.slots.active);
         if (!slot) {
-            // TODO: select or create the active save slot once the slot dialog is wired.
+            // No active slot: the caller reports this to the user.
             return;
         }
         const index = slot.entries.findIndex((item) => matches(item, entry));
         if (index >= 0) {
             slot.entries.splice(index, 1);
-            nowSaved = false;
+            result = "removed";
         } else {
             slot.entries.push(entry);
-            nowSaved = true;
+            result = "saved";
         }
     });
-    return nowSaved;
+    return result;
 }

@@ -230,6 +230,20 @@ function createTreeContent(paneId: 1 | 2, state: TreeState): DocumentFragment {
 }
 
 /**
+ * Remove the rendered navigation content of a pane.
+ *
+ * Only the tree nodes are removed so the feedback placeholders living in the
+ * same pane are kept.
+ * @param paneId - Tree pane identifier.
+ */
+export function clearTree(paneId: 1 | 2): void {
+    const treeContainer = document.querySelector(`#tree${paneId}`);
+    treeContainer
+        ?.querySelectorAll(":scope > .opened-levels, :scope > .levels, :scope > .card-grid")
+        .forEach((element) => element.remove());
+}
+
+/**
  * Render the current position of a tree pane.
  * @param paneId - Tree pane identifier.
  * @param state - Navigation state to render.
@@ -240,7 +254,8 @@ function renderTree(paneId: 1 | 2, state: TreeState): void {
         console.error("Tree view container is missing.");
         return;
     }
-    treeContainer.replaceChildren(createTreeContent(paneId, state));
+    clearTree(paneId);
+    treeContainer.append(createTreeContent(paneId, state));
 }
 
 /**

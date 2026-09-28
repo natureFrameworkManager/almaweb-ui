@@ -88,16 +88,58 @@ export function createActionButton(className: string, text: string): HTMLButtonE
  * The button carries the entity kind and id so the state layer can save it into
  * the active save slot regardless of the entity type.
  * @param view - Entity view data.
- * @returns The created save button.
+ * @returns The created save button, or null when the entity cannot be saved.
  */
-function createSaveButton(view: EntityView): HTMLButtonElement {
-    const button = createActionButton("btn material-symbols save-toggle", "save");
-    if (view.entityKind !== undefined && view.entityId !== undefined) {
-        button.dataset["saveKind"] = view.entityKind;
-        button.dataset["saveRef"] = String(view.entityId);
-        button.setAttribute("aria-pressed", "false");
+function createSaveButton(view: EntityView): HTMLButtonElement | null {
+    if (view.entityKind === undefined || view.entityId === undefined) {
+        return null;
     }
+    const button = createActionButton("btn material-symbols save-toggle", "save");
+    button.dataset["saveKind"] = view.entityKind;
+    button.dataset["saveRef"] = String(view.entityId);
+    button.setAttribute("aria-pressed", "false");
     return button;
+}
+
+/**
+ * Create the button that opens the shared detail dialog for an entity.
+ * @param view - Entity view data.
+ * @returns The created details button, or null when no detail is available.
+ */
+function createDetailsButton(view: EntityView): HTMLButtonElement | null {
+    if (!view.detailsId) {
+        return null;
+    }
+    const button = createActionButton("btn", "Mehr Details");
+    button.dataset["detailsId"] = view.detailsId;
+    if (view.detailsKind) {
+        button.dataset["detailsKind"] = view.detailsKind;
+    }
+    button.setAttribute("popovertarget", "detail-dialog");
+    button.setAttribute("popovertargetaction", "toggle");
+    return button;
+}
+
+/**
+ * Create the action row of an entity, keeping only the available actions.
+ * @param view - Entity view data.
+ * @returns The action row, or null when the entity has no actions.
+ */
+function createActionRow(view: EntityView): HTMLDivElement | null {
+    const details = createDetailsButton(view);
+    const save = createSaveButton(view);
+    if (!details && !save) {
+        return null;
+    }
+    const row = document.createElement("div");
+    row.className = "btn-con";
+    if (details) {
+        row.appendChild(details);
+    }
+    if (save) {
+        row.appendChild(save);
+    }
+    return row;
 }
 
 /**
@@ -113,27 +155,12 @@ function createListItem(view: EntityView): HTMLLIElement {
         appendHeading(item, "h2", view.number);
     }
     appendInfoContainer(item, view.listInfos);
-    item.appendChild(createSaveButton(view));
+    const actions = createActionRow(view);
+    if (actions) {
+        item.appendChild(actions);
+    }
 
     return item;
-}
-
-/**
- * Create the button that opens the shared detail dialog for an entity.
- * @param view - Entity view data.
- * @returns The created details button.
- */
-function createDetailsButton(view: EntityView): HTMLButtonElement {
-    const button = createActionButton("btn", "Mehr Details");
-    if (view.detailsId) {
-        button.dataset["detailsId"] = view.detailsId;
-        if (view.detailsKind) {
-            button.dataset["detailsKind"] = view.detailsKind;
-        }
-        button.setAttribute("popovertarget", "detail-dialog");
-        button.setAttribute("popovertargetaction", "toggle");
-    }
-    return button;
 }
 
 /**
@@ -149,12 +176,10 @@ function createCard(view: EntityView): HTMLDivElement {
         appendHeading(card, "h2", view.number);
     }
     appendInfoContainer(card, view.cardInfos);
-
-    const btnCon = document.createElement("div");
-    btnCon.className = "btn-con";
-    btnCon.appendChild(createDetailsButton(view));
-    btnCon.appendChild(createSaveButton(view));
-    card.appendChild(btnCon);
+    const actions = createActionRow(view);
+    if (actions) {
+        card.appendChild(actions);
+    }
 
     return card;
 }

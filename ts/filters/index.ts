@@ -11,6 +11,7 @@ export {
     type FilterOption,
 } from "./options";
 export {
+    initTreeRetry,
     invalidateTree,
     refreshTree,
     registerCollections,
@@ -18,5 +19,6 @@ export {
     requeryCourses,
     requeryExams,
     requeryModules,
+    validateFilterRanges,
     wireFilterGroup,
 } from "./query";

@@ -1,4 +1,5 @@
 import type { PagedResponse } from "../api/types";
+import { reportError, setPlaceholderVisible } from "../feedback";
 import { getActiveMainView, isPaneVisible } from "../layout";
 import { syncEntityContainer, type EntityKind, type EntityView } from "./entity-view";
 
@@ -18,6 +19,16 @@ const TYPE_ID_PREFIX: Record<string, string> = {
     locations: "location",
 };
 
+/** Displayed labels of the entity types used in feedback messages. */
+const TYPE_LABELS: Record<string, string> = {
+    modules: "Module",
+    courses: "Kurse",
+    events: "Veranstaltungen",
+    exams: "Prüfungen",
+    staff: "Mitarbeitende",
+    locations: "Räumlichkeiten",
+};
+
 type CollectionConfig<T> = {
     fetchPage: (page: number) => Promise<PagedResponse<T>>;
     toView: (item: T) => EntityView;
@@ -33,6 +44,8 @@ type Collection = {
     totalPages: number;
     loaded: boolean;
     loading: boolean;
+    /** Set when the last page request failed and no data was loaded yet. */
+    error: boolean;
     generation: number;
 };
 
@@ -56,6 +69,7 @@ export function registerCollection<T>(type: string, config: CollectionConfig<T>)
         totalPages: 0,
         loaded: false,
         loading: false,
+        error: false,
         generation: 0,
     });
 }
@@ -106,6 +120,45 @@ function isCollectionNeeded(type: string): boolean {
     return ([1, 2] as const).some(
         (paneId) => paneShowsCollections(paneId) && activeTypes[paneId] === type,
     );
+}
+
+/**
+ * Update the loading, empty, error and "load more" placeholders of a pane.
+ * @param paneId - Pane identifier.
+ */
+function updatePaneFeedback(paneId: 1 | 2): void {
+    if (!paneShowsCollections(paneId)) {
+        setPlaceholderVisible(`collection-loading${paneId}`, false);
+        setPlaceholderVisible(`collection-empty${paneId}`, false);
+        setPlaceholderVisible(`collection-error${paneId}`, false);
+        setPlaceholderVisible(`list-more${paneId}`, false);
+        return;
+    }
+    const collection = collections.get(activeTypes[paneId]);
+    if (!collection) {
+        return;
+    }
+    const hasItems = collection.views.length > 0;
+    const initialLoading = collection.loading && !hasItems;
+    const loadingMore = collection.loading && hasItems;
+    const showError = collection.error && !hasItems;
+    const showEmpty = collection.loaded && !collection.error && !hasItems;
+    setPlaceholderVisible(`collection-loading${paneId}`, initialLoading);
+    setPlaceholderVisible(`collection-empty${paneId}`, showEmpty);
+    setPlaceholderVisible(`collection-error${paneId}`, showError);
+    setPlaceholderVisible(`list-more${paneId}`, loadingMore);
+}
+
+/**
+ * Update the feedback placeholders of every pane showing a collection type.
+ * @param type - Entity type selector value.
+ */
+function updateFeedbackForType(type: string): void {
+    ([1, 2] as const).forEach((paneId) => {
+        if (activeTypes[paneId] === type) {
+            updatePaneFeedback(paneId);
+        }
+    });
 }
 
 /**
@@ -168,6 +221,8 @@ async function loadNextPage(type: string): Promise<void> {
     const generation = collection.generation;
     const nextPage = collection.page + 1;
     collection.loading = true;
+    collection.error = false;
+    updateFeedbackForType(type);
     try {
         const response = await collection.fetchPage(nextPage);
         if (generation !== collection.generation) {
@@ -180,10 +235,14 @@ async function loadNextPage(type: string): Promise<void> {
         collection.loaded = true;
         renderCollection(type);
     } catch (error) {
-        console.error(`Failed to load ${type}:`, error);
+        if (generation === collection.generation) {
+            collection.error = true;
+            reportError(`${TYPE_LABELS[type] ?? type} konnten nicht geladen werden.`, error);
+        }
     } finally {
         if (generation === collection.generation) {
             collection.loading = false;
+            updateFeedbackForType(type);
         }
     }
 }
@@ -199,6 +258,7 @@ export function ensureCollection(type: string): void {
     }
     if (collection.loaded) {
         renderCollection(type);
+        updateFeedbackForType(type);
         return;
     }
     if (isCollectionNeeded(type)) {
@@ -219,6 +279,7 @@ export function setActiveType(paneId: 1 | 2, type: string): void {
         clearCollectionContainers(type);
     }
     ensureCollection(type);
+    updateFeedbackForType(type);
 }
 
 /** Ensure every visible pane has its active collection loaded and rendered. */
@@ -255,10 +316,30 @@ export function reloadCollection(type: string): void {
     collection.totalPages = 0;
     collection.loaded = false;
     collection.loading = false;
+    collection.error = false;
     clearCollectionContainers(type);
     if (isCollectionNeeded(type)) {
         void loadNextPage(type);
     }
+    updateFeedbackForType(type);
+}
+
+/**
+ * Retry the collection displayed in a pane after a failed load.
+ * @param paneId - Pane identifier.
+ */
+export function retryCollection(paneId: 1 | 2): void {
+    if (!paneShowsCollections(paneId)) {
+        return;
+    }
+    const type = activeTypes[paneId];
+    const collection = collections.get(type);
+    if (!collection) {
+        return;
+    }
+    collection.error = false;
+    updateFeedbackForType(type);
+    void loadNextPage(type);
 }
 
 /** Reset and reload every collection that is currently displayed. */
@@ -290,6 +371,9 @@ function handlePaneScroll(paneId: 1 | 2, event: Event): void {
 /** Enable infinite scrolling for every list and card grid. */
 export function initCollectionScrolling(): void {
     ([1, 2] as const).forEach((paneId) => {
+        document
+            .getElementById(`collection-retry${paneId}`)
+            ?.addEventListener("click", () => retryCollection(paneId));
         const pane = document.getElementById(`list-card-view${paneId}`);
         if (!pane) {
             return;

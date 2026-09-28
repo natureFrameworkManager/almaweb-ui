@@ -22,6 +22,9 @@ ul.list li.list-item span.info {
 ul.list li.list-item button {
     @apply self-end;
 }
+ul.list li.list-item div.btn-con {
+    @apply mt-1 flex flex-row items-center justify-end gap-x-1 self-end;
+}
 div.card-grid {
     @apply grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-2;
 }
