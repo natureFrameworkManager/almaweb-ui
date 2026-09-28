@@ -54,12 +54,6 @@
     @apply text-text/40;
 }
 
-/* Save toggle: a single button that reflects the saved state */
-.detail-dialog .save-toggle.saved {
-    @apply bg-accent text-text dark:text-background;
-    @apply hover:bg-accent/80;
-}
-
 /* Link to the original data source */
 .detail-dialog .original-link {
     @apply inline-flex w-fit flex-row items-center gap-x-1 text-label-large font-semibold text-primary;

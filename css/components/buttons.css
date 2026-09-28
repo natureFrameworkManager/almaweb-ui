@@ -25,3 +25,8 @@
 .btn.slim span.material-symbols {
     @apply text-[16px];
 }
+/* Save toggle: accent styling while the data point is stored in the active slot. */
+.btn.save-toggle.saved {
+    @apply bg-accent text-text dark:text-background;
+    @apply hover:bg-accent/80;
+}

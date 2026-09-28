@@ -1027,6 +1027,8 @@ export function syncSaveButtons(): void {
         const saved = kind !== undefined && Number.isFinite(ref) && isSaved(`${kind}:${ref}`);
         button.classList.toggle("saved", saved);
         button.setAttribute("aria-pressed", String(saved));
+        button.setAttribute("aria-label", saved ? "Aus dem Slot entfernen" : "In Slot speichern");
+        button.textContent = saved ? "bookmark" : "bookmark_add";
     });
 }
 
