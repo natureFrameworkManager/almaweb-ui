@@ -1,0 +1,19 @@
+/*
+ * Reset dialog: lets the user clear only the filters or the entire persisted
+ * state. It reuses the shared .dialog shell and only adds the option layout.
+ */
+.reset-dialog {
+    @apply w-[min(520px,92vw)];
+}
+.reset-dialog > div.dialog-body {
+    @apply gap-y-2;
+}
+.reset-dialog .reset-hint {
+    @apply m-0 text-body-medium text-text/70;
+}
+.reset-dialog .reset-option {
+    @apply w-full justify-start gap-x-3 px-3 py-2 text-left;
+}
+.reset-dialog .reset-option span.material-symbols {
+    @apply text-[20px];
+}

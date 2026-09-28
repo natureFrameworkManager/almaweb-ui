@@ -84,6 +84,14 @@
                 >
                     <span class="material-symbols">file_download</span>Export
                 </button>
+                <button
+                    id="reset-button"
+                    class="btn ghost"
+                    popovertarget="reset-dialog"
+                    popovertargetaction="toggle"
+                >
+                    <span class="material-symbols">restart_alt</span>Zurücksetzen
+                </button>
             </div>
             <div id="save-slot-options">
                 <div class="input-container">
@@ -1811,6 +1819,44 @@
                     Bestätigen
                 </button>
             </footer>
+        </dialog>
+
+        <!-- Reset dialog: clear only the filters or the entire saved state -->
+        <dialog
+            id="reset-dialog"
+            class="dialog reset-dialog"
+            popover
+        >
+            <header class="dialog-header">
+                <h1 class="dialog-title">Zurücksetzen</h1>
+                <button
+                    class="btn slim material-symbols dialog-close"
+                    popovertarget="reset-dialog"
+                    popovertargetaction="hide"
+                    aria-label="Dialog schließen"
+                >
+                    close
+                </button>
+            </header>
+            <div class="dialog-body">
+                <p class="reset-hint">Wähle, was zurückgesetzt werden soll.</p>
+                <button
+                    id="reset-filters-option"
+                    class="btn ghost reset-option"
+                    type="button"
+                >
+                    <span class="material-symbols">filter_alt_off</span>
+                    Nur Filter zurücksetzen
+                </button>
+                <button
+                    id="reset-state-option"
+                    class="btn danger reset-option"
+                    type="button"
+                >
+                    <span class="material-symbols">delete_forever</span>
+                    Gespeicherten Zustand löschen
+                </button>
+            </div>
         </dialog>
 
         <!-- Transient notifications, filled by the behaviour layer -->

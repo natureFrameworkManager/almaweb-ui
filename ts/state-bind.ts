@@ -13,9 +13,11 @@ import { switchMainView, switchViewMode } from "./layout";
 import { isSaved, toggleSaved } from "./saved";
 import {
     applyShareState,
+    clearStoredState,
     createSaveSlot,
     createSlotId,
     DEFAULT_SLOT_ID,
+    defaultState,
     getActiveSlot,
     getState,
     hasSharedState,
@@ -1000,6 +1002,7 @@ export function initStateBindings(): void {
     initSlotControls();
     initConfirmDialog();
     initShareButton();
+    initResetDialog();
 }
 
 /** Re-apply the filters after asynchronous option loading and reload the data. */
@@ -1359,5 +1362,53 @@ async function shareState(): Promise<void> {
 function initShareButton(): void {
     document.getElementById("share-button")?.addEventListener("click", () => {
         void shareState();
+    });
+}
+
+/** Reset every filter control to its default and reload the filtered data. */
+function resetFilters(): void {
+    updateState((state) => {
+        state.filters = defaultState().filters;
+    });
+    applyFilterState(getState());
+    validateFilterRanges();
+    requeryAll();
+    showToast("Filter zurückgesetzt.", "info");
+}
+
+/** Clear the persisted state and restore every setting to its default. */
+function resetSavedState(): void {
+    clearStoredState();
+    if (hasSharedState()) {
+        globalThis.history.replaceState(null, "", globalThis.location.pathname);
+    }
+    const state = setState(defaultState());
+    applyState(state);
+    requeryAll();
+    syncSaveButtons();
+    void refreshCalendarEvents();
+    showToast("Gespeicherter Zustand gelöscht.", "info");
+}
+
+/** Wire the reset dialog and its two reset scopes. */
+function initResetDialog(): void {
+    const dialog = document.getElementById("reset-dialog");
+    document.getElementById("reset-filters-option")?.addEventListener("click", () => {
+        dialog?.hidePopover();
+        resetFilters();
+    });
+    document.getElementById("reset-state-option")?.addEventListener("click", () => {
+        dialog?.hidePopover();
+        openConfirm(
+            {
+                title: "Gespeicherten Zustand löschen",
+                message:
+                    "Alle Einstellungen, Filter und gespeicherten Daten werden zurückgesetzt.",
+                detail:
+                    "Theme, Sprache, Ansicht, Kalender, Filter und alle Save-Slots kehren zu den Standardwerten zurück.",
+                acceptLabel: "Zurücksetzen",
+            },
+            resetSavedState,
+        );
     });
 }

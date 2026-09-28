@@ -361,6 +361,15 @@ export function saveState(state: UIState): void {
     }
 }
 
+/** Remove the persisted state document from local storage. */
+export function clearStoredState(): void {
+    try {
+        localStorage.removeItem(STATE_STORAGE_KEY);
+    } catch (error) {
+        console.error("Failed to clear UI state:", error);
+    }
+}
+
 /** In-memory state document shared across the application. */
 let currentState: UIState | null = null;
 
