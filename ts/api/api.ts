@@ -10,7 +10,8 @@ import type {
     EventType,
     Faculty,
     PagedResponse,
-    ModuleDetail,} from "./types";
+    ModuleDetail,
+} from "./types";
 
 const host = "https://api.casparkroll.de/almaweb/v1";
 
@@ -515,5 +516,7 @@ export async function getExamTypes(
  * @returns The module detail response data.
  */
 export async function getModuleDetail(id: string): Promise<ModuleDetail> {
-    return fetchApi(`/modules/${id}?include=faculty&include=semesters&include=courses&include=courses.staff&include=courses.events&include=courses.events.location&include=courses.events.location.building&include=courses.events.staff&include=exams&include=exams.staff`);
+    return fetchApi(
+        `/modules/${id}?include=faculty&include=semesters&include=courses&include=courses.type&include=courses.staff&include=courses.events&include=courses.events.location&include=courses.events.location.building&include=courses.events.staff&include=exams&include=exams.staff`,
+    );
 }

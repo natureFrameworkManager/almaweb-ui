@@ -116,7 +116,7 @@ export interface ModuleDetail extends Module {
     content: string;
     goals: string;
     exam_prerequisites: string;
-    prerequisites: { mandatory: string } | null;
+    prerequisites: Record<string, string> | null;
     faculty_id: number;
     faculty: Faculty;
     semesters: Semester[];

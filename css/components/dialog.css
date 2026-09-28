@@ -100,17 +100,29 @@
 
 /* Scrollable wrapper + generic data table for the linked data. */
 .table-wrap {
-    @apply overflow-x-auto rounded-md border border-border;
+    @apply max-h-[60vh] overflow-auto rounded-md border border-border;
+    scrollbar-gutter: stable;
 }
 .table-wrap > table {
-    @apply w-full border-collapse text-body-small;
+    @apply w-full border-collapse text-body-medium;
 }
 .table-wrap > table th {
-    @apply border-b border-border px-2 py-1 text-left text-label-medium font-semibold text-nowrap;
-    @apply bg-primary/5 dark:bg-primary/15;
+    @apply sticky top-0 z-10 border-b border-border px-3 py-2 text-left text-label-large font-semibold text-nowrap;
+    background-color: color-mix(in oklab, var(--color-primary) 12%, var(--color-background));
+}
+.table-wrap > table th.sortable {
+    @apply cursor-pointer select-none;
+    @apply hover:text-primary;
+}
+.table-wrap > table th .sort-marker {
+    @apply ms-1 text-text/40;
+}
+.table-wrap > table th.sorted-asc .sort-marker,
+.table-wrap > table th.sorted-desc .sort-marker {
+    @apply text-primary;
 }
 .table-wrap > table td {
-    @apply border-b border-border px-2 py-1 align-top;
+    @apply border-b border-border px-3 py-2 align-top;
 }
 .table-wrap > table tbody tr:last-child td {
     @apply border-b-0;

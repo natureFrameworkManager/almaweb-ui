@@ -10,6 +10,7 @@ import type {
     Semester,
     Staff,
 } from "../api/types";
+import { formatDate, formatTimeRange as formatTimeSpan } from "./formatters";
 import { isSaved, toggleSaved } from "../saved";
 import { normalizePath } from "../tree";
 
@@ -21,14 +22,15 @@ type Column<T> = {
     label: string;
     value: (row: T) => string;
     title?: (row: T) => string;
+    sortValue?: (row: T) => string | number;
 };
 
-/** A staff member together with every linked entity name. */
+/** A staff member together with the entities they are linked to. */
 type StaffUsage = {
     staff: Staff;
-    courses: string[];
-    events: string[];
-    exams: string[];
+    courses: Map<number, string>;
+    events: Map<number, string>;
+    exams: Map<number, string>;
 };
 
 /** A location together with the names of the courses that use it. */
@@ -62,11 +64,20 @@ function displayText(value: unknown): string {
  * @param end - End time.
  * @returns The formatted time range.
  */
-function formatTimeRange(start: string | null, end: string | null): string {
+function formatTime(start: string | null, end: string | null): string {
     if (start && end) {
-        return `${start} - ${end}`;
+        return formatTimeSpan(start, end);
     }
     return displayText(start ?? end);
+}
+
+/**
+ * Format an ISO date for display.
+ * @param date - ISO date value.
+ * @returns The formatted date or the empty placeholder.
+ */
+function formatDateValue(date: string | null): string {
+    return date ? formatDate(date) : EMPTY_VALUE;
 }
 
 /**
@@ -106,20 +117,16 @@ function createSaveButtonContent(icon: string, label: string): DocumentFragment 
 }
 
 /**
- * Create a table head for the given columns.
- * @param columns - Column definitions.
- * @returns The table head element.
+ * Compare two sortable values.
+ * @param a - First value.
+ * @param b - Second value.
+ * @returns The comparison result.
  */
-function createTableHead<T>(columns: Column<T>[]): HTMLTableSectionElement {
-    const thead = document.createElement("thead");
-    const row = document.createElement("tr");
-    columns.forEach((column) => {
-        const th = document.createElement("th");
-        th.textContent = column.label;
-        row.appendChild(th);
-    });
-    thead.appendChild(row);
-    return thead;
+function compareValues(a: string | number, b: string | number): number {
+    if (typeof a === "number" && typeof b === "number") {
+        return a - b;
+    }
+    return String(a).localeCompare(String(b), "de", { numeric: true });
 }
 
 /**
@@ -162,23 +169,90 @@ function createEmptyRow(columnCount: number): HTMLTableRowElement {
 }
 
 /**
- * Create a bordered, scrollable data table.
+ * Sort rows by a column.
+ * @param rows - Row items.
+ * @param column - Column to sort by.
+ * @param ascending - Whether to sort ascending.
+ * @returns The sorted rows.
+ */
+function sortRows<T>(rows: T[], column: Column<T>, ascending: boolean): T[] {
+    const key = column.sortValue ?? column.value;
+    return [...rows].sort((a, b) => {
+        const result = compareValues(key(a), key(b));
+        return ascending ? result : -result;
+    });
+}
+
+/**
+ * Create a sortable, scrollable data table. Columns without any value are hidden.
  * @param columns - Column definitions.
  * @param rows - Row items.
+ * @param defaultSort - Label of the column sorted initially.
  * @returns The table wrapper.
  */
-function createTable<T>(columns: Column<T>[], rows: T[]): HTMLDivElement {
+function createTable<T>(columns: Column<T>[], rows: T[], defaultSort?: string): HTMLDivElement {
+    const visibleColumns = columns.filter(
+        (column) => rows.length === 0 || rows.some((row) => column.value(row) !== EMPTY_VALUE),
+    );
     const wrap = document.createElement("div");
     wrap.className = "table-wrap";
     const table = document.createElement("table");
-    table.appendChild(createTableHead(columns));
+    const head = document.createElement("thead");
+    const headRow = document.createElement("tr");
     const tableBody = document.createElement("tbody");
-    if (rows.length === 0) {
-        tableBody.appendChild(createEmptyRow(columns.length));
-    }
-    rows.forEach((row) => tableBody.appendChild(createTableRow(columns, row)));
-    table.appendChild(tableBody);
+    let sortLabel = defaultSort ?? (visibleColumns[0] ? visibleColumns[0].label : "");
+    let ascending = true;
+
+    const renderBody = (): void => {
+        tableBody.replaceChildren();
+        const column = visibleColumns.find((entry) => entry.label === sortLabel);
+        const data = column ? sortRows(rows, column, ascending) : rows;
+        if (data.length === 0) {
+            tableBody.appendChild(createEmptyRow(visibleColumns.length));
+            return;
+        }
+        data.forEach((row) => tableBody.appendChild(createTableRow(visibleColumns, row)));
+    };
+
+    const updateHeaders = (): void => {
+        headRow.querySelectorAll<HTMLTableCellElement>("th").forEach((header) => {
+            const active = header.dataset["label"] === sortLabel;
+            header.classList.toggle("sorted-asc", active && ascending);
+            header.classList.toggle("sorted-desc", active && !ascending);
+            const marker = header.querySelector(".sort-marker");
+            if (marker) {
+                marker.textContent = active ? (ascending ? "↑" : "↓") : "";
+            }
+        });
+    };
+
+    visibleColumns.forEach((column) => {
+        const header = document.createElement("th");
+        header.className = "sortable";
+        header.dataset["label"] = column.label;
+        const label = document.createElement("span");
+        label.textContent = column.label;
+        const marker = document.createElement("span");
+        marker.className = "sort-marker";
+        header.append(label, marker);
+        header.addEventListener("click", () => {
+            if (sortLabel === column.label) {
+                ascending = !ascending;
+            } else {
+                sortLabel = column.label;
+                ascending = true;
+            }
+            renderBody();
+            updateHeaders();
+        });
+        headRow.appendChild(header);
+    });
+
+    head.appendChild(headRow);
+    table.append(head, tableBody);
     wrap.appendChild(table);
+    renderBody();
+    updateHeaders();
     return wrap;
 }
 
@@ -314,7 +388,10 @@ function collectBuildings(events: EventWithCourse[], exams: Exam[]): Building[] 
     const buildings = new Map<number, Building>();
     const add = (location: Location | undefined): void => {
         const building = location ? location.building : undefined;
-        if (building) {
+        const hasLabel = building
+            ? (building.name || building.short_name || building.address).length > 0
+            : false;
+        if (building && hasLabel) {
             buildings.set(building.id, building);
         }
     };
@@ -331,42 +408,52 @@ function collectBuildings(events: EventWithCourse[], exams: Exam[]): Building[] 
  */
 function collectStaff(detail: ModuleDetail, events: EventWithCourse[]): StaffUsage[] {
     const usages = new Map<number, StaffUsage>();
-    const add = (staff: Staff, group: "courses" | "events" | "exams", label: string): void => {
-        const usage = usages.get(staff.id) ?? { staff, courses: [], events: [], exams: [] };
-        const names = usage[group];
-        if (label.length > 0 && !names.includes(label)) {
-            names.push(label);
-        }
+    const add = (
+        staff: Staff,
+        group: "courses" | "events" | "exams",
+        id: number,
+        label: string,
+    ): void => {
+        const usage =
+            usages.get(staff.id) ??
+            ({ staff, courses: new Map(), events: new Map(), exams: new Map() } as StaffUsage);
+        usage[group].set(id, label);
         usages.set(staff.id, usage);
     };
     detail.courses.forEach((course) => {
-        (course.staff ?? []).forEach((staff) => add(staff, "courses", course.name));
+        (course.staff ?? []).forEach((staff) => add(staff, "courses", course.id, course.name));
     });
-    events.forEach(({ event }) => {
-        (event.staff ?? []).forEach((staff) => add(staff, "events", event.name));
+    events.forEach(({ event, course }) => {
+        (event.staff ?? []).forEach((staff) =>
+            add(staff, "events", event.id, event.name || course.name),
+        );
     });
     detail.exams.forEach((exam) => {
-        (exam.staff ?? []).forEach((staff) => add(staff, "exams", exam.name));
+        (exam.staff ?? []).forEach((staff) => add(staff, "exams", exam.id, exam.name));
     });
     return [...usages.values()];
 }
 
 /**
  * Format a list size for a table cell.
- * @param values - Names in the list.
+ * @param count - Number of items.
  * @returns The item count or the empty placeholder.
  */
-function countLabel(values: string[]): string {
-    return values.length > 0 ? String(values.length) : EMPTY_VALUE;
+function countLabel(count: number): string {
+    return count > 0 ? String(count) : EMPTY_VALUE;
 }
 
 /** Columns of the linked courses table. */
 const courseColumns: Column<CourseDetail>[] = [
     { label: "Nummer", value: (course) => displayText(course.number) },
     { label: "Name", value: (course) => displayText(course.name) },
-    { label: "Typ", value: (course) => displayText(course.type?.name) },
+    { label: "Typ", value: (course) => displayText(course.type ? course.type.name : "") },
     { label: "Tag", value: (course) => displayText(course.weekday) },
-    { label: "SWS", value: (course) => displayText(course.weekly_hours) },
+    {
+        label: "SWS",
+        value: (course) => displayText(course.weekly_hours),
+        sortValue: (course) => course.weekly_hours,
+    },
     { label: "Sprache", value: (course) => displayText(course.language) },
     { label: "Dozenten", value: (course) => staffNames(course.staff ?? []) },
 ];
@@ -374,17 +461,25 @@ const courseColumns: Column<CourseDetail>[] = [
 /** Columns of the linked exams table. */
 const examColumns: Column<Exam>[] = [
     { label: "Name", value: (exam) => displayText(exam.name) },
-    { label: "Datum", value: (exam) => displayText(exam.exam_date) },
-    { label: "Zeit", value: (exam) => formatTimeRange(exam.start_time, exam.end_time) },
+    {
+        label: "Datum",
+        value: (exam) => formatDateValue(exam.exam_date),
+        sortValue: (exam) => exam.exam_date ?? "",
+    },
+    { label: "Zeit", value: (exam) => formatTime(exam.start_time, exam.end_time) },
     { label: "Pflicht", value: (exam) => (exam.required ? "Ja" : "Nein") },
     { label: "Dozenten", value: (exam) => staffNames(exam.staff ?? []) },
 ];
 
 /** Columns of the linked events table. */
 const eventColumns: Column<EventWithCourse>[] = [
-    { label: "Datum", value: ({ event }) => displayText(event.event_date) },
-    { label: "Zeit", value: ({ event }) => formatTimeRange(event.start_time, event.end_time) },
-    { label: "Typ", value: ({ course }) => displayText(course.type?.name) },
+    {
+        label: "Datum",
+        value: ({ event }) => formatDateValue(event.event_date),
+        sortValue: ({ event }) => event.event_date ?? "",
+    },
+    { label: "Zeit", value: ({ event }) => formatTime(event.start_time, event.end_time) },
+    { label: "Typ", value: ({ course }) => displayText(course.type ? course.type.name : "") },
     { label: "Kurs", value: ({ course }) => displayText(course.name) },
     { label: "Ort", value: ({ event }) => displayText(event.location?.name) },
     { label: "Dozenten", value: ({ event }) => staffNames(event.staff ?? []) },
@@ -395,18 +490,21 @@ const staffColumns: Column<StaffUsage>[] = [
     { label: "Name", value: ({ staff }) => displayText(staff.name) },
     {
         label: "Kurse",
-        value: (usage) => countLabel(usage.courses),
-        title: (usage) => usage.courses.join(", "),
+        value: (usage) => countLabel(usage.courses.size),
+        title: (usage) => [...usage.courses.values()].join(", "),
+        sortValue: (usage) => usage.courses.size,
     },
     {
         label: "Veranstaltungen",
-        value: (usage) => countLabel(usage.events),
-        title: (usage) => usage.events.join(", "),
+        value: (usage) => countLabel(usage.events.size),
+        title: (usage) => [...usage.events.values()].join(", "),
+        sortValue: (usage) => usage.events.size,
     },
     {
         label: "Prüfungen",
-        value: (usage) => countLabel(usage.exams),
-        title: (usage) => usage.exams.join(", "),
+        value: (usage) => countLabel(usage.exams.size),
+        title: (usage) => [...usage.exams.values()].join(", "),
+        sortValue: (usage) => usage.exams.size,
     },
 ];
 
@@ -414,8 +512,16 @@ const staffColumns: Column<StaffUsage>[] = [
 const locationColumns: Column<LocationUsage>[] = [
     { label: "Name", value: ({ location }) => displayText(location.name) },
     { label: "Typ", value: ({ location }) => displayText(location.type) },
-    { label: "Plätze", value: ({ location }) => displayText(location.seats) },
-    { label: "Gebäude", value: ({ location }) => displayText(location.building?.name) },
+    {
+        label: "Plätze",
+        value: ({ location }) => displayText(location.seats),
+        sortValue: ({ location }) => location.seats ?? 0,
+    },
+    {
+        label: "Gebäude",
+        value: ({ location }) =>
+            displayText(location.building?.short_name || location.building?.name),
+    },
     { label: "Barrierefrei", value: ({ location }) => displayText(location.accessibility) },
     { label: "Kurse", value: ({ courses }) => displayText(courses.join(", ")) },
 ];
@@ -430,7 +536,11 @@ const buildingColumns: Column<Building>[] = [
 /** Columns of the linked semesters table. */
 const semesterColumns: Column<Semester>[] = [
     { label: "Name", value: (semester) => displayText(semester.name) },
-    { label: "Jahr", value: (semester) => displayText(semester.year) },
+    {
+        label: "Jahr",
+        value: (semester) => displayText(semester.year),
+        sortValue: (semester) => semester.year,
+    },
     { label: "Termin", value: (semester) => displayText(semester.term) },
 ];
 
@@ -450,6 +560,22 @@ function createDegreeColumns(detail: ModuleDetail): Column<Degree>[] {
                     : `Fakultät ${degree.faculty_id}`,
         },
     ];
+}
+
+/**
+ * Build the attribute rows for the module's prerequisites.
+ * @param detail - Module detail record.
+ * @returns The prerequisite attribute rows.
+ */
+function createPrerequisiteRows(detail: ModuleDetail): { label: string; value: string }[] {
+    const entries = Object.entries(detail.prerequisites ?? {});
+    if (entries.length === 0) {
+        return [{ label: "Zulassungsvoraussetzungen", value: EMPTY_VALUE }];
+    }
+    return entries.map(([degree, requirement]) => ({
+        label: degree,
+        value: displayText(requirement),
+    }));
 }
 
 /**
@@ -486,11 +612,8 @@ function createDetailsSections(detail: ModuleDetail): DocumentFragment {
                 { label: "Modulpfad", value: displayText(formatModulePath(detail)) },
                 { label: "Inhalte", value: displayText(detail.content) },
                 { label: "Qualifikationsziele", value: displayText(detail.goals) },
-                {
-                    label: "Zulassungsvoraussetzungen",
-                    value: displayText(detail.prerequisites ? detail.prerequisites.mandatory : ""),
-                },
                 { label: "Prüfungsvorleistungen", value: displayText(detail.exam_prerequisites) },
+                ...createPrerequisiteRows(detail),
             ]),
         ]),
     );
@@ -588,14 +711,14 @@ function renderDetail(detail: ModuleDetail): void {
 
     const contents: HTMLElement[] = [
         createTabContent("details", [createDetailsSections(detail)]),
-        createTabContent("courses", [createTable(courseColumns, detail.courses)]),
-        createTabContent("exams", [createTable(examColumns, detail.exams)]),
-        createTabContent("events", [createTable(eventColumns, events)]),
-        createTabContent("staff", [createTable(staffColumns, staff)]),
-        createTabContent("locations", [createTable(locationColumns, locations)]),
-        createTabContent("buildings", [createTable(buildingColumns, buildings)]),
-        createTabContent("degrees", [createTable(createDegreeColumns(detail), degrees)]),
-        createTabContent("semester", [createTable(semesterColumns, detail.semesters)]),
+        createTabContent("courses", [createTable(courseColumns, detail.courses, "Name")]),
+        createTabContent("exams", [createTable(examColumns, detail.exams, "Datum")]),
+        createTabContent("events", [createTable(eventColumns, events, "Datum")]),
+        createTabContent("staff", [createTable(staffColumns, staff, "Name")]),
+        createTabContent("locations", [createTable(locationColumns, locations, "Name")]),
+        createTabContent("buildings", [createTable(buildingColumns, buildings, "Name")]),
+        createTabContent("degrees", [createTable(createDegreeColumns(detail), degrees, "Name")]),
+        createTabContent("semester", [createTable(semesterColumns, detail.semesters, "Jahr")]),
     ];
 
     body.querySelectorAll(".tab-content").forEach((content) => content.remove());
