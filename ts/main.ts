@@ -35,6 +35,7 @@ import {
     wireFilterGroup,
 } from "./filters";
 import { getActiveMainView, switchMainView, switchViewMode } from "./layout";
+import { initState } from "./state";
 import { wireSwitcher } from "./switcher";
 import { handleThemeChange, initTheme } from "./theme";
 import {
@@ -83,9 +84,13 @@ function handleViewModeChange(): void {
     });
 }
 
+initState();
+
 registerCollections();
 initCollectionScrolling();
 initModuleDetail();
+
+// TODO: wire #share-button to writeStateToQuery() and #export-button to captureState() + a JSON download.
 
 wireSwitcher("#display-changer1", (view) => handlePaneView(1, view));
 wireSwitcher("#display-changer2", (view) => handlePaneView(2, view));

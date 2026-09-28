@@ -1,54 +1,57 @@
-/** Local storage key under which the saved data point keys are stored. */
-const STORAGE_KEY = "almaweb.saved";
+import { getActiveSlot, parseSavedKey, updateState, type SaveSlotEntry } from "./state";
 
 /**
- * Read the set of saved data point keys from local storage.
- * @returns The saved data point keys.
+ * Check whether two save slot entries refer to the same entity.
+ * @param a - First entry.
+ * @param b - Second entry.
+ * @returns Whether both entries match.
  */
-function readSaved(): Set<string> {
-    try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        return new Set<string>(raw ? (JSON.parse(raw) as string[]) : []);
-    } catch (error) {
-        console.error("Failed to read saved state:", error);
-        return new Set<string>();
-    }
+function matches(a: SaveSlotEntry, b: SaveSlotEntry): boolean {
+    return a.kind === b.kind && a.ref === b.ref;
 }
 
 /**
- * Persist the set of saved data point keys to local storage.
- * @param saved - Saved data point keys to store.
- */
-function writeSaved(saved: Set<string>): void {
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify([...saved]));
-    } catch (error) {
-        console.error("Failed to write saved state:", error);
-    }
-}
-
-/**
- * Check whether a data point is currently saved.
- * @param key - Data point key.
+ * Check whether a data point is saved in the active save slot.
+ * @param key - Data point key such as `module:2011`.
  * @returns Whether the data point is saved.
  */
 export function isSaved(key: string): boolean {
-    return readSaved().has(key);
+    const entry = parseSavedKey(key);
+    if (entry === null) {
+        return false;
+    }
+    const slot = getActiveSlot();
+    return slot ? slot.entries.some((item) => matches(item, entry)) : false;
 }
 
 /**
- * Toggle the saved state of a data point.
- * @param key - Data point key.
+ * Toggle the saved state of a data point inside the active save slot.
+ *
+ * Saving a data point adds it to the entries of the currently active save slot
+ * instead of a flat list, so switching slots changes what is reported as saved.
+ * @param key - Data point key such as `module:2011`.
  * @returns Whether the data point is saved after toggling.
  */
 export function toggleSaved(key: string): boolean {
-    const saved = readSaved();
-    const nowSaved = !saved.has(key);
-    if (nowSaved) {
-        saved.add(key);
-    } else {
-        saved.delete(key);
+    const entry = parseSavedKey(key);
+    if (entry === null) {
+        return false;
     }
-    writeSaved(saved);
+    let nowSaved = false;
+    updateState((state) => {
+        const slot = state.slots.items.find((item) => item.id === state.slots.active);
+        if (!slot) {
+            // TODO: select or create the active save slot once the slot dialog is wired.
+            return;
+        }
+        const index = slot.entries.findIndex((item) => matches(item, entry));
+        if (index >= 0) {
+            slot.entries.splice(index, 1);
+            nowSaved = false;
+        } else {
+            slot.entries.push(entry);
+            nowSaved = true;
+        }
+    });
     return nowSaved;
 }
