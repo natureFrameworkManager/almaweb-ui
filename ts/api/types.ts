@@ -22,13 +22,15 @@ export interface Course {
     id: number;
     name: string;
     number: string;
-    type: {
-        name: string;
-    };
+    type: EventType;
     weekday: string | null;
     weekly_hours: number;
     language: string;
     staff: Staff[];
+}
+
+export interface CourseDetail extends Course {
+    events: Event[];
 }
 
 export interface Event {
@@ -50,6 +52,7 @@ export interface Exam {
     end_time: string | null;
     required: boolean;
     staff: Staff[];
+    location?: Location;
 }
 
 export interface Staff {
@@ -95,6 +98,12 @@ export interface EventType {
     name: string;
 }
 
+export interface Degree {
+    id: number;
+    faculty_id: number;
+    name: string;
+}
+
 export interface PagedResponse<T> {
     count: number;
     page: number;
@@ -103,8 +112,15 @@ export interface PagedResponse<T> {
     items: T[];
 }
 
-export interface ModuleDetail extends Module { 
+export interface ModuleDetail extends Module {
+    content: string;
+    goals: string;
+    exam_prerequisites: string;
+    prerequisites: { mandatory: string } | null;
+    faculty_id: number;
+    faculty: Faculty;
     semesters: Semester[];
+    degrees?: Degree[];
     exams: Exam[];
-    courses: Course[];
+    courses: CourseDetail[];
 }

@@ -509,6 +509,11 @@ export async function getExamTypes(
     return fetchApi(appendQuery("/exams/distinct/fields?field=name", queryParams));
 }
 
+/**
+ * Fetch the full detail record of a single module.
+ * @param id - Module id.
+ * @returns The module detail response data.
+ */
 export async function getModuleDetail(id: string): Promise<ModuleDetail> {
     return fetchApi(`/modules/${id}?include=faculty&include=semesters&include=courses&include=courses.staff&include=courses.events&include=courses.events.location&include=courses.events.location.building&include=courses.events.staff&include=exams&include=exams.staff`);
 }
