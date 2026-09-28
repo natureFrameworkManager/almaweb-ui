@@ -128,7 +128,7 @@ export async function getModules(
         "/modules?include=faculty&include=courses&include=exams&fields=id&fields=name&fields=number&fields=language&fields=duration_semesters&fields=credits&fields=frequency&fields=path&fields=faculty.name&fields=courses.type&fields=exams.name&" +
             queryParams.toString(),
     );
-    return fetchLocal(`/ts/api/offline-data/modules.json?${queryParams.toString()}`); // fetchApi("/modules?include=faculty&include=courses&include=exams&fields=id&fields=name&fields=number&fields=language&fields=duration_semesters&fields=credits&fields=frequency&fields=path&fields=faculty.name&fields=courses.type&fields=exams.name");
+    return fetchApi(`/modules?include=faculty&include=courses&include=exams&fields=id&fields=name&fields=number&fields=language&fields=duration_semesters&fields=credits&fields=frequency&fields=path&fields=faculty.name&fields=courses.type&fields=exams.name&${queryParams.toString()}`);
 }
 
 /**
@@ -354,7 +354,7 @@ export async function getExams(
         "/exams?fields=id&fields=name&fields=exam_date&fields=start_time&fields=end_time&fields=required&fields=staff&" +
             queryParams.toString(),
     );
-    return fetchLocal("/ts/api/offline-data/exams.json"); // fetchApi("/exams?fields=id&fields=name&fields=exam_date&fields=start_time&fields=end_time&fields=required&fields=staff");
+    return fetchApi(`/exams?fields=id&fields=name&fields=exam_date&fields=start_time&fields=end_time&fields=required&fields=staff&${queryParams.toString()}`);
 }
 
 /**
