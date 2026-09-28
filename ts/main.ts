@@ -11,8 +11,32 @@ import "fullcalendar/skeleton.css";
 import "fullcalendar/themes/monarch/palettes/purple.css";
 import "fullcalendar/themes/monarch/theme.css";
 
-import type { Module, Course, Event, Exam, Staff, Location } from "./api/types";
-import { getCourses, getEvents, getExams, getModules, getStaff, getLocations } from "./api/api";
+import type {
+    Module,
+    Course,
+    Event,
+    Exam,
+    Staff,
+    Location,
+    Semester,
+    Faculty,
+    Building,
+    EventType,
+} from "./api/types";
+import {
+    getCourses,
+    getEvents,
+    getExams,
+    getModules,
+    getStaff,
+    getLocations,
+    getSemesters,
+    getFaculties,
+    getBuildings,
+    getEventTypes,
+    getModuleLanguages,
+    getExamTypes,
+} from "./api/api";
 
 const THEME_STORAGE_KEY = "almaweb-theme";
 
@@ -705,6 +729,198 @@ function switchViewMode(mode: "single" | "split" | "compare") {
     compareView.style.display = mode === "compare" ? "" : "none";
 }
 
+type FilterOption = {
+    value: string;
+    label: string;
+};
+
+/**
+ * Create the checkbox input for a filter option.
+ * @param optionId - Unique identifier for the checkbox input.
+ * @returns The created checkbox input.
+ */
+function createFilterCheckbox(optionId: string): HTMLInputElement {
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.id = optionId;
+    return input;
+}
+
+/**
+ * Create a single selectable checkbox filter option.
+ * @param optionId - Unique identifier for the option.
+ * @param label - Visible option label.
+ * @returns The created checkbox option.
+ */
+function createFilterCheckboxOption(optionId: string, label: string): HTMLLabelElement {
+    const option = document.createElement("label");
+    option.className = "checkbox-item";
+    option.htmlFor = optionId;
+    option.appendChild(createFilterCheckbox(optionId));
+    const text = document.createElement("span");
+    text.textContent = label;
+    option.appendChild(text);
+    return option;
+}
+
+/**
+ * Convert an option value into a safe identifier fragment.
+ * @param value - Raw option value.
+ * @returns A lowercase identifier without whitespace or special characters.
+ */
+function slugifyOptionValue(value: string): string {
+    return value
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+}
+
+/**
+ * Create a checkbox option with an identifier unique within its filter list.
+ * @param containerId - Identifier of the checkbox list container.
+ * @param option - Filter option to render.
+ * @param usedIds - Identifiers already assigned within the container.
+ * @returns The created checkbox option.
+ */
+function createFilterOptionItem(
+    containerId: string,
+    option: FilterOption,
+    usedIds: Set<string>,
+): HTMLLabelElement {
+    const baseId = `${containerId}-${slugifyOptionValue(option.value)}`;
+    const optionId = usedIds.has(baseId) ? `${baseId}-${usedIds.size}` : baseId;
+    usedIds.add(optionId);
+    return createFilterCheckboxOption(optionId, option.label);
+}
+
+/**
+ * Append generated options after the static default of a checkbox filter list.
+ * @param containerId - Identifier of the checkbox list container.
+ * @param options - Filter options to render.
+ */
+function appendCheckboxOptions(containerId: string, options: FilterOption[]): void {
+    const container = document.getElementById(containerId);
+    if (!container) {
+        console.error(`Filter container "#${containerId}" is missing.`);
+        return;
+    }
+    const usedIds = new Set<string>();
+    options
+        .map((option) => createFilterOptionItem(containerId, option, usedIds))
+        .forEach((option) => container.appendChild(option));
+}
+
+/**
+ * Create a single option element for a filter select.
+ * @param value - Option value.
+ * @param label - Visible option text.
+ * @returns The created option element.
+ */
+function createSelectOption(value: string, label: string): HTMLOptionElement {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = label;
+    return option;
+}
+
+/**
+ * Append generated options after the static default of a filter select.
+ * @param selectId - Identifier of the select element.
+ * @param options - Filter options to render.
+ */
+function appendSelectOptions(selectId: string, options: FilterOption[]): void {
+    const select = document.getElementById(selectId) as HTMLSelectElement | null;
+    if (!select) {
+        console.error(`Filter select "#${selectId}" is missing.`);
+        return;
+    }
+    options
+        .map((option) => createSelectOption(option.value, option.label))
+        .forEach((option) => select.appendChild(option));
+}
+
+/**
+ * Convert semester records into filter options, newest semester first.
+ * @param semesters - Semester records.
+ * @returns The semester filter options.
+ */
+function toSemesterOptions(semesters: Semester[]): FilterOption[] {
+    return semesters
+        .sort((a, b) => b.year - a.year || b.term.localeCompare(a.term))
+        .map((semester) => ({ value: String(semester.id), label: semester.name }));
+}
+
+/**
+ * Convert faculty records into filter options.
+ * @param faculties - Faculty records.
+ * @returns The faculty filter options.
+ */
+function toFacultyOptions(faculties: Faculty[]): FilterOption[] {
+    return faculties
+        .sort((a, b) => a.id - b.id)
+        .map((faculty) => ({ value: String(faculty.id), label: faculty.name }));
+}
+
+/**
+ * Convert catalog event type records into filter options.
+ * @param eventTypes - Event type records.
+ * @returns The event type filter options.
+ */
+function toEventTypeOptions(eventTypes: EventType[]): FilterOption[] {
+    return eventTypes
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map((eventType) => ({ value: String(eventType.id), label: eventType.name }));
+}
+
+/**
+ * Convert staff records into filter options.
+ * @param staff - Staff records.
+ * @returns The staff filter options.
+ */
+function toStaffOptions(staff: Staff[]): FilterOption[] {
+    return staff
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map((member) => ({ value: String(member.id), label: member.name }));
+}
+
+/**
+ * Convert building records into filter options.
+ * @param buildings - Building records.
+ * @returns The building filter options.
+ */
+function toBuildingOptions(buildings: Building[]): FilterOption[] {
+    return buildings
+        .filter((building) => building.name)
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map((building) => ({ value: String(building.id), label: building.name }));
+}
+
+/**
+ * Convert distinct module language records into filter options.
+ * @param languages - Distinct module language records.
+ * @returns The language filter options.
+ */
+function toLanguageOptions(languages: { language: string }[]): FilterOption[] {
+    return languages
+        .map((entry) => entry.language)
+        .filter((language) => language)
+        .sort((a, b) => a.localeCompare(b))
+        .map((language) => ({ value: language, label: language }));
+}
+
+/**
+ * Convert distinct exam name records into filter options.
+ * @param examTypes - Distinct exam name records.
+ * @returns The exam type filter options.
+ */
+function toExamTypeOptions(examTypes: { name: string }[]): FilterOption[] {
+    return examTypes
+        .map((entry) => entry.name)
+        .filter((name) => name)
+        .sort((a, b) => a.localeCompare(b))
+        .map((name) => ({ value: name, label: name }));
+}
+
 // Marks the clicked item as active (and its siblings as inactive) within a single switcher nav
 /**
  * Connect a navigation switcher to an optional selection callback.
@@ -782,7 +998,7 @@ getExams()
         console.error("Failed to fetch exams:", error);
     });
 
-getEvents()
+/* getEvents()
     .then((events) => {
         const sortedEvents = events.items.sort((a, b) => a.event_date.localeCompare(b.event_date));
         renderEntities("events", sortedEvents, eventToView);
@@ -796,7 +1012,7 @@ getEvents()
     })
     .catch((error) => {
         console.error("Failed to fetch events:", error);
-    });
+    }); */
 
 getStaff()
     .then((staff) => {
@@ -805,6 +1021,8 @@ getStaff()
             staff.items.sort((a, b) => a.name.localeCompare(b.name)),
             staffToView,
         );
+        appendCheckboxOptions("filter-instructors", toStaffOptions(staff.items));
+        appendCheckboxOptions("filter-staff", toStaffOptions(staff.items));
     })
     .catch((error) => {
         console.error("Failed to fetch staff:", error);
@@ -820,4 +1038,54 @@ getLocations()
     })
     .catch((error) => {
         console.error("Failed to fetch locations:", error);
+    });
+
+getSemesters()
+    .then((semesters) => {
+        appendCheckboxOptions("filter-semester", toSemesterOptions(semesters.items));
+    })
+    .catch((error) => {
+        console.error("Failed to fetch semesters:", error);
+    });
+
+getFaculties()
+    .then((faculties) => {
+        appendCheckboxOptions("filter-faculty", toFacultyOptions(faculties.items));
+    })
+    .catch((error) => {
+        console.error("Failed to fetch faculties:", error);
+    });
+
+getEventTypes()
+    .then((eventTypes) => {
+        appendCheckboxOptions("filter-type", toEventTypeOptions(eventTypes.items));
+    })
+    .catch((error) => {
+        console.error("Failed to fetch event types:", error);
+    });
+
+getBuildings()
+    .then((buildings) => {
+        const options = toBuildingOptions(buildings.items);
+        appendCheckboxOptions("filter-buildings", options);
+        appendSelectOptions("filter-event-buildings", options);
+    })
+    .catch((error) => {
+        console.error("Failed to fetch buildings:", error);
+    });
+
+getModuleLanguages()
+    .then((languages) => {
+        appendCheckboxOptions("filter-language", toLanguageOptions(languages.items));
+    })
+    .catch((error) => {
+        console.error("Failed to fetch languages:", error);
+    });
+
+getExamTypes()
+    .then((examTypes) => {
+        appendCheckboxOptions("filter-examtypes", toExamTypeOptions(examTypes.items));
+    })
+    .catch((error) => {
+        console.error("Failed to fetch exam types:", error);
     });
