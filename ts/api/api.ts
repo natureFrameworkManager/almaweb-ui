@@ -443,6 +443,10 @@ export async function getEventTypes(): Promise<{
     return fetchApi("/catalog/event-types");
 }
 
+/**
+ * Fetch the distinct module languages from the API.
+ * @returns The distinct module language response data.
+ */
 export async function getModuleLanguages(): Promise<{
     count: number;
     page: number;
@@ -453,6 +457,10 @@ export async function getModuleLanguages(): Promise<{
     return fetchApi("/modules/distinct/fields?field=language");
 }
 
+/**
+ * Fetch the distinct exam types from the API.
+ * @returns The distinct exam type response data.
+ */
 export async function getExamTypes(): Promise<{
     count: number;
     page: number;
