@@ -41,6 +41,7 @@ import {
     loadInitialState,
     refreshStateFilters,
     registerCalendarLoader,
+    syncSortSummary,
 } from "./state-bind";
 import { wireSwitcher } from "./switcher";
 import { handleThemeChange, initTheme } from "./theme";
@@ -105,8 +106,14 @@ wireSwitcher("#view-switcher", (view) => {
         handleViewModeChange();
     }
 });
-wireSwitcher("#type-switcher1", (type) => setActiveType(1, type));
-wireSwitcher("#type-switcher2", (type) => setActiveType(2, type));
+wireSwitcher("#type-switcher1", (type) => {
+    setActiveType(1, type);
+    syncSortSummary(1);
+});
+wireSwitcher("#type-switcher2", (type) => {
+    setActiveType(2, type);
+    syncSortSummary(2);
+});
 initTheme();
 initStateBindings();
 

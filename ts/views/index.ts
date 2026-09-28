@@ -11,6 +11,7 @@ export {
     COLLECTION_PAGE_SIZE,
     ensureCollection,
     ensurePaneCollections,
+    getActiveType,
     getCachedEntityView,
     getCachedEntityViews,
     initCollectionScrolling,

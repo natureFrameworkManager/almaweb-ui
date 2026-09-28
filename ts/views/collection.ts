@@ -1,6 +1,8 @@
 import type { PagedResponse } from "../api/types";
 import { reportError, setPlaceholderVisible } from "../feedback";
 import { getActiveMainView, isPaneVisible } from "../layout";
+import { getState } from "../state";
+import { compareItems, parseSortLevels, type SortLevel } from "../sort";
 import { syncEntityContainer, type EntityKind, type EntityView } from "./entity-view";
 
 /** Number of entities requested per page. */
@@ -53,6 +55,28 @@ const collections = new Map<string, Collection>();
 
 /** Entity type currently selected in each pane. */
 const activeTypes: Record<1 | 2, string> = { 1: "modules", 2: "modules" };
+
+/**
+ * Read the entity type currently selected in a pane.
+ * @param paneId - Pane identifier.
+ * @returns The active entity type selector value.
+ */
+export function getActiveType(paneId: 1 | 2): string {
+    return activeTypes[paneId];
+}
+
+/**
+ * Read the multi-level sort configured for the pane showing an entity type.
+ *
+ * The backend accepts a single sort column, so the first level is forwarded
+ * there while every level is applied on the client (see {@link compareItems}).
+ * @param type - Entity type selector value.
+ * @returns The configured sort levels, or an empty list when unsorted.
+ */
+function activeSortLevels(type: string): SortLevel[] {
+    const paneId = ([1, 2] as const).find((id) => activeTypes[id] === type);
+    return paneId === undefined ? [] : parseSortLevels(getState().display.panes[paneId].sort);
+}
 
 /**
  * Register a paged collection for an entity type.
@@ -228,7 +252,12 @@ async function loadNextPage(type: string): Promise<void> {
         if (generation !== collection.generation) {
             return;
         }
-        const pageViews = [...response.items].sort(collection.sort).map(collection.toView);
+        const levels = activeSortLevels(type);
+        const comparator =
+            levels.length > 0
+                ? (a: unknown, b: unknown) => compareItems(a, b, levels, type)
+                : collection.sort;
+        const pageViews = [...response.items].sort(comparator).map(collection.toView);
         collection.views.push(...pageViews);
         collection.page = nextPage;
         collection.totalPages = response.total_pages;

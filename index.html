@@ -569,8 +569,12 @@
                 <div
                     class="multi-level-sort"
                     id="multi-level-sort1"
+                    role="button"
+                    tabindex="0"
+                    aria-label="Sortierung bearbeiten"
                 >
-                    <span>Sortieren nach</span>
+                    <span class="material-symbols">sort</span>
+                    <span class="sort-summary">Sortieren nach</span>
                 </div>
             </header>
             <div
@@ -902,8 +906,12 @@
                 <div
                     class="multi-level-sort"
                     id="multi-level-sort2"
+                    role="button"
+                    tabindex="0"
+                    aria-label="Sortierung bearbeiten"
                 >
-                    <span>Sortieren nach</span>
+                    <span class="material-symbols">sort</span>
+                    <span class="sort-summary">Sortieren nach</span>
                 </div>
             </header>
             <div
@@ -1857,6 +1865,72 @@
                     Gespeicherten Zustand löschen
                 </button>
             </div>
+        </dialog>
+
+        <!-- Sort dialog: build a multi-level sort for the active pane -->
+        <dialog
+            id="sort-dialog"
+            class="dialog sort-dialog"
+            popover
+        >
+            <header class="dialog-header">
+                <h1 class="dialog-title">Sortieren</h1>
+                <button
+                    class="btn slim material-symbols dialog-close"
+                    popovertarget="sort-dialog"
+                    popovertargetaction="hide"
+                    aria-label="Dialog schließen"
+                >
+                    close
+                </button>
+            </header>
+            <div class="dialog-body">
+                <p class="sort-hint">
+                    Ebenen werden von oben nach unten angewendet. Die erste Ebene erhält auch der
+                    Server; die übrigen sortiert der Client.
+                </p>
+                <ul
+                    class="sort-level-list"
+                    id="sort-level-list"
+                ></ul>
+                <p
+                    class="sort-empty"
+                    id="sort-empty"
+                >
+                    Noch keine Sortier-Ebene – es gilt die Standardreihenfolge.
+                </p>
+                <button
+                    id="sort-level-add"
+                    class="btn ghost"
+                    type="button"
+                >
+                    <span class="material-symbols">add</span>Ebene hinzufügen
+                </button>
+            </div>
+            <footer class="dialog-footer">
+                <button
+                    id="sort-reset"
+                    class="btn ghost"
+                    type="button"
+                >
+                    Zurücksetzen
+                </button>
+                <span class="spacer"></span>
+                <button
+                    class="btn ghost"
+                    popovertarget="sort-dialog"
+                    popovertargetaction="hide"
+                >
+                    Abbrechen
+                </button>
+                <button
+                    id="sort-apply"
+                    class="btn"
+                    type="button"
+                >
+                    <span class="material-symbols">check</span>Übernehmen
+                </button>
+            </footer>
         </dialog>
 
         <!-- Transient notifications, filled by the behaviour layer -->

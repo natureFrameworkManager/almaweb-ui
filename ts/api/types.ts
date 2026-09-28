@@ -167,6 +167,9 @@ export interface PagedResponse<T> {
     items: T[];
 }
 
+/** Sort direction accepted by the API `order` query parameter. */
+export type SortOrder = "asc" | "desc";
+
 export interface ModuleDetail extends Module {
     content: string;
     goals: string;

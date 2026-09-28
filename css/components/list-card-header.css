@@ -13,8 +13,12 @@ header.list-card-view-header div.type-switcher span.active {
     @apply border-b-2 border-primary;
 }
 header.list-card-view-header div.multi-level-sort {
-    @apply cursor-pointer;
+    @apply flex cursor-pointer flex-row items-center gap-x-1;
     @apply border border-border;
     @apply rounded-md px-2 py-1;
     @apply bg-background text-text;
+    @apply hover:border-primary;
+}
+header.list-card-view-header div.multi-level-sort span.material-symbols {
+    @apply text-[18px];
 }

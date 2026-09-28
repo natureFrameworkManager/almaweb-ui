@@ -1,0 +1,32 @@
+/*
+ * Sort dialog: lets the user build a multi-level sort for a pane. It reuses the
+ * shared .dialog shell and only adds the sort level rows.
+ */
+.sort-dialog {
+    @apply w-[min(560px,92vw)];
+}
+.sort-dialog > div.dialog-body {
+    @apply gap-y-3;
+}
+.sort-dialog .sort-hint {
+    @apply m-0 text-body-medium text-text/70;
+}
+.sort-dialog .sort-level-list {
+    @apply m-0 flex list-none flex-col gap-y-2 p-0;
+}
+.sort-dialog .sort-level {
+    @apply flex flex-row items-center gap-x-2 rounded-md border border-border px-2 py-2;
+}
+.sort-dialog .sort-level .sort-index {
+    @apply w-5 shrink-0 text-center text-label-large font-semibold text-text/60;
+}
+.sort-dialog .sort-level .sort-field {
+    @apply min-w-0 flex-1;
+}
+.sort-dialog .sort-level .sort-dir,
+.sort-dialog .sort-level .sort-remove {
+    @apply shrink-0;
+}
+.sort-dialog .sort-empty {
+    @apply m-0 text-body-small text-text/60;
+}

@@ -2,11 +2,14 @@ import { getCourses, getExams, getLocations, getModules, getStaff } from "../api
 import type { Course, Exam, Location, Module, PagedResponse, Staff } from "../api/types";
 import { setPlaceholderVisible } from "../feedback";
 import { getActiveMainView } from "../layout";
+import { getState } from "../state";
+import { parseSortLevels, type SortLevel } from "../sort";
 import { clearTree, displayTree } from "../tree";
 import {
     COLLECTION_PAGE_SIZE,
     courseToView,
     examToView,
+    getActiveType,
     locationToView,
     moduleToView,
     registerCollection,
@@ -160,6 +163,21 @@ function byName(a: NamedRecord, b: NamedRecord): number {
 const TREE_PAGE_SIZE = 500;
 
 /**
+ * Read the primary sort level of the first pane showing an entity type.
+ *
+ * The API only accepts a single sort column, so the client forwards the primary
+ * level to the backend and applies the remaining levels itself.
+ * @param type - Entity type selector value.
+ * @returns The sort column and direction, or empty defaults when unsorted.
+ */
+function backendSort(type: string): { sort?: string; order?: "asc" | "desc" } {
+    const state = getState();
+    const paneId = ([1, 2] as const).find((id) => getActiveType(id) === type) ?? 1;
+    const level: SortLevel | undefined = parseSortLevels(state.display.panes[paneId].sort)[0];
+    return level ? { sort: level.field, order: level.direction } : {};
+}
+
+/**
  * Fetch one page of modules using the current filter values.
  * @param page - Page number to load.
  * @param pageSize - Number of modules per page.
@@ -169,6 +187,7 @@ function fetchModulePage(
     page: number,
     pageSize = COLLECTION_PAGE_SIZE,
 ): Promise<PagedResponse<Module>> {
+    const { sort, order } = backendSort("modules");
     const credits = getNumericRange("filter-group-module", "Leistungspunkte");
     const duration = getNumericRange("filter-group-module", "Semesterdauer");
     return getModules(
@@ -184,6 +203,8 @@ function fetchModulePage(
         toOptionalNumbers(getCheckedValues("filter-semester")),
         page,
         pageSize,
+        sort,
+        order,
     );
 }
 
@@ -193,6 +214,7 @@ function fetchModulePage(
  * @returns The course page.
  */
 function fetchCoursePage(page: number): Promise<PagedResponse<Course>> {
+    const { sort, order } = backendSort("courses");
     const hours = getNumericRange("filter-group-course", "Wochenstunden");
     return getCourses(
         toOptionalValue(getInputValue("search-input-course")),
@@ -204,6 +226,8 @@ function fetchCoursePage(page: number): Promise<PagedResponse<Course>> {
         toOptionalNumbers(getCheckedValues("filter-semester")),
         page,
         COLLECTION_PAGE_SIZE,
+        sort,
+        order,
     );
 }
 
@@ -213,6 +237,7 @@ function fetchCoursePage(page: number): Promise<PagedResponse<Course>> {
  * @returns The exam page.
  */
 function fetchExamPage(page: number): Promise<PagedResponse<Exam>> {
+    const { sort, order } = backendSort("exams");
     const startTime = getRangeValues("filter-group-exam", "Start-Uhrzeit");
     const endTime = getRangeValues("filter-group-exam", "End-Uhrzeit");
     const dates = getRangeValues("filter-group-exam", "Datumszeitraum");
@@ -229,6 +254,8 @@ function fetchExamPage(page: number): Promise<PagedResponse<Exam>> {
         toOptionalNumbers(getCheckedValues("filter-semester")),
         page,
         COLLECTION_PAGE_SIZE,
+        sort,
+        order,
     );
 }
 
@@ -238,7 +265,8 @@ function fetchExamPage(page: number): Promise<PagedResponse<Exam>> {
  * @returns The staff page.
  */
 function fetchStaffPage(page: number): Promise<PagedResponse<Staff>> {
-    return getStaff(page, COLLECTION_PAGE_SIZE);
+    const { sort, order } = backendSort("staff");
+    return getStaff(page, COLLECTION_PAGE_SIZE, sort, order);
 }
 
 /**
@@ -247,7 +275,8 @@ function fetchStaffPage(page: number): Promise<PagedResponse<Staff>> {
  * @returns The location page.
  */
 function fetchLocationPage(page: number): Promise<PagedResponse<Location>> {
-    return getLocations(page, COLLECTION_PAGE_SIZE);
+    const { sort, order } = backendSort("locations");
+    return getLocations(page, COLLECTION_PAGE_SIZE, sort, order);
 }
 
 /** Register the paged collections backing the list and card views. */

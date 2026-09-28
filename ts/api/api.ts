@@ -20,6 +20,7 @@ import type {
     FacultyDetail,
     SemesterDetail,
     DegreeDetail,
+    SortOrder,
 } from "./types";
 
 const host = "https://api.casparkroll.de/almaweb/v1";
@@ -68,6 +69,24 @@ function appendPaging(queryParams: URLSearchParams, page?: number, pageSize?: nu
 }
 
 /**
+ * Append the single backend sort level to a query.
+ *
+ * The API only supports one sort column, so the client sends the primary level
+ * and applies the remaining levels itself (see `ts/sort.ts`).
+ * @param queryParams - Query parameters to extend.
+ * @param sort - Optional sort column.
+ * @param order - Optional sort direction.
+ */
+function appendSort(queryParams: URLSearchParams, sort?: string, order?: SortOrder): void {
+    if (sort) {
+        queryParams.append("sort", sort);
+    }
+    if (order) {
+        queryParams.append("order", order);
+    }
+}
+
+/**
  * Append encoded query parameters to a URL.
  * @param url - Base URL, optionally already containing a query string.
  * @param queryParams - Query parameters to append.
@@ -95,6 +114,8 @@ function appendQuery(url: string, queryParams: URLSearchParams): string {
  * @param semester - Optional semester ID filter.
  * @param page - Optional one-based page number.
  * @param pageSize - Optional number of items per page.
+ * @param sort - Optional single sort column sent to the API.
+ * @param order - Optional sort direction sent to the API.
  * @returns The module response data.
  */
 export async function getModules(
@@ -110,6 +131,8 @@ export async function getModules(
     semester?: number | number[],
     page?: number,
     pageSize?: number,
+    sort?: string,
+    order?: SortOrder,
 ): Promise<PagedResponse<Module>> {
     const queryParams = new URLSearchParams();
     if (name) {
@@ -162,6 +185,7 @@ export async function getModules(
             queryParams.append("semester_id", semester.toString());
         }
     }
+    appendSort(queryParams, sort, order);
     appendPaging(queryParams, page, pageSize);
     return fetchApi(
         `/modules?include=faculty&include=courses&include=exams&fields=id&fields=name&fields=number&fields=language&fields=duration_semesters&fields=credits&fields=frequency&fields=path&fields=faculty.name&fields=courses.type&fields=exams.name&${queryParams.toString()}`,
@@ -179,6 +203,8 @@ export async function getModules(
  * @param semester - Optional semester ID filter.
  * @param page - Optional one-based page number.
  * @param pageSize - Optional number of items per page.
+ * @param sort - Optional single sort column sent to the API.
+ * @param order - Optional sort direction sent to the API.
  * @returns The course response data.
  */
 export async function getCourses(
@@ -191,6 +217,8 @@ export async function getCourses(
     semester?: number | number[],
     page?: number,
     pageSize?: number,
+    sort?: string,
+    order?: SortOrder,
 ): Promise<PagedResponse<Course>> {
     const queryParams = new URLSearchParams();
     if (name) {
@@ -235,8 +263,11 @@ export async function getCourses(
             queryParams.append("semester_id", semester.toString());
         }
     }
+    appendSort(queryParams, sort, order);
     appendPaging(queryParams, page, pageSize);
-    return fetchApi(`/courses?fields=id&fields=name&fields=number&fields=weekday&fields=weekly_hours&fields=language&fields=staff&fields=type.name&${queryParams.toString()}`);
+    return fetchApi(
+        `/courses?fields=id&fields=name&fields=number&fields=weekday&fields=weekly_hours&fields=language&fields=staff&fields=type.name&${queryParams.toString()}`,
+    );
 }
 
 /**
@@ -251,6 +282,8 @@ export async function getCourses(
  * @param semester - Optional semester ID filter.
  * @param page - Optional one-based page number.
  * @param pageSize - Optional number of items per page.
+ * @param sort - Optional single sort column sent to the API.
+ * @param order - Optional sort direction sent to the API.
  * @returns The event response data.
  */
 export async function getEvents(
@@ -264,6 +297,8 @@ export async function getEvents(
     semester?: number | number[],
     page?: number,
     pageSize?: number,
+    sort?: string,
+    order?: SortOrder,
 ): Promise<PagedResponse<Event>> {
     const queryParams = new URLSearchParams();
     if (startTimeMin) {
@@ -298,8 +333,11 @@ export async function getEvents(
             queryParams.append("semester_id", semester.toString());
         }
     }
+    appendSort(queryParams, sort, order);
     appendPaging(queryParams, page, pageSize);
-    return fetchApi(`events?fields=id&fields=number&fields=name&fields=start_time&fields=end_time&fields=event_date&fields=location&fields=location.building&fields=staff&${queryParams.toString()}`);
+    return fetchApi(
+        `events?fields=id&fields=number&fields=name&fields=start_time&fields=end_time&fields=event_date&fields=location&fields=location.building&fields=staff&${queryParams.toString()}`,
+    );
 }
 
 /**
@@ -344,6 +382,8 @@ export async function getCourseEvents(courseId: number): Promise<PagedResponse<E
  * @param semester - Optional semester ID filter.
  * @param page - Optional one-based page number.
  * @param pageSize - Optional number of items per page.
+ * @param sort - Optional single sort column sent to the API.
+ * @param order - Optional sort direction sent to the API.
  * @returns The exam response data.
  */
 export async function getExams(
@@ -359,6 +399,8 @@ export async function getExams(
     semester?: number | number[],
     page?: number,
     pageSize?: number,
+    sort?: string,
+    order?: SortOrder,
 ): Promise<PagedResponse<Exam>> {
     const queryParams = new URLSearchParams();
     if (startTimeMin) {
@@ -403,6 +445,7 @@ export async function getExams(
             queryParams.append("semester_id", semester.toString());
         }
     }
+    appendSort(queryParams, sort, order);
     appendPaging(queryParams, page, pageSize);
     return fetchApi(
         `/exams?fields=id&fields=name&fields=exam_date&fields=start_time&fields=end_time&fields=required&fields=staff&${queryParams.toString()}`,
@@ -413,10 +456,18 @@ export async function getExams(
  * Fetch staff data from the API.
  * @param page - Optional one-based page number.
  * @param pageSize - Optional number of items per page.
+ * @param sort - Optional single sort column sent to the API.
+ * @param order - Optional sort direction sent to the API.
  * @returns The staff response data.
  */
-export async function getStaff(page?: number, pageSize?: number): Promise<PagedResponse<Staff>> {
+export async function getStaff(
+    page?: number,
+    pageSize?: number,
+    sort?: string,
+    order?: SortOrder,
+): Promise<PagedResponse<Staff>> {
     const queryParams = new URLSearchParams();
+    appendSort(queryParams, sort, order);
     appendPaging(queryParams, page, pageSize);
     return fetchApi(appendQuery("/staff?fields=id&fields=name", queryParams));
 }
@@ -425,13 +476,18 @@ export async function getStaff(page?: number, pageSize?: number): Promise<PagedR
  * Fetch location data from the API.
  * @param page - Optional one-based page number.
  * @param pageSize - Optional number of items per page.
+ * @param sort - Optional single sort column sent to the API.
+ * @param order - Optional sort direction sent to the API.
  * @returns The location response data.
  */
 export async function getLocations(
     page?: number,
     pageSize?: number,
+    sort?: string,
+    order?: SortOrder,
 ): Promise<PagedResponse<Location>> {
     const queryParams = new URLSearchParams();
+    appendSort(queryParams, sort, order);
     appendPaging(queryParams, page, pageSize);
     return fetchApi(
         appendQuery(

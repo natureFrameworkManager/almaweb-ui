@@ -12,6 +12,14 @@ import { showToast } from "./feedback";
 import { switchMainView, switchViewMode } from "./layout";
 import { isSaved, toggleSaved } from "./saved";
 import {
+    describeSort,
+    parseSortLevels,
+    serializeSortLevels,
+    sortOptionsFor,
+    type SortLevel,
+    type SortOption,
+} from "./sort";
+import {
     applyShareState,
     clearStoredState,
     createSaveSlot,
@@ -45,7 +53,15 @@ import {
     type ViewMode,
 } from "./state";
 import { applyTheme } from "./theme";
-import { getCachedEntityView, getCachedEntityViews, setActiveType, type EntityView } from "./views";
+import {
+    createActionButton,
+    getActiveType,
+    getCachedEntityView,
+    getCachedEntityViews,
+    reloadCollection,
+    setActiveType,
+    type EntityView,
+} from "./views";
 
 /** Debounce delay before high-frequency control changes are captured. */
 const CAPTURE_DEBOUNCE_MS = 250;
@@ -412,6 +428,7 @@ function applyPaneState(paneId: PaneId, state: UIState): void {
     setActiveSwitcher(`#type-switcher${paneId}`, pane.type, "data-view");
     switchMainView(paneId, pane.mainView);
     setActiveType(paneId, pane.type);
+    syncSortSummary(paneId);
     if (pane.mainView === "tree") {
         void refreshTree(paneId);
     } else if (pane.mainView === "calendar") {
@@ -1003,6 +1020,7 @@ export function initStateBindings(): void {
     initConfirmDialog();
     initShareButton();
     initResetDialog();
+    initSortDialog();
 }
 
 /** Re-apply the filters after asynchronous option loading and reload the data. */
@@ -1351,10 +1369,7 @@ async function shareState(): Promise<void> {
         showToast("Link in die Zwischenablage kopiert.", "success");
     } catch (error) {
         console.warn("Failed to copy the share link:", error);
-        showToast(
-            "Link konnte nicht kopiert werden – die Adresse wurde aktualisiert.",
-            "error",
-        );
+        showToast("Link konnte nicht kopiert werden – die Adresse wurde aktualisiert.", "error");
     }
 }
 
@@ -1402,13 +1417,179 @@ function initResetDialog(): void {
         openConfirm(
             {
                 title: "Gespeicherten Zustand löschen",
-                message:
-                    "Alle Einstellungen, Filter und gespeicherten Daten werden zurückgesetzt.",
-                detail:
-                    "Theme, Sprache, Ansicht, Kalender, Filter und alle Save-Slots kehren zu den Standardwerten zurück.",
+                message: "Alle Einstellungen, Filter und gespeicherten Daten werden zurückgesetzt.",
+                detail: "Theme, Sprache, Ansicht, Kalender, Filter und alle Save-Slots kehren zu den Standardwerten zurück.",
                 acceptLabel: "Zurücksetzen",
             },
             resetSavedState,
         );
     });
+}
+
+/** Pane whose sort is currently edited in the sort dialog. */
+let sortPane: PaneId = 1;
+
+/** Working copy of the sort levels while the sort dialog is open. */
+let sortDraft: SortLevel[] = [];
+
+/**
+ * Update the sort summary shown in a pane header.
+ * @param paneId - Pane identifier.
+ */
+export function syncSortSummary(paneId: PaneId): void {
+    const levels = parseSortLevels(getState().display.panes[paneId].sort);
+    const summary = document.querySelector(`#multi-level-sort${paneId} .sort-summary`);
+    if (summary) {
+        summary.textContent =
+            levels.length > 0 ? describeSort(levels, getActiveType(paneId)) : "Sortieren nach";
+    }
+}
+
+/**
+ * Create one editable sort level row.
+ * @param level - Sort level to display.
+ * @param index - Position of the level.
+ * @param options - Selectable fields of the entity type.
+ * @returns The created list item.
+ */
+function createSortRow(level: SortLevel, index: number, options: SortOption[]): HTMLLIElement {
+    const item = document.createElement("li");
+    item.className = "sort-level";
+    const position = document.createElement("span");
+    position.className = "sort-index";
+    position.textContent = String(index + 1);
+    const select = document.createElement("select");
+    select.className = "sort-field";
+    select.dataset["sortIndex"] = String(index);
+    select.setAttribute("aria-label", "Sortierfeld");
+    options.forEach((option) => {
+        const entry = document.createElement("option");
+        entry.value = option.field;
+        entry.textContent = option.label;
+        entry.selected = option.field === level.field;
+        select.appendChild(entry);
+    });
+    const direction = createActionButton(
+        "btn slim material-symbols sort-dir",
+        level.direction === "asc" ? "arrow_upward" : "arrow_downward",
+    );
+    direction.dataset["sortIndex"] = String(index);
+    direction.setAttribute("aria-label", "Sortierrichtung wechseln");
+    const remove = createActionButton("btn slim material-symbols sort-remove", "close");
+    remove.dataset["sortIndex"] = String(index);
+    remove.setAttribute("aria-label", "Ebene entfernen");
+    item.append(position, select, direction, remove);
+    return item;
+}
+
+/** Render the working sort levels into the sort dialog. */
+function renderSortRows(): void {
+    const list = document.getElementById("sort-level-list");
+    if (!list) {
+        return;
+    }
+    const options = sortOptionsFor(getActiveType(sortPane));
+    list.replaceChildren(...sortDraft.map((level, index) => createSortRow(level, index, options)));
+    const empty = document.getElementById("sort-empty");
+    if (empty) {
+        empty.hidden = sortDraft.length > 0;
+    }
+}
+
+/**
+ * Open the sort dialog for a pane.
+ * @param paneId - Pane identifier.
+ */
+function openSortDialog(paneId: PaneId): void {
+    sortPane = paneId;
+    sortDraft = parseSortLevels(getState().display.panes[paneId].sort).map((level) => ({
+        ...level,
+    }));
+    renderSortRows();
+    document.getElementById("sort-dialog")?.showPopover();
+}
+
+/** Add the next unused sort field as a new level. */
+function addSortLevel(): void {
+    const options = sortOptionsFor(getActiveType(sortPane));
+    const used = new Set(sortDraft.map((level) => level.field));
+    const next = options.find((option) => !used.has(option.field)) ?? options[0];
+    if (next) {
+        sortDraft.push({ field: next.field, direction: "asc" });
+        renderSortRows();
+    }
+}
+
+/**
+ * Update a sort level when its field selection changes.
+ * @param event - Change event of a field select.
+ */
+function handleSortFieldChange(event: Event): void {
+    const target = event.target;
+    if (!(target instanceof HTMLSelectElement)) {
+        return;
+    }
+    const level = sortDraft[Number(target.dataset["sortIndex"])];
+    if (level) {
+        level.field = target.value;
+        renderSortRows();
+    }
+}
+
+/**
+ * Toggle the direction or remove a sort level from a click in its row.
+ * @param event - Click event inside the sort list.
+ */
+function handleSortRowClick(event: Event): void {
+    const target = event.target;
+    if (!(target instanceof Element)) {
+        return;
+    }
+    const direction = target.closest<HTMLElement>(".sort-dir");
+    const remove = target.closest<HTMLElement>(".sort-remove");
+    const level = sortDraft[Number((direction ?? remove)?.dataset["sortIndex"])];
+    if (!level) {
+        return;
+    }
+    if (direction) {
+        level.direction = level.direction === "asc" ? "desc" : "asc";
+        renderSortRows();
+    } else if (remove) {
+        sortDraft.splice(sortDraft.indexOf(level), 1);
+        renderSortRows();
+    }
+}
+
+/** Store the working sort levels for the active pane and reload its data. */
+function applySort(): void {
+    document.getElementById("sort-dialog")?.hidePopover();
+    updateState((state) => {
+        state.display.panes[sortPane].sort = serializeSortLevels(sortDraft);
+    });
+    syncSortSummary(sortPane);
+    reloadCollection(getActiveType(sortPane));
+    showToast("Sortierung angewendet.", "success");
+}
+
+/** Wire the sort dialog and the pane header sort controls. */
+function initSortDialog(): void {
+    ([1, 2] as const).forEach((paneId) => {
+        const control = document.getElementById(`multi-level-sort${paneId}`);
+        control?.addEventListener("click", () => openSortDialog(paneId));
+        control?.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                openSortDialog(paneId);
+            }
+        });
+    });
+    document.getElementById("sort-level-add")?.addEventListener("click", addSortLevel);
+    document.getElementById("sort-reset")?.addEventListener("click", () => {
+        sortDraft = [];
+        renderSortRows();
+    });
+    document.getElementById("sort-apply")?.addEventListener("click", applySort);
+    const list = document.getElementById("sort-level-list");
+    list?.addEventListener("change", handleSortFieldChange);
+    list?.addEventListener("click", handleSortRowClick);
 }

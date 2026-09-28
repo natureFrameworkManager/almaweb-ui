@@ -24,5 +24,6 @@
 @import "./components/detail-dialog.css";
 @import "./components/confirm-dialog.css";
 @import "./components/reset-dialog.css";
+@import "./components/sort-dialog.css";
 
 @import "./components/feedback.css";
