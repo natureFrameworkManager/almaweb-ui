@@ -1,4 +1,4 @@
-import type { Module, Course, Event, Exam, Staff, Location, Semester } from "./types";
+import type { Module, Course, Event, Exam, Staff, Location, Semester, Building, EventType, Faculty } from "./types";
 
 const host = "https://api.casparkroll.de/almaweb/v1";
 
@@ -364,6 +364,16 @@ export async function getLocations(): Promise<{
     );
 }
 
+export async function getBuildings(): Promise<{
+    count: number;
+    page: number;
+    limit: number;
+    total_pages: number;
+    items: Building[];
+}> {
+    return fetchApi("/buildings");
+}
+
 export async function getSemesters(): Promise<{
     count: number;
     page: number;
@@ -372,4 +382,24 @@ export async function getSemesters(): Promise<{
     items: Semester[];
 }> {
     return fetchApi("/semesters");
+}
+
+export async function getFaculties(): Promise<{
+    count: number;
+    page: number;
+    limit: number;
+    total_pages: number;
+    items: Faculty[];
+}> {
+    return fetchApi("/faculties");
+}
+
+export async function getEventTypes(): Promise<{
+    count: number;
+    page: number;
+    limit: number;
+    total_pages: number;
+    items: EventType[];
+}> {
+    return fetchApi("/catalog/event-types");
 }

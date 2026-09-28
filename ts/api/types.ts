@@ -14,10 +14,7 @@ export interface Module {
         name: string;
     }[];
     courses: {
-        type: {
-            id: number;
-            name: string;
-        };
+        type: EventType;
     }[];
 }
 
@@ -31,10 +28,7 @@ export interface Course {
     weekday: string | null;
     weekly_hours: number;
     language: string;
-    staff: {
-        id: number;
-        name: string;
-    }[];
+    staff: Staff[];
 }
 
 export interface Event {
@@ -44,27 +38,8 @@ export interface Event {
     start_time: string;
     end_time: string;
     event_date: string;
-    location: {
-        id: number;
-        name: string;
-        external_id: string;
-        description: string;
-        type: string;
-        seats: number;
-        size: number;
-        accessibility: string;
-        building_id: number;
-        building: {
-            id: number;
-            name: string;
-            short_name: string;
-            address: string;
-        };
-    };
-    staff: {
-        id: number;
-        name: string;
-    }[];
+    location: Location;
+    staff: Staff[];
 }
 
 export interface Exam {
@@ -74,10 +49,7 @@ export interface Exam {
     start_time: string | null;
     end_time: string | null;
     required: boolean;
-    staff: {
-        id: number;
-        name: string;
-    }[];
+    staff: Staff[];
 }
 
 export interface Staff {
@@ -95,12 +67,7 @@ export interface Location {
     size: number;
     accessibility: string;
     building_id: number;
-    building: {
-        id: number;
-        name: string;
-        short_name: string;
-        address: string;
-    };
+    building: Building;
 }
 
 export interface Semester {
@@ -108,4 +75,22 @@ export interface Semester {
     name: string;
     year: number;
     term: string;
+}
+
+export interface Faculty {
+    id: number;
+    name: string;
+    prefix: number;
+}
+
+export interface Building {
+    id: number;
+    name: string;
+    short_name: string;
+    address: string;
+}
+
+export interface EventType {
+    id: number;
+    name: string;
 }
