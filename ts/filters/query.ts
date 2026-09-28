@@ -1,5 +1,22 @@
-import { getCourses, getEvents, getExams, getLocations, getModules, getStaff } from "../api/api";
-import type { Course, Event, Exam, Location, Module, PagedResponse, Staff } from "../api/types";
+import {
+    getCourses,
+    getDegrees,
+    getEvents,
+    getExams,
+    getLocations,
+    getModules,
+    getStaff,
+} from "../api/api";
+import type {
+    Course,
+    Degree,
+    Event,
+    Exam,
+    Location,
+    Module,
+    PagedResponse,
+    Staff,
+} from "../api/types";
 import { setPlaceholderVisible } from "../feedback";
 import { getActiveMainView } from "../layout";
 import { getState } from "../state";
@@ -8,6 +25,7 @@ import { clearTree, displayTree } from "../tree";
 import {
     COLLECTION_PAGE_SIZE,
     courseToView,
+    degreeToView,
     eventToView,
     examToView,
     getActiveType,
@@ -18,6 +36,7 @@ import {
     staffToView,
     type EntityView,
 } from "../views";
+import { resolveStaffNames } from "./options";
 
 /** Debounce delay applied before re-querying filtered data. */
 const FILTER_DEBOUNCE_MS = 350;
@@ -281,6 +300,7 @@ function fetchExamPage(page: number): Promise<PagedResponse<Exam>> {
     const endTime = getRangeValues("filter-group-exam", "End-Uhrzeit");
     const dates = getRangeValues("filter-group-exam", "Datumszeitraum");
     return getExams(
+        toOptionalValue(getInputValue("search-input-exam")),
         toOptionalValue(startTime.min),
         toOptionalValue(startTime.max),
         toOptionalValue(endTime.min),
@@ -289,7 +309,7 @@ function fetchExamPage(page: number): Promise<PagedResponse<Exam>> {
         toOptionalValue(dates.max),
         toOptionalValues(getCheckedValues("filter-buildings")),
         isChecked("filter-exam-required") ? true : undefined,
-        toOptionalNumbers(getCheckedValues("filter-staff")),
+        resolveStaffNames(toOptionalNumbers(getCheckedValues("filter-staff")) ?? []),
         toOptionalNumbers(getCheckedValues("filter-semester")),
         page,
         COLLECTION_PAGE_SIZE,
@@ -319,6 +339,25 @@ function fetchLocationPage(page: number): Promise<PagedResponse<Location>> {
 }
 
 /**
+ * Fetch one page of degrees using the current filter values.
+ * @param page - Page number to load.
+ * @returns The degree page.
+ */
+function fetchDegreePage(page: number): Promise<PagedResponse<Degree>> {
+    const { sort, order } = backendSort("degrees");
+    return getDegrees(
+        toOptionalValue(getInputValue("search-input-degree")),
+        toOptionalValue(getInputValue("filter-degree-subject")),
+        toOptionalValues(getCheckedValues("filter-degree-types")),
+        undefined,
+        page,
+        COLLECTION_PAGE_SIZE,
+        sort,
+        order,
+    );
+}
+
+/**
  * Register a paged collection that is sorted by name on the client.
  * @param type - Entity type selector value.
  * @param fetchPage - Page fetcher using the current filter values.
@@ -340,6 +379,7 @@ export function registerCollections(): void {
     registerType("exams", fetchExamPage, examToView);
     registerType("staff", fetchStaffPage, staffToView);
     registerType("locations", fetchLocationPage, locationToView);
+    registerType("degrees", fetchDegreePage, degreeToView);
 }
 
 /** Re-query module data using the current filter values. */
@@ -364,12 +404,18 @@ export function requeryExams(): void {
     reloadCollection("exams");
 }
 
+/** Re-query degree data using the current filter values. */
+export function requeryDegrees(): void {
+    reloadCollection("degrees");
+}
+
 /** Re-query every filtered entity type using the current filter values. */
 export function requeryAll(): void {
     requeryModules();
     requeryCourses();
     requeryEvents();
     requeryExams();
+    requeryDegrees();
 }
 
 let treeModules: Module[] | null = null;

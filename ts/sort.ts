@@ -1,4 +1,4 @@
-import type { Course, Event, Exam, Location, Module, Staff } from "./api/types";
+import type { Course, Degree, Event, Exam, Location, Module, Staff } from "./api/types";
 import type { EntityType } from "./state";
 
 /** Sort direction of a single sort level. */
@@ -85,6 +85,16 @@ const LOCATION_OPTIONS: SortOption[] = [
     },
 ];
 
+/** Sortable fields of degrees, matching the API `sort` enum. */
+const DEGREE_OPTIONS: SortOption[] = [
+    { field: "name", label: "Name", value: (item) => (item as Degree).name },
+    { field: "subject", label: "Fach", value: (item) => (item as Degree).subject },
+    { field: "degree", label: "Abschluss", value: (item) => (item as Degree).degree },
+    { field: "school_type", label: "Schulart", value: (item) => (item as Degree).school_type },
+    { field: "ects", label: "Leistungspunkte", value: (item) => (item as Degree).ects },
+    { field: "version", label: "Version", value: (item) => (item as Degree).version },
+];
+
 /** Sortable fields per entity type. */
 export const SORT_OPTIONS: Record<EntityType, SortOption[]> = {
     modules: MODULE_OPTIONS,
@@ -93,6 +103,7 @@ export const SORT_OPTIONS: Record<EntityType, SortOption[]> = {
     exams: EXAM_OPTIONS,
     staff: STAFF_OPTIONS,
     locations: LOCATION_OPTIONS,
+    degrees: DEGREE_OPTIONS,
 };
 
 /**

@@ -43,7 +43,8 @@ export type PaneId = 1 | 2;
 export type MainView = "list" | "cards" | "calendar" | "tree";
 
 /** Entity types switchable inside a pane. */
-export type EntityType = "modules" | "courses" | "events" | "exams" | "staff" | "locations";
+export type EntityType =
+    "modules" | "courses" | "events" | "exams" | "staff" | "locations" | "degrees";
 
 /** Views offered by the FullCalendar instance. */
 export type CalendarView =
@@ -91,6 +92,7 @@ export type EventFilters = {
 
 /** Filters applied to exams. */
 export type ExamFilters = {
+    name: string;
     types: string[];
     startTime: Range;
     endTime: Range;
@@ -100,6 +102,13 @@ export type ExamFilters = {
     staff: number[];
 };
 
+/** Filters applied to degrees. */
+export type DegreeFilters = {
+    name: string;
+    subject: string;
+    degrees: string[];
+};
+
 /** The complete filter section of the state document. */
 export type Filters = {
     global: GlobalFilters;
@@ -107,6 +116,7 @@ export type Filters = {
     course: CourseFilters;
     event: EventFilters;
     exam: ExamFilters;
+    degree: DegreeFilters;
 };
 
 /** View and display settings of a single pane. */
@@ -254,6 +264,7 @@ export function defaultState(): UIState {
                 buildings: "",
             },
             exam: {
+                name: "",
                 types: [],
                 startTime: emptyRange(),
                 endTime: emptyRange(),
@@ -261,6 +272,11 @@ export function defaultState(): UIState {
                 buildings: [],
                 required: "neutral",
                 staff: [],
+            },
+            degree: {
+                name: "",
+                subject: "",
+                degrees: [],
             },
         },
         slots: {

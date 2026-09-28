@@ -22,6 +22,7 @@ export {
     setActiveType,
 } from "./collection";
 export { courseToView } from "./courses";
+export { degreeToView } from "./degrees";
 export { initDetailDialog, openDetail } from "./detail-dialog";
 export { registerDetailSpecs } from "./detail-specs";
 export { eventToView } from "./events";

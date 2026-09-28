@@ -1,9 +1,34 @@
-import type { Building, EventType, Faculty, Semester, Staff } from "../api/types";
+import type { Building, Degree, EventType, Faculty, Semester, Staff } from "../api/types";
 
 export type FilterOption = {
     value: string;
     label: string;
 };
+
+/** Lookup of staff ids to their names, used to translate id filters to names. */
+const staffDirectory = new Map<number, string>();
+
+/**
+ * Remember the staff records so id-based filters can be sent as names.
+ * @param staff - Staff records loaded for the filter options.
+ */
+export function setStaffDirectory(staff: Staff[]): void {
+    staffDirectory.clear();
+    staff.forEach((member) => staffDirectory.set(member.id, member.name));
+}
+
+/**
+ * Translate selected staff ids into the names expected by the name-based
+ * `staff` filters of `/courses` and `/exams`.
+ * @param ids - Selected staff ids.
+ * @returns The resolvable names, or undefined when none can be resolved.
+ */
+export function resolveStaffNames(ids: number[]): string[] | undefined {
+    const names = ids
+        .map((id) => staffDirectory.get(id))
+        .filter((name): name is string => Boolean(name));
+    return names.length > 0 ? names : undefined;
+}
 
 /**
  * Create the checkbox input for a filter option.
@@ -197,4 +222,18 @@ export function toExamTypeOptions(examTypes: { name: string }[]): FilterOption[]
         .filter((name) => name)
         .sort((a, b) => a.localeCompare(b))
         .map((name) => ({ value: name, label: name }));
+}
+
+/**
+ * Convert degree records into options for the degree type filter.
+ * @param degrees - Degree records.
+ * @returns The degree type filter options, without duplicates.
+ */
+export function toDegreeTypeOptions(degrees: Degree[]): FilterOption[] {
+    const values = degrees
+        .map((degree) => degree.degree)
+        .filter((value): value is string => Boolean(value));
+    return [...new Set(values)]
+        .sort((a, b) => a.localeCompare(b))
+        .map((value) => ({ value, label: value }));
 }

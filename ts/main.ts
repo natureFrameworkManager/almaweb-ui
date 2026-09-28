@@ -6,6 +6,7 @@ import "fullcalendar/themes/monarch/theme.css";
 
 import {
     getBuildings,
+    getDegrees,
     getEventTypes,
     getExamTypes,
     getFaculties,
@@ -22,10 +23,13 @@ import {
     registerCollections,
     requeryAll,
     requeryCourses,
+    requeryDegrees,
     requeryEvents,
     requeryExams,
     requeryModules,
+    setStaffDirectory,
     toBuildingOptions,
+    toDegreeTypeOptions,
     toEventTypeOptions,
     toExamTypeOptions,
     toFacultyOptions,
@@ -136,6 +140,7 @@ layoutQueries.forEach((query) => {
 const filterOptionLoads = [
     getStaff()
         .then((staff) => {
+            setStaffDirectory(staff.items);
             appendCheckboxOptions("filter-instructors", toStaffOptions(staff.items));
             appendCheckboxOptions("filter-staff", toStaffOptions(staff.items));
         })
@@ -186,6 +191,13 @@ const filterOptionLoads = [
         .catch((error) => {
             reportError("Filteroptionen konnten nicht geladen werden.", error);
         }),
+    getDegrees()
+        .then((degrees) => {
+            appendCheckboxOptions("filter-degree-types", toDegreeTypeOptions(degrees.items));
+        })
+        .catch((error) => {
+            reportError("Filteroptionen konnten nicht geladen werden.", error);
+        }),
 ];
 
 void Promise.allSettled(filterOptionLoads).then(refreshStateFilters);
@@ -195,3 +207,4 @@ wireFilterGroup("filter-group-module", requeryModules);
 wireFilterGroup("filter-group-course", requeryCourses);
 wireFilterGroup("filter-group-event", requeryEvents);
 wireFilterGroup("filter-group-exam", requeryExams);
+wireFilterGroup("filter-group-degree", requeryDegrees);

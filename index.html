@@ -467,6 +467,14 @@
             >
                 <summary><span class="material-symbols">history_edu</span>Prüfungen</summary>
                 <div class="filter-group-content">
+                    <div class="input-container">
+                        <input
+                            id="search-input-exam"
+                            type="text"
+                            placeholder='"Klausur"'
+                        />
+                        <label for="search-input-exam">Prüfungsname</label>
+                    </div>
                     <div class="input-container slim">
                         <div
                             class="checkbox-list"
@@ -594,6 +602,50 @@
                     </div>
                 </div>
             </details>
+            <details
+                class="filter-group"
+                id="filter-group-degree"
+                open
+            >
+                <summary><span class="material-symbols">school</span>Studiengänge</summary>
+                <div class="filter-group-content">
+                    <div class="input-container">
+                        <input
+                            id="search-input-degree"
+                            type="text"
+                            placeholder='"Informatik (Bachelor of Science)"'
+                        />
+                        <label for="search-input-degree">Studiengang</label>
+                    </div>
+                    <div class="input-container">
+                        <input
+                            id="filter-degree-subject"
+                            type="text"
+                            placeholder='"Informatik"'
+                        />
+                        <label for="filter-degree-subject">Fach</label>
+                    </div>
+                    <div class="input-container slim">
+                        <div
+                            class="checkbox-list"
+                            id="filter-degree-types"
+                        >
+                            <label
+                                class="checkbox-item"
+                                for="filter-degree-types-all"
+                            >
+                                <input
+                                    type="checkbox"
+                                    id="filter-degree-types-all"
+                                    value=""
+                                />
+                                <span>Alle Abschlüsse</span>
+                            </label>
+                        </div>
+                        <label>Abschluss</label>
+                    </div>
+                </div>
+            </details>
         </div>
         <main
             class="list-card-view"
@@ -617,6 +669,7 @@
                     <span data-view="exams">Prüfungen</span>
                     <span data-view="staff">Mitarbeitende</span>
                     <span data-view="locations">Räumlichkeiten</span>
+                    <span data-view="degrees">Studiengänge</span>
                 </div>
                 <div
                     class="multi-level-sort"
@@ -888,6 +941,45 @@
                 </div>
             </div>
             <div
+                class="type-content"
+                data-type="degrees"
+            >
+                <ul
+                    class="list"
+                    id="degree-list1"
+                >
+                    <li class="list-item">
+                        <h1 class="degree-name">Informatik (Bachelor of Science)</h1>
+                        <h2 class="degree-type">B.Sc.</h2>
+                        <div class="info-container">
+                            <span class="info degree-subject">Informatik</span>
+                            <span class="info degree-version">PO 2017</span>
+                        </div>
+                    </li>
+                </ul>
+                <div
+                    class="card-grid"
+                    id="degree-card-grid1"
+                >
+                    <div class="card">
+                        <h1 class="degree-name">Informatik (Bachelor of Science)</h1>
+                        <h2 class="degree-type">B.Sc.</h2>
+                        <div class="info-container">
+                            <span class="info degree-subject">Informatik</span>
+                        </div>
+                        <div class="btn-con">
+                            <button
+                                class="btn"
+                                popovertarget="detail-dialog"
+                                popovertargetaction="toggle"
+                            >
+                                Mehr Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div
                 class="feedback-block"
                 id="collection-loading1"
                 hidden
@@ -954,6 +1046,7 @@
                     <span data-view="exams">Prüfungen</span>
                     <span data-view="staff">Mitarbeitende</span>
                     <span data-view="locations">Räumlichkeiten</span>
+                    <span data-view="degrees">Studiengänge</span>
                 </div>
                 <div
                     class="multi-level-sort"
@@ -1211,6 +1304,45 @@
                         <div class="info-container">
                             <span class="info location-type">Hörsaal</span>
                             <span class="info location-seats">120 Plätze</span>
+                        </div>
+                        <div class="btn-con">
+                            <button
+                                class="btn"
+                                popovertarget="detail-dialog"
+                                popovertargetaction="toggle"
+                            >
+                                Mehr Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="type-content"
+                data-type="degrees"
+            >
+                <ul
+                    class="list"
+                    id="degree-list2"
+                >
+                    <li class="list-item">
+                        <h1 class="degree-name">Informatik (Bachelor of Science)</h1>
+                        <h2 class="degree-type">B.Sc.</h2>
+                        <div class="info-container">
+                            <span class="info degree-subject">Informatik</span>
+                            <span class="info degree-version">PO 2017</span>
+                        </div>
+                    </li>
+                </ul>
+                <div
+                    class="card-grid"
+                    id="degree-card-grid2"
+                >
+                    <div class="card">
+                        <h1 class="degree-name">Informatik (Bachelor of Science)</h1>
+                        <h2 class="degree-type">B.Sc.</h2>
+                        <div class="info-container">
+                            <span class="info degree-subject">Informatik</span>
                         </div>
                         <div class="btn-con">
                             <button

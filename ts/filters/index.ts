@@ -1,7 +1,10 @@
 export {
     appendCheckboxOptions,
     appendSelectOptions,
+    resolveStaffNames,
+    setStaffDirectory,
     toBuildingOptions,
+    toDegreeTypeOptions,
     toEventTypeOptions,
     toExamTypeOptions,
     toFacultyOptions,
@@ -17,6 +20,7 @@ export {
     registerCollections,
     requeryAll,
     requeryCourses,
+    requeryDegrees,
     requeryEvents,
     requeryExams,
     requeryModules,

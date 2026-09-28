@@ -13,7 +13,9 @@ main.list-card-view:has(.type-switcher span.active[data-view="exams"])
 main.list-card-view:has(.type-switcher span.active[data-view="staff"])
     .type-content[data-type="staff"],
 main.list-card-view:has(.type-switcher span.active[data-view="locations"])
-    .type-content[data-type="locations"] {
+    .type-content[data-type="locations"],
+main.list-card-view:has(.type-switcher span.active[data-view="degrees"])
+    .type-content[data-type="degrees"] {
     display: contents;
 }
 

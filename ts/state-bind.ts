@@ -36,6 +36,7 @@ import {
     updateState,
     writeStateToQuery,
     type CourseFilters,
+    type DegreeFilters,
     type EntityType,
     type EntryKind,
     type ExamFilters,
@@ -512,6 +513,7 @@ function applyEventFilters(filters: EventFilters): void {
  * @param filters - Exam filters to write.
  */
 function applyExamFilters(filters: ExamFilters): void {
+    writeText("search-input-exam", filters.name);
     writeCheckedValues("filter-examtypes", filters.types);
     writeRange("filter-group-exam", "Start-Uhrzeit", filters.startTime);
     writeRange("filter-group-exam", "End-Uhrzeit", filters.endTime);
@@ -519,6 +521,16 @@ function applyExamFilters(filters: ExamFilters): void {
     writeCheckedValues("filter-buildings", filters.buildings);
     writeTriState("filter-exam-required", filters.required);
     writeCheckedValues("filter-staff", filters.staff);
+}
+
+/**
+ * Write the degree filters into their DOM controls.
+ * @param filters - Degree filters to write.
+ */
+function applyDegreeFilters(filters: DegreeFilters): void {
+    writeText("search-input-degree", filters.name);
+    writeText("filter-degree-subject", filters.subject);
+    writeCheckedValues("filter-degree-types", filters.degrees);
 }
 
 /**
@@ -531,6 +543,7 @@ export function applyFilterState(state: UIState): void {
     applyCourseFilters(state.filters.course);
     applyEventFilters(state.filters.event);
     applyExamFilters(state.filters.exam);
+    applyDegreeFilters(state.filters.degree);
 }
 
 /**
@@ -583,6 +596,7 @@ function captureEventFilters(filters: EventFilters): void {
  * @param filters - Filter section to update.
  */
 function captureExamFilters(filters: ExamFilters): void {
+    filters.name = readText("search-input-exam");
     filters.types = readCheckedValues("filter-examtypes");
     filters.startTime = readRange("filter-group-exam", "Start-Uhrzeit");
     filters.endTime = readRange("filter-group-exam", "End-Uhrzeit");
@@ -590,6 +604,16 @@ function captureExamFilters(filters: ExamFilters): void {
     filters.buildings = readNumbers("filter-buildings");
     filters.required = readTriState("filter-exam-required");
     filters.staff = readNumbers("filter-staff");
+}
+
+/**
+ * Capture the degree filters from their DOM controls.
+ * @param filters - Filter section to update.
+ */
+function captureDegreeFilters(filters: DegreeFilters): void {
+    filters.name = readText("search-input-degree");
+    filters.subject = readText("filter-degree-subject");
+    filters.degrees = readCheckedValues("filter-degree-types");
 }
 
 /**
@@ -602,6 +626,7 @@ export function captureFilterState(state: UIState = getState()): void {
     captureCourseFilters(state.filters.course);
     captureEventFilters(state.filters.event);
     captureExamFilters(state.filters.exam);
+    captureDegreeFilters(state.filters.degree);
 }
 
 /**

@@ -19,6 +19,7 @@ const TYPE_ID_PREFIX: Record<string, string> = {
     exams: "exam",
     staff: "staff",
     locations: "location",
+    degrees: "degree",
 };
 
 /** Displayed labels of the entity types used in feedback messages. */
@@ -29,6 +30,7 @@ const TYPE_LABELS: Record<string, string> = {
     exams: "Prüfungen",
     staff: "Mitarbeitende",
     locations: "Räumlichkeiten",
+    degrees: "Studiengänge",
 };
 
 type CollectionConfig<T> = {

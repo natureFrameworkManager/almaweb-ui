@@ -1,6 +1,7 @@
 import type {
     Module,
     Course,
+    Degree,
     Event,
     Exam,
     Staff,
@@ -98,6 +99,24 @@ function appendQuery(url: string, queryParams: URLSearchParams): string {
         return url;
     }
     return `${url}${url.includes("?") ? "&" : "?"}${query}`;
+}
+
+/**
+ * Append a repeatable string parameter, dropping empty values.
+ * @param queryParams - Query parameters to extend.
+ * @param key - Query parameter name.
+ * @param values - Single value or list of values to append.
+ */
+function appendStringList(
+    queryParams: URLSearchParams,
+    key: string,
+    values?: string | string[],
+): void {
+    if (values === undefined) {
+        return;
+    }
+    const list = Array.isArray(values) ? values : [values];
+    list.filter((value) => value !== "").forEach((value) => queryParams.append(key, value));
 }
 
 /**
@@ -242,14 +261,10 @@ export async function getCourses(
             queryParams.append("type", type);
         }
     }
-    // Currently staff is not resolved to IDs -> bug API
-    /* if (staff) {
-        if (Array.isArray(staff)) {
-            staff.forEach(s => queryParams.append("staff_id", s.toString()));
-        } else {
-            queryParams.append("staff_id", staff.toString());
-        }
-    } */
+    // The instructor filter stays inert: `/courses?staff=<name>` currently returns
+    // HTTP 500 on the live API and `/courses` has no `staff_id` parameter, so the
+    // selected ids are intentionally dropped (see todo.md §1).
+    void staff;
     if (weekHoursMin !== undefined) {
         queryParams.append("weekly_hours_min", weekHoursMin.toString());
     }
@@ -365,7 +380,8 @@ export async function getCourseEvents(courseId: number): Promise<PagedResponse<E
 }
 
 /**
- * Fetch exam data from the local fixture.
+ * Fetch exam data from the API.
+ * @param name - Optional exam name filter.
  * @param startTimeMin - Optional minimum start time filter.
  * @param startTimeMax - Optional maximum start time filter.
  * @param endTimeMin - Optional minimum end time filter.
@@ -374,7 +390,7 @@ export async function getCourseEvents(courseId: number): Promise<PagedResponse<E
  * @param endDate - Optional end date filter.
  * @param building - Optional building filter.
  * @param required - Optional required filter.
- * @param staff - Optional staff ID filter.
+ * @param staff - Optional staff name filter.
  * @param semester - Optional semester ID filter.
  * @param page - Optional one-based page number.
  * @param pageSize - Optional number of items per page.
@@ -383,6 +399,7 @@ export async function getCourseEvents(courseId: number): Promise<PagedResponse<E
  * @returns The exam response data.
  */
 export async function getExams(
+    name?: string,
     startTimeMin?: string,
     startTimeMax?: string,
     endTimeMin?: string,
@@ -391,7 +408,7 @@ export async function getExams(
     endDate?: string,
     building?: string | string[],
     required?: boolean,
-    staff?: number | number[],
+    staff?: string | string[],
     semester?: number | number[],
     page?: number,
     pageSize?: number,
@@ -399,6 +416,9 @@ export async function getExams(
     order?: SortOrder,
 ): Promise<PagedResponse<Exam>> {
     const queryParams = new URLSearchParams();
+    if (name) {
+        queryParams.append("name", name);
+    }
     if (startTimeMin) {
         queryParams.append("start_time_from", startTimeMin);
     }
@@ -428,11 +448,7 @@ export async function getExams(
         queryParams.append("required", required.toString());
     }
     if (staff) {
-        if (Array.isArray(staff)) {
-            staff.forEach((s) => queryParams.append("staff_id", s.toString()));
-        } else {
-            queryParams.append("staff_id", staff.toString());
-        }
+        appendStringList(queryParams, "staff", staff);
     }
     if (semester) {
         if (Array.isArray(semester)) {
@@ -466,6 +482,47 @@ export async function getStaff(
     appendSort(queryParams, sort, order);
     appendPaging(queryParams, page, pageSize);
     return fetchApi(appendQuery("/staff?fields=id&fields=name", queryParams));
+}
+
+/**
+ * Fetch degree data from the API.
+ * @param name - Optional degree name filter.
+ * @param subject - Optional subject filter.
+ * @param degrees - Optional degree type filter, e.g. `B.Sc.`.
+ * @param faculty - Optional faculty ID filter.
+ * @param page - Optional one-based page number.
+ * @param pageSize - Optional number of items per page.
+ * @param sort - Optional single sort column sent to the API.
+ * @param order - Optional sort direction sent to the API.
+ * @returns The degree response data.
+ */
+export async function getDegrees(
+    name?: string | string[],
+    subject?: string | string[],
+    degrees?: string | string[],
+    faculty?: number | number[],
+    page?: number,
+    pageSize?: number,
+    sort?: string,
+    order?: SortOrder,
+): Promise<PagedResponse<Degree>> {
+    const queryParams = new URLSearchParams();
+    appendStringList(queryParams, "names", name);
+    appendStringList(queryParams, "subjects", subject);
+    appendStringList(queryParams, "degrees", degrees);
+    if (faculty !== undefined) {
+        (Array.isArray(faculty) ? faculty : [faculty]).forEach((value) =>
+            queryParams.append("faculty", value.toString()),
+        );
+    }
+    appendSort(queryParams, sort, order);
+    appendPaging(queryParams, page, pageSize);
+    return fetchApi(
+        appendQuery(
+            "/degrees?fields=id&fields=name&fields=subject&fields=degree&fields=school_type&fields=ects&fields=version&fields=confidence&fields=faculty_id",
+            queryParams,
+        ),
+    );
 }
 
 /**
