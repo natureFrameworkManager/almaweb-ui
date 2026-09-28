@@ -315,6 +315,34 @@ export async function getEvents(
 }
 
 /**
+ * Fetch every event linked to a module.
+ *
+ * Uses the dedicated `/modules/{module_id}/events` endpoint; pagination is left
+ * out so the API returns the complete list of linked events.
+ * @param moduleId - Module id.
+ * @returns The module event response data.
+ */
+export async function getModuleEvents(moduleId: number): Promise<PagedResponse<Event>> {
+    return fetchApi(
+        `/modules/${moduleId}/events?include=location&include=location.building&include=staff`,
+    );
+}
+
+/**
+ * Fetch every event linked to a course.
+ *
+ * Uses the dedicated `/courses/{course_id}/events` endpoint; pagination is left
+ * out so the API returns the complete list of linked events.
+ * @param courseId - Course id.
+ * @returns The course event response data.
+ */
+export async function getCourseEvents(courseId: number): Promise<PagedResponse<Event>> {
+    return fetchApi(
+        `/courses/${courseId}/events?include=location&include=location.building&include=staff`,
+    );
+}
+
+/**
  * Fetch exam data from the local fixture.
  * @param startTimeMin - Optional minimum start time filter.
  * @param startTimeMax - Optional maximum start time filter.

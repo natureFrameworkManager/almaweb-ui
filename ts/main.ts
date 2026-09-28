@@ -4,8 +4,6 @@ import "fullcalendar/skeleton.css";
 import "fullcalendar/themes/monarch/palettes/purple.css";
 import "fullcalendar/themes/monarch/theme.css";
 
-import type { Calendar } from "fullcalendar";
-
 import {
     getBuildings,
     getEventTypes,
@@ -15,7 +13,7 @@ import {
     getSemesters,
     getStaff,
 } from "./api/api";
-import { initCal } from "./calendar";
+import { ensureCalendar, refreshCalendarEvents } from "./calendar";
 import {
     appendCheckboxOptions,
     appendSelectOptions,
@@ -54,17 +52,13 @@ import {
     setActiveType,
 } from "./views";
 
-/** Calendars created lazily the first time a pane shows them. */
-const calendars: Partial<Record<1 | 2, Calendar>> = {};
-
 /**
- * Create the calendar of a pane the first time it is shown.
+ * Create the calendar of a pane and draw the events linked to the active slot.
  * @param paneId - Pane identifier.
  */
-function ensureCalendar(paneId: 1 | 2): void {
-    if (!calendars[paneId]) {
-        calendars[paneId] = initCal(`calendar-container${paneId}`, getState().calendar.view);
-    }
+function showCalendar(paneId: 1 | 2): void {
+    ensureCalendar(paneId, getState().calendar.view);
+    void refreshCalendarEvents();
 }
 
 /**
@@ -77,7 +71,7 @@ function handlePaneView(paneId: 1 | 2, view: string): void {
     if (view === "tree") {
         void refreshTree(paneId);
     } else if (view === "calendar") {
-        ensureCalendar(paneId);
+        showCalendar(paneId);
     } else {
         ensurePaneCollections();
     }
@@ -98,7 +92,7 @@ registerDetailSpecs();
 initCollectionScrolling();
 initDetailDialog();
 
-registerCalendarLoader(ensureCalendar);
+registerCalendarLoader(showCalendar);
 initTreeRetry();
 loadInitialState();
 
@@ -115,22 +109,6 @@ wireSwitcher("#type-switcher1", (type) => setActiveType(1, type));
 wireSwitcher("#type-switcher2", (type) => setActiveType(2, type));
 initTheme();
 initStateBindings();
-
-/* getEvents()
-    .then((events) => {
-        const sortedEvents = events.items.sort((a, b) => a.event_date.localeCompare(b.event_date));
-        renderEntities("events", sortedEvents, eventToView);
-        const calendarEvents = sortedEvents.map((event) => ({
-            id: String(event.id),
-            title: event.name || event.location.name,
-            start: `${event.event_date}T${event.start_time}`,
-            end: `${event.event_date}T${event.end_time}`,
-        }));
-        calendars.forEach((calendar) => calendar.addEventSource(calendarEvents));
-    })
-    .catch((error) => {
-        console.error("Failed to fetch events:", error);
-    }); */
 
 /** Fetch the filter options; the state filters are re-applied once they exist. */
 const filterOptionLoads = [

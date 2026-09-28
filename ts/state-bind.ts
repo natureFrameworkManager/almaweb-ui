@@ -6,6 +6,7 @@
  * separate from `state.ts` leaves the state model free of DOM access.
  */
 
+import { refreshCalendarEvents } from "./calendar";
 import { refreshTree, requeryAll, validateFilterRanges } from "./filters";
 import { showToast } from "./feedback";
 import { switchMainView, switchViewMode } from "./layout";
@@ -1050,6 +1051,7 @@ function handleSaveClick(button: HTMLElement): void {
     }
     syncSaveButtons();
     renderActiveSlot(getState());
+    void refreshCalendarEvents();
 }
 
 /** Whether a save-button sync is already scheduled for the next frame. */
@@ -1108,6 +1110,7 @@ function removeEntry(key: string): void {
     });
     renderActiveSlot(getState());
     syncSaveButtons();
+    void refreshCalendarEvents();
     showToast("Eintrag entfernt.", "info");
 }
 
@@ -1121,6 +1124,7 @@ function clearActiveSlot(): void {
     });
     renderActiveSlot(getState());
     syncSaveButtons();
+    void refreshCalendarEvents();
     showToast("Slot geleert.", "info");
 }
 
@@ -1136,6 +1140,7 @@ function deleteActiveSlot(): void {
     renderSlotSelector(getState());
     renderActiveSlot(getState());
     syncSaveButtons();
+    void refreshCalendarEvents();
     showToast("Slot gelöscht.", "info");
 }
 
@@ -1170,6 +1175,7 @@ function createNewSlot(): void {
     renderSlotSelector(state);
     renderActiveSlot(state);
     syncSaveButtons();
+    void refreshCalendarEvents();
     showToast("Neuer Slot angelegt.", "success");
 }
 
@@ -1306,6 +1312,7 @@ function initSlotControls(): void {
         });
         renderActiveSlot(getState());
         syncSaveButtons();
+        void refreshCalendarEvents();
     });
     const dialog = document.querySelector("#save-slot-dialog");
     dialog?.addEventListener("click", handleSlotClick);
