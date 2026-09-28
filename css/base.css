@@ -1,0 +1,5 @@
+body {
+    @apply h-screen min-h-screen w-screen max-w-screen overflow-hidden;
+    @apply bg-background text-body-medium leading-[1.2] text-text;
+    @apply grid grid-cols-[330px_minmax(0,1fr)_minmax(0,1fr)] grid-rows-[max-content_minmax(0,1fr)];
+}

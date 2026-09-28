@@ -1,0 +1,41 @@
+/* Type switcher: shows only the type-content matching the active span in .type-switcher */
+.type-content {
+    display: none;
+}
+main.list-card-view:has(.type-switcher span.active[data-view="modules"])
+    .type-content[data-type="modules"],
+main.list-card-view:has(.type-switcher span.active[data-view="courses"])
+    .type-content[data-type="courses"],
+main.list-card-view:has(.type-switcher span.active[data-view="events"])
+    .type-content[data-type="events"],
+main.list-card-view:has(.type-switcher span.active[data-view="exams"])
+    .type-content[data-type="exams"],
+main.list-card-view:has(.type-switcher span.active[data-view="staff"])
+    .type-content[data-type="staff"],
+main.list-card-view:has(.type-switcher span.active[data-view="locations"])
+    .type-content[data-type="locations"] {
+    display: contents;
+}
+
+/* Display changer: swaps the list/card-grid pair per pane based on the active nav item */
+.type-content .card-grid {
+    display: none;
+}
+body:has(#display-changer1 item.active[data-view="cards"]) #list-card-view1 .type-content .list {
+    display: none;
+}
+body:has(#display-changer1 item.active[data-view="cards"])
+    #list-card-view1
+    .type-content
+    .card-grid {
+    display: grid;
+}
+body:has(#display-changer2 item.active[data-view="cards"]) #list-card-view2 .type-content .list {
+    display: none;
+}
+body:has(#display-changer2 item.active[data-view="cards"])
+    #list-card-view2
+    .type-content
+    .card-grid {
+    display: grid;
+}

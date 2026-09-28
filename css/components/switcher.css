@@ -1,0 +1,16 @@
+.switcher {
+    @apply flex flex-row items-center;
+    @apply cursor-pointer;
+    @apply h-8;
+}
+.switcher span {
+    @apply p-1 first:rounded-s-full first:ps-2 last:rounded-e-full last:pe-2;
+    @apply bg-primary text-background;
+    @apply hover:bg-primary/80;
+    @apply border-e border-primary last:border-e-0;
+    @apply flex h-full items-center;
+}
+.switcher .active {
+    @apply bg-accent text-text dark:text-background;
+    @apply hover:bg-accent/80;
+}

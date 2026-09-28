@@ -1,0 +1,20 @@
+header.list-card-view-header {
+    @apply mb-4 flex flex-row items-end justify-between;
+}
+header.list-card-view-header div.type-switcher {
+    @apply flex flex-row items-end;
+}
+header.list-card-view-header div.type-switcher span {
+    @apply cursor-pointer px-2 text-lg;
+    @apply border-b-2 border-transparent;
+    @apply hover:border-primary;
+}
+header.list-card-view-header div.type-switcher span.active {
+    @apply border-b-2 border-primary;
+}
+header.list-card-view-header div.multi-level-sort {
+    @apply cursor-pointer;
+    @apply border border-border;
+    @apply rounded-md px-2 py-1;
+    @apply bg-background text-text;
+}

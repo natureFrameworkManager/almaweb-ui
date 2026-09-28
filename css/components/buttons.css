@@ -1,0 +1,15 @@
+.btn {
+    @apply cursor-pointer;
+    @apply inline-flex items-center justify-center gap-x-2;
+    @apply h-fit rounded bg-primary px-3 py-2 text-background;
+    @apply hover:bg-primary/80;
+}
+.btn.slim {
+    @apply px-2 py-1;
+}
+.btn.slim.material-symbols {
+    @apply text-[16px];
+}
+.btn.slim span.material-symbols {
+    @apply text-[16px];
+}

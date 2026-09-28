@@ -1,0 +1,31 @@
+div#filter-options {
+    @apply border-r border-border;
+    @apply col-1 row-start-1 row-end-3;
+    @apply flex flex-col;
+    @apply max-h-screen min-h-0 overflow-y-auto;
+    @apply bg-primary/5;
+}
+div#filter-options details.filter-group summary {
+    @apply cursor-pointer list-none;
+    @apply text-title-medium font-semibold text-nowrap;
+    @apply flex flex-row items-center gap-x-2;
+    @apply border-y border-border p-2;
+    @apply sticky top-0;
+    @apply bg-primary text-background;
+}
+div#filter-options details.filter-group:open summary {
+    @apply mb-1;
+}
+div#filter-options details.filter-group summary::after {
+    @apply content-['+'];
+    @apply w-full text-right;
+}
+div#filter-options details.filter-group:open > summary::after {
+    @apply content-['-'];
+}
+div#filter-options details.filter-group summary span.material-symbols {
+    @apply text-[20px];
+}
+div#filter-options details.filter-group div.filter-group-content {
+    @apply flex flex-col gap-y-2 px-1 pb-3;
+}

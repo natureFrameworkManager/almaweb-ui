@@ -1,0 +1,49 @@
+header#top-header {
+    @apply border-b border-border;
+    @apply col-start-2 col-end-4 row-1 pe-2 pt-3 pb-2;
+    @apply grid grid-cols-[1fr_max-content_1fr] grid-rows-[max-content_max-content] gap-y-2;
+}
+header#top-header nav {
+    @apply flex flex-row items-end;
+    @apply px-2;
+}
+header#top-header nav#display-changer1 {
+    @apply col-start-1 col-end-3 row-2;
+}
+header#top-header nav#display-changer2 {
+    @apply col-3 row-2 justify-end;
+}
+body[data-view-mode="single"] header#top-header nav#display-changer2,
+body[data-view-mode="compare"] header#top-header nav#display-changer1,
+body[data-view-mode="compare"] header#top-header nav#display-changer2 {
+    display: none;
+}
+header#top-header nav item {
+    @apply cursor-pointer px-2 text-lg;
+    @apply border-b-2 border-transparent;
+    @apply hover:border-primary;
+}
+header#top-header nav item.active {
+    @apply border-b-2 border-primary;
+}
+header#top-header div#view-switcher {
+    @apply col-2 row-1 flex flex-row items-center justify-center;
+}
+header#top-header div#additional-controls {
+    @apply col-3 row-1 flex flex-row items-center justify-end gap-x-2;
+}
+header#top-header div#additional-controls div#last-updated-con {
+    @apply flex flex-row flex-nowrap items-center gap-x-1 text-nowrap;
+}
+header#top-header div#additional-controls div#last-updated-con span.material-symbols {
+    @apply text-[16px];
+}
+header#top-header div#additional-controls div#dark-mode-toggle {
+    @apply text-[16px];
+}
+header#top-header div#additional-controls button span.material-symbols {
+    @apply text-[18px];
+}
+header#top-header div#save-slot-options {
+    @apply col-1 row-1 flex flex-row-reverse items-center justify-end gap-x-2 ps-2;
+}

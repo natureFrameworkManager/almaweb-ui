@@ -1,0 +1,56 @@
+.input-container {
+    @apply flex flex-col-reverse;
+}
+.input-container input,
+.input-container textarea,
+.input-container select {
+    @apply rounded-md border border-border bg-transparent px-3 py-2 text-text;
+    @apply w-full;
+}
+.input-container select {
+    @apply pe-4;
+}
+.input-container > label {
+    @apply ps-2 pb-0.5 text-label-medium text-text;
+}
+.input-container label[for] {
+    @apply cursor-pointer;
+}
+.input-container.slim input,
+.input-container.slim textarea,
+.input-container.slim select {
+    @apply px-2 py-1;
+}
+.input-container.range div {
+    @apply grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-x-2;
+}
+.input-container.range div::before {
+    content: "-";
+    @apply col-2 row-1 text-text;
+}
+.input-container.range div input:first-of-type {
+    @apply col-1 row-1;
+}
+.input-container.range div input:last-of-type {
+    @apply col-3 row-1;
+}
+.input-container div.checkbox-list {
+    @apply rounded-md border border-border bg-transparent px-3 py-2 text-text;
+    @apply w-full;
+    @apply flex max-h-24 flex-col gap-y-1 overflow-y-auto pe-1;
+}
+.input-container div.checkbox-list label.checkbox-item {
+    @apply flex cursor-pointer flex-row items-center gap-x-2;
+}
+.input-container div.checkbox-list label.checkbox-item input[type="checkbox"] {
+    @apply h-4 w-4 accent-primary;
+}
+.input-container:has(input[type="checkbox"]):not(:has(div.checkbox-list)) {
+    @apply flex flex-row items-center gap-x-3 ps-3;
+}
+.input-container:has(input[type="checkbox"]):not(:has(div.checkbox-list)) > label {
+    @apply ps-0 pb-0 text-body-medium text-text;
+}
+.input-container > input[type="checkbox"] {
+    @apply h-4 w-4 accent-primary;
+}

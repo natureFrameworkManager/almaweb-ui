@@ -1,0 +1,51 @@
+ul.list {
+    @apply m-0 list-none overflow-y-auto p-0;
+}
+ul.list li.list-item {
+    @apply border-b border-border p-2 last:border-b-0;
+    @apply flex flex-col gap-y-1;
+}
+ul.list li.list-item h1 {
+    @apply text-lg font-bold text-wrap;
+}
+ul.list li.list-item h2 {
+    @apply flex h-full flex-col font-semibold;
+}
+ul.list li.list-item div.info-container {
+    @apply flex flex-row flex-wrap gap-2;
+}
+ul.list li.list-item span.info {
+    @apply w-fit rounded-full border border-border px-2 py-1;
+    @apply bg-primary/5 text-sm dark:bg-primary/15;
+    @apply text-nowrap;
+}
+ul.list li.list-item button {
+    @apply self-end;
+}
+div.card-grid {
+    @apply grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-2;
+}
+div.card-grid div.card {
+    @apply rounded-md border border-border px-2 pt-1 pb-2;
+    @apply flex flex-col gap-1;
+}
+div.card-grid div.card h1 {
+    @apply text-lg leading-tight font-bold text-wrap;
+}
+div.card-grid div.card h2 {
+    @apply mb-2 flex h-full flex-col font-semibold;
+}
+div.card-grid div.card div.info-container {
+    @apply flex flex-row flex-wrap gap-2;
+}
+div.card-grid div.card span.info {
+    @apply h-fit w-fit rounded border border-border px-2 py-1;
+    @apply bg-primary/5 text-sm dark:bg-primary/15;
+    @apply text-wrap;
+}
+div.card-grid div.card div.btn-con {
+    @apply mt-2 flex items-center justify-between gap-x-1;
+}
+div.card-grid div.card div.btn-con button {
+    @apply h-full first:w-full;
+}
