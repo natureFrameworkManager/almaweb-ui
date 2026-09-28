@@ -182,6 +182,11 @@
                         <label for="filter-responsible-person">Verantwortliche Person</label>
                     </div>
                     <div class="input-container range slim">
+                        <p
+                            class="field-error"
+                            id="error-module-credits"
+                            role="alert"
+                        ></p>
                         <div>
                             <input
                                 type="number"
@@ -197,6 +202,11 @@
                         <label>Leistungspunkte</label>
                     </div>
                     <div class="input-container range slim">
+                        <p
+                            class="field-error"
+                            id="error-module-duration"
+                            role="alert"
+                        ></p>
                         <div>
                             <input
                                 type="number"
@@ -294,6 +304,11 @@
                         <label>Dozenten in Kursen</label>
                     </div>
                     <div class="input-container range slim">
+                        <p
+                            class="field-error"
+                            id="error-course-hours"
+                            role="alert"
+                        ></p>
                         <div>
                             <input
                                 type="number"
@@ -318,6 +333,11 @@
                 <summary><span class="material-symbols">event</span>Veranstaltungen</summary>
                 <div class="filter-group-content">
                     <div class="input-container range slim">
+                        <p
+                            class="field-error"
+                            id="error-event-start"
+                            role="alert"
+                        ></p>
                         <div>
                             <input
                                 type="time"
@@ -333,6 +353,11 @@
                         <label>Start-Uhrzeit</label>
                     </div>
                     <div class="input-container range slim">
+                        <p
+                            class="field-error"
+                            id="error-event-end"
+                            role="alert"
+                        ></p>
                         <div>
                             <input
                                 type="time"
@@ -348,6 +373,11 @@
                         <label>End-Uhrzeit</label>
                     </div>
                     <div class="input-container range slim">
+                        <p
+                            class="field-error"
+                            id="error-event-dates"
+                            role="alert"
+                        ></p>
                         <div>
                             <input
                                 type="date"
@@ -397,6 +427,11 @@
                         <label>Prüfungsarten</label>
                     </div>
                     <div class="input-container range slim">
+                        <p
+                            class="field-error"
+                            id="error-exam-start"
+                            role="alert"
+                        ></p>
                         <div>
                             <input
                                 type="time"
@@ -412,6 +447,11 @@
                         <label>Start-Uhrzeit</label>
                     </div>
                     <div class="input-container range slim">
+                        <p
+                            class="field-error"
+                            id="error-exam-end"
+                            role="alert"
+                        ></p>
                         <div>
                             <input
                                 type="time"
@@ -427,6 +467,11 @@
                         <label>End-Uhrzeit</label>
                     </div>
                     <div class="input-container range slim">
+                        <p
+                            class="field-error"
+                            id="error-exam-dates"
+                            role="alert"
+                        ></p>
                         <div>
                             <input
                                 type="date"
@@ -782,6 +827,50 @@
                     </div>
                 </div>
             </div>
+            <div
+                class="feedback-block"
+                id="collection-loading1"
+                hidden
+            >
+                <span class="spinner large"></span>
+                <span>Daten werden geladen …</span>
+            </div>
+            <div
+                class="empty-state"
+                id="collection-empty1"
+                hidden
+            >
+                <span class="material-symbols">search_off</span>
+                <h2>Keine Ergebnisse</h2>
+                <p>
+                    Für die aktuellen Filter wurden keine Daten gefunden. Passe die Filter an, um
+                    mehr zu sehen.
+                </p>
+            </div>
+            <div
+                class="error-state"
+                id="collection-error1"
+                hidden
+            >
+                <span class="material-symbols">cloud_off</span>
+                <h2>Daten konnten nicht geladen werden</h2>
+                <p>Bitte überprüfe deine Verbindung und versuche es erneut.</p>
+                <button
+                    class="btn"
+                    id="collection-retry1"
+                    type="button"
+                >
+                    <span class="material-symbols">refresh</span>Erneut versuchen
+                </button>
+            </div>
+            <div
+                class="list-more"
+                id="list-more1"
+                hidden
+            >
+                <span class="spinner"></span>
+                <span>Weitere Daten werden geladen …</span>
+            </div>
         </main>
         <main
             class="list-card-view"
@@ -1075,6 +1164,50 @@
                     </div>
                 </div>
             </div>
+            <div
+                class="feedback-block"
+                id="collection-loading2"
+                hidden
+            >
+                <span class="spinner large"></span>
+                <span>Daten werden geladen …</span>
+            </div>
+            <div
+                class="empty-state"
+                id="collection-empty2"
+                hidden
+            >
+                <span class="material-symbols">search_off</span>
+                <h2>Keine Ergebnisse</h2>
+                <p>
+                    Für die aktuellen Filter wurden keine Daten gefunden. Passe die Filter an, um
+                    mehr zu sehen.
+                </p>
+            </div>
+            <div
+                class="error-state"
+                id="collection-error2"
+                hidden
+            >
+                <span class="material-symbols">cloud_off</span>
+                <h2>Daten konnten nicht geladen werden</h2>
+                <p>Bitte überprüfe deine Verbindung und versuche es erneut.</p>
+                <button
+                    class="btn"
+                    id="collection-retry2"
+                    type="button"
+                >
+                    <span class="material-symbols">refresh</span>Erneut versuchen
+                </button>
+            </div>
+            <div
+                class="list-more"
+                id="list-more2"
+                hidden
+            >
+                <span class="spinner"></span>
+                <span>Weitere Daten werden geladen …</span>
+            </div>
         </main>
         <main
             class="calendar"
@@ -1085,6 +1218,14 @@
                 class="calendar-container"
                 id="calendar-container1"
             ></div>
+            <div
+                class="feedback-block"
+                id="calendar-loading1"
+                hidden
+            >
+                <span class="spinner large"></span>
+                <span>Kalender wird geladen …</span>
+            </div>
         </main>
         <main
             class="calendar"
@@ -1095,6 +1236,14 @@
                 class="calendar-container"
                 id="calendar-container2"
             ></div>
+            <div
+                class="feedback-block"
+                id="calendar-loading2"
+                hidden
+            >
+                <span class="spinner large"></span>
+                <span>Kalender wird geladen …</span>
+            </div>
         </main>
         <main
             class="tree"
@@ -1119,6 +1268,38 @@
                     <button class="btn slim material-symbols">keyboard_double_arrow_right</button>
                 </div>
             </div>
+            <div
+                class="feedback-block"
+                id="tree-loading1"
+                hidden
+            >
+                <span class="spinner large"></span>
+                <span>Navigationsbaum wird geladen …</span>
+            </div>
+            <div
+                class="empty-state"
+                id="tree-empty1"
+                hidden
+            >
+                <span class="material-symbols">account_tree</span>
+                <h2>Kein Navigationsbaum</h2>
+                <p>Für die aktuellen Filter wurden keine Module gefunden.</p>
+            </div>
+            <div
+                class="error-state"
+                id="tree-error1"
+                hidden
+            >
+                <span class="material-symbols">cloud_off</span>
+                <h2>Navigationsbaum konnte nicht geladen werden</h2>
+                <button
+                    class="btn"
+                    id="tree-retry1"
+                    type="button"
+                >
+                    <span class="material-symbols">refresh</span>Erneut versuchen
+                </button>
+            </div>
         </main>
         <main
             class="tree"
@@ -1142,6 +1323,38 @@
                     <span>Analysis</span>
                     <button class="btn slim material-symbols">keyboard_double_arrow_right</button>
                 </div>
+            </div>
+            <div
+                class="feedback-block"
+                id="tree-loading2"
+                hidden
+            >
+                <span class="spinner large"></span>
+                <span>Navigationsbaum wird geladen …</span>
+            </div>
+            <div
+                class="empty-state"
+                id="tree-empty2"
+                hidden
+            >
+                <span class="material-symbols">account_tree</span>
+                <h2>Kein Navigationsbaum</h2>
+                <p>Für die aktuellen Filter wurden keine Module gefunden.</p>
+            </div>
+            <div
+                class="error-state"
+                id="tree-error2"
+                hidden
+            >
+                <span class="material-symbols">cloud_off</span>
+                <h2>Navigationsbaum konnte nicht geladen werden</h2>
+                <button
+                    class="btn"
+                    id="tree-retry2"
+                    type="button"
+                >
+                    <span class="material-symbols">refresh</span>Erneut versuchen
+                </button>
             </div>
         </main>
         <main
@@ -1337,6 +1550,11 @@
                                 </div>
                             </div>
                         </div>
+                        <p
+                            class="field-error"
+                            id="error-slot-total-lp"
+                            role="alert"
+                        ></p>
                     </section>
                     <section class="dialog-section">
                         <h2 class="section-title">
@@ -1514,6 +1732,30 @@
                     <span data-tab="degrees">Studiengänge <span class="count-badge">0</span></span>
                     <span data-tab="semester">Semester <span class="count-badge">0</span></span>
                 </div>
+                <div
+                    class="feedback-block"
+                    id="detail-loading"
+                    hidden
+                >
+                    <span class="spinner large"></span>
+                    <span>Details werden geladen …</span>
+                </div>
+                <div
+                    class="error-state"
+                    id="detail-error"
+                    hidden
+                >
+                    <span class="material-symbols">cloud_off</span>
+                    <h2>Details konnten nicht geladen werden</h2>
+                    <p>Bitte versuche es erneut.</p>
+                    <button
+                        class="btn"
+                        id="detail-retry"
+                        type="button"
+                    >
+                        <span class="material-symbols">refresh</span>Erneut versuchen
+                    </button>
+                </div>
             </div>
             <footer class="dialog-footer">
                 <a
@@ -1534,6 +1776,60 @@
                 </button>
             </footer>
         </dialog>
+
+        <!-- Confirmation dialog for destructive actions (filled and opened by the behaviour layer) -->
+        <dialog
+            id="confirm-dialog"
+            class="dialog confirm-dialog"
+            popover
+        >
+            <header class="dialog-header">
+                <h1
+                    class="dialog-title"
+                    id="confirm-title"
+                >
+                    Aktion bestätigen
+                </h1>
+            </header>
+            <div class="dialog-body">
+                <span class="material-symbols confirm-icon">warning</span>
+                <p
+                    class="confirm-message"
+                    id="confirm-message"
+                ></p>
+                <p
+                    class="confirm-detail"
+                    id="confirm-detail"
+                ></p>
+            </div>
+            <footer class="dialog-footer">
+                <button
+                    class="btn ghost"
+                    id="confirm-cancel"
+                    popovertarget="confirm-dialog"
+                    popovertargetaction="hide"
+                >
+                    Abbrechen
+                </button>
+                <button
+                    class="btn confirm-accept"
+                    id="confirm-accept"
+                    type="button"
+                >
+                    Bestätigen
+                </button>
+            </footer>
+        </dialog>
+
+        <!-- Transient notifications, filled by the behaviour layer -->
+        <div
+            id="toast-region"
+            class="toast-region"
+            role="region"
+            aria-label="Benachrichtigungen"
+            aria-live="polite"
+            aria-atomic="false"
+        ></div>
 
         <script
             type="module"

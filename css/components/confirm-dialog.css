@@ -1,0 +1,26 @@
+/*
+ * Confirmation dialog for destructive actions. It reuses the shared .dialog
+ * shell and only adds the confirm-specific layout and the accept emphasis.
+ */
+.confirm-dialog {
+    @apply w-[min(480px,92vw)];
+}
+.confirm-dialog > div.dialog-body {
+    @apply items-center gap-y-3 text-center;
+}
+.confirm-dialog .confirm-icon {
+    @apply text-[44px] leading-none text-red-500;
+}
+.confirm-dialog .confirm-message {
+    @apply m-0 text-body-medium text-text/80;
+}
+.confirm-dialog .confirm-target {
+    @apply font-semibold text-text;
+}
+.confirm-dialog .confirm-detail {
+    @apply m-0 text-body-small text-text/60;
+}
+.confirm-dialog .btn.confirm-accept {
+    @apply border border-red-500 bg-red-500 text-white;
+    @apply hover:bg-red-500/80;
+}

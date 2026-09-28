@@ -1,0 +1,157 @@
+/*
+ * Feedback layer: transient toasts, loading indicators, empty and error states
+ * and inline field validation.
+ *
+ * These components are presentation only. The behaviour layer reveals the
+ * [hidden] placeholders in index.html and fills the toast region at runtime.
+ */
+
+/* -------------------------------------------------------------------- Toasts */
+
+/* Region that stacks transient notifications above the app content. */
+.toast-region {
+    @apply pointer-events-none fixed inset-x-0 bottom-4 z-50 flex flex-col items-center gap-y-2 px-4;
+}
+
+.toast {
+    @apply pointer-events-auto flex w-fit max-w-[min(560px,92vw)] flex-row items-start gap-x-3;
+    @apply rounded-md border border-border bg-background px-3 py-2 text-body-medium text-text shadow-2xl;
+    animation: feedback-slide-in 160ms ease-out;
+}
+.toast.is-leaving {
+    animation: feedback-slide-in 120ms ease-in reverse forwards;
+}
+.toast > .toast-icon {
+    @apply shrink-0 text-[20px] leading-none;
+}
+.toast > .toast-message {
+    @apply min-w-0 flex-1 text-wrap;
+}
+.toast > .toast-action {
+    @apply shrink-0 cursor-pointer self-center rounded border border-border px-2 py-0.5 text-label-large font-semibold text-primary;
+    @apply hover:bg-primary/10;
+}
+.toast > .toast-dismiss {
+    @apply shrink-0 cursor-pointer self-center rounded text-[18px] leading-none text-text/50;
+    @apply hover:text-text;
+}
+
+.toast.success {
+    @apply border-accent;
+}
+.toast.success > .toast-icon {
+    @apply text-accent;
+}
+.toast.error {
+    @apply border-red-500;
+}
+.toast.error > .toast-icon {
+    @apply text-red-500;
+}
+.toast.info > .toast-icon {
+    @apply text-primary;
+}
+
+@keyframes feedback-slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ------------------------------------------------------------------ Loaders */
+
+/* Inline spinner that inherits the surrounding text colour by default. */
+.spinner {
+    @apply inline-block h-4 w-4 shrink-0 rounded-full border-2 border-current border-t-transparent;
+    animation: feedback-spin 700ms linear infinite;
+}
+.spinner.large {
+    @apply h-6 w-6 border-[3px];
+}
+@keyframes feedback-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Centred loading block used inside panes, trees and dialogs. */
+.feedback-block {
+    @apply m-auto flex max-w-[420px] flex-col items-center justify-center gap-y-2;
+    @apply px-4 py-6 text-center text-body-medium text-text/70;
+}
+.feedback-block > .spinner {
+    @apply text-primary;
+}
+
+/* Skeleton placeholders for content that is still loading. */
+.skeleton {
+    @apply animate-pulse rounded bg-border/40;
+}
+.skeleton-line {
+    @apply h-3 w-full rounded bg-border/40;
+}
+.skeleton-card {
+    @apply flex flex-col gap-y-2 rounded-md border border-border p-2;
+}
+
+/* ------------------------------------------------- Empty and error states */
+
+.empty-state,
+.error-state {
+    @apply m-auto flex w-full max-w-[420px] flex-col items-center justify-center gap-y-2;
+    @apply rounded-md border border-dashed border-border px-6 py-8 text-center text-body-medium text-text/70;
+}
+.empty-state > .material-symbols,
+.error-state > .material-symbols {
+    @apply text-[40px] leading-none text-text/40;
+}
+.empty-state > h2,
+.error-state > h2 {
+    @apply font-header text-title-medium font-semibold text-text;
+}
+.empty-state > p,
+.error-state > p {
+    @apply m-0 text-body-small text-text/70;
+}
+.error-state {
+    @apply border-red-500/50;
+}
+.error-state > .material-symbols {
+    @apply text-red-500/70;
+}
+
+/* Bottom-of-list indicator used by the infinite scroll. */
+.list-more {
+    @apply flex w-full flex-row items-center justify-center gap-x-2 py-3 text-body-small text-text/60;
+}
+.list-more > .spinner {
+    @apply text-primary;
+}
+
+/* Keep every placeholder hidden until the behaviour layer reveals it. */
+.feedback-block[hidden],
+.empty-state[hidden],
+.error-state[hidden],
+.list-more[hidden],
+.toast-region[hidden] {
+    display: none;
+}
+
+/* ----------------------------------------------------- Field validation */
+
+.field-error {
+    @apply ps-2 pt-0.5 text-label-medium text-red-500;
+}
+.field-error:empty {
+    display: none;
+}
+.input-container.invalid input,
+.input-container.invalid select,
+.input-container.invalid .checkbox-list {
+    @apply border-red-500;
+}

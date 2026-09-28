@@ -22,3 +22,6 @@
 @import "./components/dialog.css";
 @import "./components/save-slot-dialog.css";
 @import "./components/detail-dialog.css";
+@import "./components/confirm-dialog.css";
+
+@import "./components/feedback.css";
