@@ -1158,14 +1158,22 @@
         >
             <header class="dialog-header">
                 <h1 class="dialog-title">Save-Slot verwalten</h1>
-                <button
-                    class="btn slim material-symbols dialog-close"
-                    popovertarget="save-slot-dialog"
-                    popovertargetaction="hide"
-                    aria-label="Dialog schließen"
-                >
-                    close
-                </button>
+                <div class="dialog-header-actions">
+                    <button
+                        id="save-slot-new"
+                        class="btn slim"
+                    >
+                        <span class="material-symbols">add</span>Neuer Slot
+                    </button>
+                    <button
+                        class="btn slim material-symbols dialog-close"
+                        popovertarget="save-slot-dialog"
+                        popovertargetaction="hide"
+                        aria-label="Dialog schließen"
+                    >
+                        close
+                    </button>
+                </div>
             </header>
             <div class="dialog-body">
                 <div class="dialog-tabs">
@@ -1194,6 +1202,7 @@
                                 <label for="save-slot-name">Slot-Name</label>
                             </div>
                             <button
+                                id="save-slot-rename"
                                 class="btn slim material-symbols"
                                 aria-label="Slot-Namen speichern"
                             >
@@ -1301,7 +1310,16 @@
                     <section class="dialog-section">
                         <h2 class="section-title">Leistungspunkte</h2>
                         <div class="lp-summary">
-                            <span class="lp-total">30<small>LP</small></span>
+                            <div class="lp-total">
+                                <input
+                                    id="slot-total-lp"
+                                    type="number"
+                                    min="0"
+                                    value="30"
+                                    aria-label="Gesamt-LP"
+                                />
+                                <small>LP</small>
+                            </div>
                             <div class="lp-details">
                                 <span class="lp-caption">
                                     15 von 30 LP der Pflichtmodule abgeschlossen

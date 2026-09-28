@@ -190,8 +190,22 @@ function emptyRange(): Range {
  * @param name - Human readable slot name.
  * @returns The created save slot.
  */
-function createSlot(id: string, name: string): SaveSlot {
+export function createSaveSlot(id: string, name: string): SaveSlot {
     return { id, name, entries: [], requirements: { totalLp: DEFAULT_TOTAL_LP, modules: [] } };
+}
+
+/**
+ * Build a save slot id that is not used yet.
+ * @param state - State whose existing slot ids are checked.
+ * @returns The new slot id.
+ */
+export function createSlotId(state: UIState = getState()): string {
+    const ids = new Set(state.slots.items.map((slot) => slot.id));
+    let index = state.slots.items.length + 1;
+    while (ids.has(`slot-${index}`)) {
+        index += 1;
+    }
+    return `slot-${index}`;
 }
 
 /**
@@ -252,9 +266,9 @@ export function defaultState(): UIState {
         slots: {
             active: DEFAULT_SLOT_ID,
             items: [
-                createSlot(DEFAULT_SLOT_ID, "Mein Studienplan"),
-                createSlot("slot-2", "Save-Slot 2"),
-                createSlot("slot-3", "Save-Slot 3"),
+                createSaveSlot(DEFAULT_SLOT_ID, "Mein Studienplan"),
+                createSaveSlot("slot-2", "Save-Slot 2"),
+                createSaveSlot("slot-3", "Save-Slot 3"),
             ],
         },
     };

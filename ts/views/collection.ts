@@ -300,3 +300,23 @@ export function initCollectionScrolling(): void {
         });
     });
 }
+
+/**
+ * Look up an already loaded entity view by type and id.
+ * @param type - Entity type selector value.
+ * @param id - Entity id.
+ * @returns The cached entity view, or null when it is not loaded yet.
+ */
+export function getCachedEntityView(type: string, id: number): EntityView | null {
+    const collection = collections.get(type);
+    return collection?.views.find((view) => view.entityId === id) ?? null;
+}
+
+/**
+ * List every already loaded entity view of a type.
+ * @param type - Entity type selector value.
+ * @returns The cached entity views.
+ */
+export function getCachedEntityViews(type: string): EntityView[] {
+    return collections.get(type)?.views ?? [];
+}

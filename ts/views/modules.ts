@@ -95,5 +95,6 @@ export function moduleToView(module: Module): EntityView {
         detailsId: String(module.id),
         entityKind: "module",
         entityId: module.id,
+        lp: module.credits,
     };
 }

@@ -11,6 +11,9 @@ import { switchMainView, switchViewMode } from "./layout";
 import { isSaved, toggleSaved } from "./saved";
 import {
     applyShareState,
+    createSaveSlot,
+    createSlotId,
+    DEFAULT_SLOT_ID,
     getActiveSlot,
     getState,
     loadState,
@@ -37,7 +40,7 @@ import {
     type ViewMode,
 } from "./state";
 import { applyTheme } from "./theme";
-import { setActiveType } from "./views";
+import { getCachedEntityView, getCachedEntityViews, setActiveType, type EntityView } from "./views";
 
 /** Debounce delay before high-frequency control changes are captured. */
 const CAPTURE_DEBOUNCE_MS = 250;
@@ -51,6 +54,62 @@ const ENTRY_KIND_LABELS: Record<EntryKind, string> = {
     staff: "Mitarbeiter",
     location: "Raum",
 };
+
+/** Sentinel option value that creates a new save slot from the selector. */
+const NEW_SLOT_OPTION = "__new__";
+
+/** Maps a saved entry kind to the collection type used to resolve its name. */
+const ENTRY_COLLECTION_TYPES: Record<EntryKind, string> = {
+    module: "modules",
+    course: "courses",
+    event: "events",
+    exam: "exams",
+    staff: "staff",
+    location: "locations",
+};
+
+/**
+ * Resolve the cached display data of a saved entry.
+ * @param entry - Saved data point.
+ * @returns The cached entity view, or null when it is not loaded yet.
+ */
+function resolveEntryView(entry: SaveSlotEntry): EntityView | null {
+    return getCachedEntityView(ENTRY_COLLECTION_TYPES[entry.kind], entry.ref);
+}
+
+/**
+ * Format the credit points of a resolved entry.
+ * @param view - Resolved entity view, if any.
+ * @returns The credit point label, or null when unknown.
+ */
+function formatEntryLp(view: EntityView | null): string | null {
+    return view?.lp !== undefined ? `${view.lp} LP` : null;
+}
+
+/**
+ * Build the module options that are not required yet.
+ * @param slot - Save slot whose requirements and entries are inspected.
+ * @returns The selectable module references with labels.
+ */
+function requirementAddOptions(slot: SaveSlot): { ref: number; label: string }[] {
+    const required = new Set(slot.requirements.modules.map((module) => module.ref));
+    const options = new Map<number, string>();
+    getCachedEntityViews("modules").forEach((view) => {
+        if (view.entityId !== undefined) {
+            options.set(view.entityId, view.number ? `${view.name} (${view.number})` : view.name);
+        }
+    });
+    slot.entries
+        .filter((entry) => entry.kind === "module")
+        .forEach((entry) => {
+            if (!options.has(entry.ref)) {
+                options.set(entry.ref, `Modul #${entry.ref}`);
+            }
+        });
+    return Array.from(options.entries())
+        .filter(([ref]) => !required.has(ref))
+        .map(([ref, label]) => ({ ref, label }));
+}
 
 /** Lazy calendar creator registered by the application bootstrap. */
 let calendarLoader: (paneId: PaneId) => void = () => {};
@@ -117,6 +176,18 @@ function writeText(id: string, value: string): void {
     if (input) {
         input.value = value;
     }
+}
+
+/**
+ * Read a numeric input, keeping the fallback for empty or invalid values.
+ * @param id - Input element id.
+ * @param fallback - Value used when the input is empty or invalid.
+ * @returns The parsed number.
+ */
+function readNumberInput(id: string, fallback: number): number {
+    const input = document.getElementById(id) as HTMLInputElement | null;
+    const value = Number(input?.value);
+    return input && input.value !== "" && Number.isFinite(value) ? value : fallback;
 }
 
 /**
@@ -467,6 +538,7 @@ function createSlotOption(value: string, label: string): HTMLOptionElement {
  * @returns The created list item.
  */
 function createSlotEntry(entry: SaveSlotEntry): HTMLLIElement {
+    const view = resolveEntryView(entry);
     const item = document.createElement("li");
     item.className = "slot-entry";
     const type = document.createElement("span");
@@ -476,15 +548,23 @@ function createSlotEntry(entry: SaveSlotEntry): HTMLLIElement {
     main.className = "entry-main";
     const name = document.createElement("span");
     name.className = "entry-name";
-    name.textContent = `${ENTRY_KIND_LABELS[entry.kind]} #${entry.ref}`;
-    main.appendChild(name);
+    name.textContent = view ? view.name : `${ENTRY_KIND_LABELS[entry.kind]} #${entry.ref}`;
+    const meta = document.createElement("span");
+    meta.className = "entry-meta";
+    meta.textContent = view?.number
+        ? `${view.number} · ${ENTRY_KIND_LABELS[entry.kind]}`
+        : `${ENTRY_KIND_LABELS[entry.kind]} · #${entry.ref}`;
+    main.append(name, meta);
+    const lp = document.createElement("span");
+    lp.className = "entry-lp";
+    lp.textContent = formatEntryLp(view) ?? "";
     const remove = document.createElement("button");
     remove.className = "btn slim material-symbols";
     remove.textContent = "delete";
     remove.setAttribute("aria-label", "Eintrag entfernen");
     remove.dataset["removeKind"] = entry.kind;
     remove.dataset["removeRef"] = String(entry.ref);
-    item.append(type, main, remove);
+    item.append(type, main, lp, remove);
     return item;
 }
 
@@ -511,9 +591,17 @@ function renderSlotEntries(slot: SaveSlot): void {
         `#save-slot-dialog .tab-content[data-tab="entries"] .slot-entry-list`,
     );
     if (list) {
-        const fragment = document.createDocumentFragment();
-        slot.entries.forEach((entry) => fragment.appendChild(createSlotEntry(entry)));
-        list.replaceChildren(fragment);
+        if (slot.entries.length === 0) {
+            const empty = document.createElement("li");
+            empty.className = "slot-empty";
+            empty.textContent =
+                "Noch keine gespeicherten Einträge. Speichere Daten über die Behalten-Buttons.";
+            list.replaceChildren(empty);
+        } else {
+            const fragment = document.createDocumentFragment();
+            slot.entries.forEach((entry) => fragment.appendChild(createSlotEntry(entry)));
+            list.replaceChildren(fragment);
+        }
     }
     setCountBadge("entries", slot.entries.length);
 }
@@ -524,6 +612,7 @@ function renderSlotEntries(slot: SaveSlot): void {
  * @returns The created requirement card.
  */
 function createRequirementCard(module: RequirementModule): HTMLLIElement {
+    const view = getCachedEntityView("modules", module.ref);
     const item = document.createElement("li");
     item.className = `requirement-card${module.done ? " finished" : ""}`;
     const head = document.createElement("div");
@@ -532,21 +621,60 @@ function createRequirementCard(module: RequirementModule): HTMLLIElement {
     checkbox.type = "checkbox";
     checkbox.checked = module.done;
     checkbox.dataset["requirementRef"] = String(module.ref);
-    checkbox.setAttribute("aria-label", `Modul #${module.ref} abgeschlossen`);
-    const icon = document.createElement("span");
-    icon.className = "material-symbols";
-    icon.textContent = module.done ? "check_circle" : "radio_button_unchecked";
-    head.append(checkbox, icon);
+    checkbox.setAttribute("aria-label", `${view?.name ?? "Modul"} abgeschlossen`);
+    const remove = document.createElement("button");
+    remove.className = "btn slim material-symbols req-remove";
+    remove.textContent = "close";
+    remove.setAttribute("aria-label", "Pflichtmodul entfernen");
+    remove.dataset["removeRequirement"] = String(module.ref);
+    head.append(checkbox, remove);
     const name = document.createElement("span");
     name.className = "req-name";
-    name.textContent = `Modul #${module.ref}`;
+    name.textContent = view?.name ?? `Modul #${module.ref}`;
     const number = document.createElement("span");
     number.className = "req-number";
-    number.textContent = `#${module.ref}`;
-    const lp = document.createElement("span");
+    number.textContent = view?.number ?? `#${module.ref}`;
+    const lp = document.createElement("input");
+    lp.type = "number";
     lp.className = "req-lp";
-    lp.textContent = `${module.lp} LP`;
+    lp.min = "0";
+    lp.value = String(module.lp);
+    lp.dataset["requirementLp"] = String(module.ref);
+    lp.setAttribute("aria-label", "Leistungspunkte");
     item.append(head, name, number, lp);
+    return item;
+}
+
+/**
+ * Create the card that adds a required module.
+ * @param slot - Save slot whose options are listed.
+ * @returns The created add card.
+ */
+function createRequirementAddCard(slot: SaveSlot): HTMLLIElement {
+    const item = document.createElement("li");
+    item.className = "requirement-card requirement-add";
+    const head = document.createElement("div");
+    head.className = "requirement-head";
+    const select = document.createElement("select");
+    select.id = "requirement-add-select";
+    select.setAttribute("aria-label", "Modul auswählen");
+    const options = requirementAddOptions(slot);
+    if (options.length === 0) {
+        select.appendChild(createSlotOption("", "Keine Module verfügbar"));
+        select.disabled = true;
+    } else {
+        options.forEach((option) =>
+            select.appendChild(createSlotOption(String(option.ref), option.label)),
+        );
+    }
+    const add = document.createElement("button");
+    add.id = "requirement-add";
+    add.className = "btn slim material-symbols";
+    add.textContent = "add_circle";
+    add.setAttribute("aria-label", "Pflichtmodul hinzufügen");
+    add.disabled = options.length === 0;
+    head.append(select, add);
+    item.appendChild(head);
     return item;
 }
 
@@ -591,6 +719,7 @@ function renderSlotRequirements(slot: SaveSlot): void {
         slot.requirements.modules.forEach((module) =>
             fragment.appendChild(createRequirementCard(module)),
         );
+        fragment.appendChild(createRequirementAddCard(slot));
         grid.replaceChildren(fragment);
     }
     setCountBadge("requirements", slot.requirements.modules.length);
@@ -614,14 +743,10 @@ function setText(selector: string, text: string): void {
  * @param total - Total credit points.
  */
 function setLpTotal(total: number): void {
-    const element = document.querySelector("#save-slot-dialog .lp-total");
-    if (!element) {
-        return;
+    const input = document.getElementById("slot-total-lp") as HTMLInputElement | null;
+    if (input) {
+        input.value = String(total);
     }
-    element.textContent = String(total);
-    const small = document.createElement("small");
-    small.textContent = "LP";
-    element.appendChild(small);
 }
 
 /**
@@ -637,6 +762,7 @@ function renderSlotSelector(state: UIState): void {
     }
     const fragment = document.createDocumentFragment();
     state.slots.items.forEach((slot) => fragment.appendChild(createSlotOption(slot.id, slot.name)));
+    fragment.appendChild(createSlotOption(NEW_SLOT_OPTION, "+ Neuer Slot"));
     select.replaceChildren(fragment);
     select.value = state.slots.active;
 }
@@ -674,6 +800,7 @@ export function captureSlotState(state: UIState = getState()): void {
         return;
     }
     slot.name = readText("save-slot-name") || slot.name;
+    slot.requirements.totalLp = readNumberInput("slot-total-lp", slot.requirements.totalLp);
     document
         .querySelectorAll<HTMLInputElement>("#save-slot-dialog [data-requirement-ref]")
         .forEach((input) => {
@@ -681,6 +808,16 @@ export function captureSlotState(state: UIState = getState()): void {
             const module = slot.requirements.modules.find((item) => item.ref === ref);
             if (module) {
                 module.done = input.checked;
+            }
+        });
+    document
+        .querySelectorAll<HTMLInputElement>("#save-slot-dialog [data-requirement-lp]")
+        .forEach((input) => {
+            const ref = Number(input.dataset["requirementLp"]);
+            const value = Number(input.value);
+            const module = slot.requirements.modules.find((item) => item.ref === ref);
+            if (module && input.value !== "" && Number.isFinite(value)) {
+                module.lp = value;
             }
         });
 }
@@ -881,11 +1018,83 @@ function clearActiveSlot(): void {
 function deleteActiveSlot(): void {
     updateState((state) => {
         state.slots.items = state.slots.items.filter((slot) => slot.id !== state.slots.active);
-        state.slots.active = state.slots.items[0]?.id ?? "";
+        if (state.slots.items.length === 0) {
+            state.slots.items = [createSaveSlot(DEFAULT_SLOT_ID, "Mein Studienplan")];
+        }
+        state.slots.active = state.slots.items[0]?.id ?? DEFAULT_SLOT_ID;
     });
     renderSlotSelector(getState());
     renderActiveSlot(getState());
     syncSaveButtons();
+}
+
+/**
+ * Activate a tab in the save-slot dialog.
+ * @param tab - Tab name to activate.
+ */
+function selectSlotTab(tab: string): void {
+    document.querySelectorAll("#save-slot-dialog .dialog-tabs > span").forEach((span) => {
+        span.classList.toggle("active", span.getAttribute("data-tab") === tab);
+    });
+}
+
+/** Focus and select the slot name input so it can be renamed. */
+function focusSlotName(): void {
+    const input = document.getElementById("save-slot-name") as HTMLInputElement | null;
+    input?.focus();
+    input?.select();
+}
+
+/** Create a new empty save slot and select it. */
+function createNewSlot(): void {
+    updateState((state) => {
+        const id = createSlotId(state);
+        state.slots.items = [
+            ...state.slots.items,
+            createSaveSlot(id, `Save-Slot ${state.slots.items.length + 1}`),
+        ];
+        state.slots.active = id;
+    });
+    const state = getState();
+    renderSlotSelector(state);
+    renderActiveSlot(state);
+    syncSaveButtons();
+}
+
+/** Add the selected module to the requirements of the active slot. */
+function addRequirement(): void {
+    const select = document.getElementById("requirement-add-select") as HTMLSelectElement | null;
+    const ref = Number(select?.value);
+    if (!select || select.value === "" || !Number.isFinite(ref)) {
+        return;
+    }
+    const lp = getCachedEntityView("modules", ref)?.lp ?? 0;
+    updateState((state) => {
+        const slot = getActiveSlot(state);
+        if (slot && !slot.requirements.modules.some((module) => module.ref === ref)) {
+            slot.requirements.modules = [...slot.requirements.modules, { ref, lp, done: false }];
+        }
+    });
+    renderActiveSlot(getState());
+}
+
+/**
+ * Remove a required module from the active slot.
+ * @param ref - Module reference to remove.
+ */
+function removeRequirement(ref: number): void {
+    if (!Number.isFinite(ref)) {
+        return;
+    }
+    updateState((state) => {
+        const slot = getActiveSlot(state);
+        if (slot) {
+            slot.requirements.modules = slot.requirements.modules.filter(
+                (module) => module.ref !== ref,
+            );
+        }
+    });
+    renderActiveSlot(getState());
 }
 
 /**
@@ -897,12 +1106,28 @@ function handleSlotClick(event: Event): void {
     if (!(target instanceof Element)) {
         return;
     }
-    const remove = target.closest<HTMLElement>("[data-remove-kind]");
-    if (remove) {
-        removeEntry(`${remove.dataset["removeKind"]}:${remove.dataset["removeRef"]}`);
+    const tab = target.closest<HTMLElement>(".dialog-tabs > span[data-tab]");
+    if (tab) {
+        selectSlotTab(tab.dataset["tab"] ?? "");
         return;
     }
-    if (target.closest("#save-slot-clear")) {
+    const entryButton = target.closest<HTMLElement>("[data-remove-kind]");
+    if (entryButton) {
+        removeEntry(`${entryButton.dataset["removeKind"]}:${entryButton.dataset["removeRef"]}`);
+        return;
+    }
+    const requirementButton = target.closest<HTMLElement>("[data-remove-requirement]");
+    if (requirementButton) {
+        removeRequirement(Number(requirementButton.dataset["removeRequirement"]));
+        return;
+    }
+    if (target.closest("#save-slot-new")) {
+        createNewSlot();
+    } else if (target.closest("#save-slot-rename")) {
+        focusSlotName();
+    } else if (target.closest("#requirement-add")) {
+        addRequirement();
+    } else if (target.closest("#save-slot-clear")) {
         clearActiveSlot();
     } else if (target.closest("#save-slot-delete")) {
         deleteActiveSlot();
@@ -917,11 +1142,15 @@ function handleSlotClick(event: Event): void {
  */
 function handleSlotChange(event: Event): void {
     const target = event.target;
-    if (!(target instanceof HTMLInputElement)) {
+    if (!(target instanceof HTMLInputElement) && !(target instanceof HTMLSelectElement)) {
         return;
     }
     captureState();
-    if (target.dataset["requirementRef"] !== undefined) {
+    if (
+        target.id === "slot-total-lp" ||
+        target.dataset["requirementRef"] !== undefined ||
+        target.dataset["requirementLp"] !== undefined
+    ) {
         renderActiveSlot(getState());
     } else if (target.id === "save-slot-name") {
         renderSlotSelector(getState());
@@ -934,6 +1163,10 @@ function initSlotControls(): void {
         "#save-slot-options .save-slot-selector",
     );
     select?.addEventListener("change", () => {
+        if (select.value === NEW_SLOT_OPTION) {
+            createNewSlot();
+            return;
+        }
         updateState((state) => {
             state.slots.active = select.value;
         });
@@ -943,6 +1176,12 @@ function initSlotControls(): void {
     const dialog = document.querySelector("#save-slot-dialog");
     dialog?.addEventListener("click", handleSlotClick);
     dialog?.addEventListener("change", handleSlotChange);
+    dialog?.addEventListener("toggle", (event) => {
+        const state = (event as Event & { newState?: string }).newState;
+        if (state === "open") {
+            renderActiveSlot(getState());
+        }
+    });
 }
 
 /**

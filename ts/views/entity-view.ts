@@ -8,6 +8,8 @@ export type EntityView = {
     detailsId?: string;
     entityKind?: EntryKind;
     entityId?: number;
+    /** Credit points of the entity, when it has any. */
+    lp?: number;
 };
 
 export type InfoSpec = {

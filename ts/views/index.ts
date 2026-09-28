@@ -10,6 +10,8 @@ export {
     COLLECTION_PAGE_SIZE,
     ensureCollection,
     ensurePaneCollections,
+    getCachedEntityView,
+    getCachedEntityViews,
     initCollectionScrolling,
     loadMoreForPane,
     registerCollection,
