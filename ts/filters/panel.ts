@@ -21,9 +21,16 @@ const SUMMARY_DEBOUNCE_MS = 150;
 const TRI_STATE_LISTS = [
     "filter-semester",
     "filter-faculty",
-    "filter-language",
+    "filter-degree",
     "filter-type",
     "filter-degree-types",
+    "filter-event-buildings",
+    "filter-event-staff",
+    "filter-event-types",
+    "filter-has-courses",
+    "filter-has-events",
+    "filter-has-staff",
+    "filter-locations-accessible",
 ];
 
 /** Callback invoked after a chip or a group reset changed the filters. */

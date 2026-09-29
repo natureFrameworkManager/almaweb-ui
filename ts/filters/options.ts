@@ -237,3 +237,15 @@ export function toDegreeTypeOptions(degrees: Degree[]): FilterOption[] {
         .sort((a, b) => a.localeCompare(b))
         .map((value) => ({ value, label: value }));
 }
+
+/**
+ * Convert degree records into options for the module degree filter.
+ * @param degrees - Degree records.
+ * @returns The degree filter options, keyed by degree id.
+ */
+export function toDegreeOptions(degrees: Degree[]): FilterOption[] {
+    return degrees
+        .slice()
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map((degree) => ({ value: String(degree.id), label: degree.name }));
+}

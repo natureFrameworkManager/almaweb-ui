@@ -43,6 +43,7 @@ import {
     type EventFilters,
     type FacetExclusions,
     type GlobalFilters,
+    type LocationFilters,
     type MainView,
     type ModuleFilters,
     type PaneId,
@@ -405,25 +406,45 @@ function writeTriState(id: string, value: TriState): void {
 }
 
 /**
- * Read the value of a select element.
- * @param id - Select element id.
- * @returns The selected value, or an empty string when missing.
+ * Read the tri-state value of a single-option checkbox facet list.
+ * @param containerId - Checkbox list container id.
+ * @returns The tri-state value of the facet option.
  */
-function readSelectValue(id: string): string {
-    const select = document.getElementById(id) as HTMLSelectElement | null;
-    return select ? select.value : "";
+function readFacetTriState(containerId: string): TriState {
+    const option = singleFacetOption(containerId);
+    if (!option) {
+        return "neutral";
+    }
+    if (option.indeterminate) {
+        return "hidden";
+    }
+    return option.checked ? "selected" : "neutral";
 }
 
 /**
- * Write the value of a select element.
- * @param id - Select element id.
- * @param value - Value to select.
+ * Write the tri-state value of a single-option checkbox facet list.
+ * @param containerId - Checkbox list container id.
+ * @param value - Tri-state value to write.
  */
-function writeSelectValue(id: string, value: string): void {
-    const select = document.getElementById(id) as HTMLSelectElement | null;
-    if (select) {
-        select.value = value;
+function writeFacetTriState(containerId: string, value: TriState): void {
+    const option = singleFacetOption(containerId);
+    if (!option) {
+        return;
     }
+    option.indeterminate = value === "hidden";
+    option.checked = value === "selected";
+}
+
+/**
+ * Return the non-default checkbox option of a facet list.
+ * @param containerId - Checkbox list container id.
+ * @returns The facet option, or null when the list is missing or empty.
+ */
+function singleFacetOption(containerId: string): HTMLInputElement | null {
+    const inputs = document.querySelectorAll<HTMLInputElement>(
+        `#${containerId} input[type="checkbox"]`,
+    );
+    return Array.from(inputs).find((input) => input.value !== "") ?? null;
 }
 
 /**
@@ -510,10 +531,15 @@ function applyModuleFilters(filters: ModuleFilters): void {
     writeText("search-input-module", filters.name);
     writeText("search-input-module-number", filters.number);
     writeCheckedValues("filter-faculty", filters.faculty);
+    writeCheckedValues("filter-degree", filters.degrees);
     writeText("filter-responsible-person", filters.responsiblePerson);
     writeRange("module-credits", filters.credits);
     writeRange("module-duration", filters.duration);
-    writeCheckedValues("filter-language", filters.languages);
+    writeFacetTriState("filter-has-courses", filters.hasCourses);
+    writeFacetTriState("filter-has-events", filters.hasEvents);
+    writeFacetTriState("filter-has-staff", filters.hasStaff);
+    writeText("filter-module-path", filters.path);
+    writeText("filter-module-path-prefix", filters.pathPrefix);
 }
 
 /**
@@ -536,7 +562,9 @@ function applyEventFilters(filters: EventFilters): void {
     writeRange("event-start-time", filters.startTime);
     writeRange("event-end-time", filters.endTime);
     writeRange("event-dates", filters.dates);
-    writeSelectValue("filter-event-buildings", filters.buildings);
+    writeCheckedValues("filter-event-buildings", filters.buildings);
+    writeCheckedValues("filter-event-staff", filters.staff);
+    writeCheckedValues("filter-event-types", filters.types);
 }
 
 /**
@@ -549,7 +577,6 @@ function applyExamFilters(filters: ExamFilters): void {
     writeRange("exam-start-time", filters.startTime);
     writeRange("exam-end-time", filters.endTime);
     writeRange("exam-dates", filters.dates);
-    writeCheckedValues("filter-buildings", filters.buildings);
     writeTriState("filter-exam-required", filters.required);
     writeCheckedValues("filter-staff", filters.staff);
 }
@@ -565,6 +592,14 @@ function applyDegreeFilters(filters: DegreeFilters): void {
 }
 
 /**
+ * Write the location filters into their DOM controls.
+ * @param filters - Location filters to write.
+ */
+function applyLocationFilters(filters: LocationFilters): void {
+    writeFacetTriState("filter-locations-accessible", filters.accessible);
+}
+
+/**
  * Hydrate every filter DOM control from the state.
  * @param state - State to read from.
  */
@@ -574,6 +609,7 @@ export function applyFilterState(state: UIState): void {
     applyCourseFilters(state.filters.course);
     applyEventFilters(state.filters.event);
     applyExamFilters(state.filters.exam);
+    applyLocationFilters(state.filters.location);
     applyDegreeFilters(state.filters.degree);
     writeExcludedValues(state.filters.excluded);
 }
@@ -594,10 +630,15 @@ function captureModuleFilters(filters: ModuleFilters): void {
     filters.name = readText("search-input-module");
     filters.number = readText("search-input-module-number");
     filters.faculty = readNumbers("filter-faculty");
+    filters.degrees = readNumbers("filter-degree");
     filters.responsiblePerson = readText("filter-responsible-person");
     filters.credits = readRange("module-credits");
     filters.duration = readRange("module-duration");
-    filters.languages = readCheckedValues("filter-language");
+    filters.hasCourses = readFacetTriState("filter-has-courses");
+    filters.hasEvents = readFacetTriState("filter-has-events");
+    filters.hasStaff = readFacetTriState("filter-has-staff");
+    filters.path = readText("filter-module-path");
+    filters.pathPrefix = readText("filter-module-path-prefix");
 }
 
 /**
@@ -620,7 +661,9 @@ function captureEventFilters(filters: EventFilters): void {
     filters.startTime = readRange("event-start-time");
     filters.endTime = readRange("event-end-time");
     filters.dates = readRange("event-dates");
-    filters.buildings = readSelectValue("filter-event-buildings");
+    filters.buildings = readNumbers("filter-event-buildings");
+    filters.staff = readNumbers("filter-event-staff");
+    filters.types = readNumbers("filter-event-types");
 }
 
 /**
@@ -633,9 +676,16 @@ function captureExamFilters(filters: ExamFilters): void {
     filters.startTime = readRange("exam-start-time");
     filters.endTime = readRange("exam-end-time");
     filters.dates = readRange("exam-dates");
-    filters.buildings = readNumbers("filter-buildings");
     filters.required = readTriState("filter-exam-required");
     filters.staff = readNumbers("filter-staff");
+}
+
+/**
+ * Capture the location filters from their DOM controls.
+ * @param filters - Filter section to update.
+ */
+function captureLocationFilters(filters: LocationFilters): void {
+    filters.accessible = readFacetTriState("filter-locations-accessible");
 }
 
 /**
@@ -658,6 +708,7 @@ export function captureFilterState(state: UIState = getState()): void {
     captureCourseFilters(state.filters.course);
     captureEventFilters(state.filters.event);
     captureExamFilters(state.filters.exam);
+    captureLocationFilters(state.filters.location);
     captureDegreeFilters(state.filters.degree);
     state.filters.excluded = readExcludedValues();
 }

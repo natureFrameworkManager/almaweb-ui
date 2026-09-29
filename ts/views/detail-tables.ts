@@ -256,7 +256,7 @@ export function collectEvents(courses: CourseDetail[]): EventWithCourse[] {
  */
 export function collectLocations(events: EventWithCourse[], exams: Exam[]): LocationUsage[] {
     const usages = new Map<number, LocationUsage>();
-    const add = (location: Location | undefined, courseName: string): void => {
+    const add = (location: Location | null | undefined, courseName: string): void => {
         if (!location) {
             return;
         }
@@ -279,7 +279,7 @@ export function collectLocations(events: EventWithCourse[], exams: Exam[]): Loca
  */
 export function collectBuildings(events: EventWithCourse[], exams: Exam[]): Building[] {
     const buildings = new Map<number, Building>();
-    const add = (location: Location | undefined): void => {
+    const add = (location: Location | null | undefined): void => {
         const building = location?.building;
         const hasLabel = building
             ? (building.name || building.short_name || building.address).length > 0

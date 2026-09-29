@@ -16,7 +16,7 @@ function getLocationInfos(location: Location, includeDetails: boolean): InfoSpec
         addInfoIfPresent(
             infos,
             "location-building",
-            location.building.name
+            location.building
                 ? `${location.building.name} - ${location.building.address}`
                 : "",
         );

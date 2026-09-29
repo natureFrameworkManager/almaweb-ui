@@ -329,21 +329,94 @@
                     <div class="input-container slim">
                         <div
                             class="checkbox-list"
-                            id="filter-language"
+                            id="filter-degree"
                         >
                             <label
                                 class="checkbox-item"
-                                for="filter-language-alle"
+                                for="filter-degree-alle"
                             >
                                 <input
                                     type="checkbox"
-                                    id="filter-language-alle"
+                                    id="filter-degree-alle"
                                     value=""
                                 />
-                                <span>Alle Sprachen</span>
+                                <span>Alle Studiengänge</span>
                             </label>
                         </div>
-                        <label>Sprache</label>
+                        <label>Studiengang</label>
+                    </div>
+                    <div class="input-container slim">
+                        <div
+                            class="checkbox-list"
+                            id="filter-has-courses"
+                        >
+                            <label
+                                class="checkbox-item"
+                                for="filter-has-courses-true"
+                            >
+                                <input
+                                    type="checkbox"
+                                    id="filter-has-courses-true"
+                                    value="true"
+                                />
+                                <span>Mit Kursen</span>
+                            </label>
+                        </div>
+                        <label>Kurse vorhanden</label>
+                    </div>
+                    <div class="input-container slim">
+                        <div
+                            class="checkbox-list"
+                            id="filter-has-events"
+                        >
+                            <label
+                                class="checkbox-item"
+                                for="filter-has-events-true"
+                            >
+                                <input
+                                    type="checkbox"
+                                    id="filter-has-events-true"
+                                    value="true"
+                                />
+                                <span>Mit Veranstaltungen</span>
+                            </label>
+                        </div>
+                        <label>Veranstaltungen vorhanden</label>
+                    </div>
+                    <div class="input-container slim">
+                        <div
+                            class="checkbox-list"
+                            id="filter-has-staff"
+                        >
+                            <label
+                                class="checkbox-item"
+                                for="filter-has-staff-true"
+                            >
+                                <input
+                                    type="checkbox"
+                                    id="filter-has-staff-true"
+                                    value="true"
+                                />
+                                <span>Mit Personal</span>
+                            </label>
+                        </div>
+                        <label>Personal vorhanden</label>
+                    </div>
+                    <div class="input-container slim">
+                        <input
+                            type="text"
+                            id="filter-module-path"
+                            placeholder='"Pflichtmodule"'
+                        />
+                        <label for="filter-module-path">Pfadsegment</label>
+                    </div>
+                    <div class="input-container slim">
+                        <input
+                            type="text"
+                            id="filter-module-path-prefix"
+                            placeholder='"Root/SoSe 2025"'
+                        />
+                        <label for="filter-module-path-prefix">Pfad-Präfix</label>
                     </div>
                 </div>
             </details>
@@ -388,10 +461,7 @@
                         </div>
                         <label>Kurstyp</label>
                     </div>
-                    <div
-                        class="input-container slim"
-                        data-unsupported="Die API unterstützt keine Dozenten-Filterung für Kurse."
-                    >
+                    <div class="input-container slim">
                         <div
                             class="checkbox-list"
                             id="filter-instructors"
@@ -511,10 +581,61 @@
                         <label>Datumszeitraum</label>
                     </div>
                     <div class="input-container slim">
-                        <select id="filter-event-buildings">
-                            <option value="">Alle Gebäude</option>
-                        </select>
-                        <label for="filter-event-buildings">Gebäude</label>
+                        <div
+                            class="checkbox-list"
+                            id="filter-event-buildings"
+                        >
+                            <label
+                                class="checkbox-item"
+                                for="filter-event-buildings-alle"
+                            >
+                                <input
+                                    type="checkbox"
+                                    id="filter-event-buildings-alle"
+                                    value=""
+                                />
+                                <span>Alle Gebäude</span>
+                            </label>
+                        </div>
+                        <label>Gebäude</label>
+                    </div>
+                    <div class="input-container slim">
+                        <div
+                            class="checkbox-list"
+                            id="filter-event-staff"
+                        >
+                            <label
+                                class="checkbox-item"
+                                for="filter-event-staff-alle"
+                            >
+                                <input
+                                    type="checkbox"
+                                    id="filter-event-staff-alle"
+                                    value=""
+                                />
+                                <span>Alle Dozierenden</span>
+                            </label>
+                        </div>
+                        <label>Dozierende</label>
+                    </div>
+                    <div class="input-container slim">
+                        <div
+                            class="checkbox-list"
+                            id="filter-event-types"
+                        >
+                            <label
+                                class="checkbox-item"
+                                for="filter-event-types-alle"
+                            >
+                                <input
+                                    type="checkbox"
+                                    id="filter-event-types-alle"
+                                    value=""
+                                />
+                                <span>Alle Kursarten</span>
+                            </label>
+                        </div>
+                        <label>Kursart</label>
                     </div>
                 </div>
             </details>
@@ -524,10 +645,6 @@
             >
                 <summary><span class="material-symbols">history_edu</span>Prüfungen</summary>
                 <div class="filter-group-content">
-                    <p class="filter-note">
-                        Hinweis: Der globale Semesterfilter wird von der API für Prüfungen nicht
-                        unterstützt.
-                    </p>
                     <div class="input-container">
                         <input
                             id="search-input-exam"
@@ -624,28 +741,6 @@
                         </div>
                         <label>Datumszeitraum</label>
                     </div>
-                    <div
-                        class="input-container slim"
-                        data-unsupported="Die API unterstützt keine Gebäude-Filterung für Prüfungen."
-                    >
-                        <div
-                            class="checkbox-list"
-                            id="filter-buildings"
-                        >
-                            <label
-                                class="checkbox-item"
-                                for="filter-buildings-all"
-                            >
-                                <input
-                                    type="checkbox"
-                                    id="filter-buildings-all"
-                                    value=""
-                                />
-                                <span>Alle Gebäude</span>
-                            </label>
-                        </div>
-                        <label>Gebäude</label>
-                    </div>
                     <div class="input-container slim">
                         <input
                             type="checkbox"
@@ -715,6 +810,33 @@
                             </label>
                         </div>
                         <label>Abschluss</label>
+                    </div>
+                </div>
+            </details>
+            <details
+                class="filter-group"
+                id="filter-group-locations"
+            >
+                <summary><span class="material-symbols">room</span>Räumlichkeiten</summary>
+                <div class="filter-group-content">
+                    <div class="input-container slim">
+                        <div
+                            class="checkbox-list"
+                            id="filter-locations-accessible"
+                        >
+                            <label
+                                class="checkbox-item"
+                                for="filter-locations-accessible-true"
+                            >
+                                <input
+                                    type="checkbox"
+                                    id="filter-locations-accessible-true"
+                                    value="true"
+                                />
+                                <span>Barrierefrei</span>
+                            </label>
+                        </div>
+                        <label>Barrierefreiheit</label>
                     </div>
                 </div>
             </details>

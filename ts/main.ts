@@ -10,14 +10,12 @@ import {
     getEventTypes,
     getExamTypes,
     getFaculties,
-    getModuleLanguages,
     getSemesters,
     getStaff,
 } from "./api/api";
 import { ensureCalendar, refreshCalendarEvents } from "./calendar";
 import {
     appendCheckboxOptions,
-    appendSelectOptions,
     initFilterPanel,
     initTreeRetry,
     refreshFilterSummary,
@@ -28,14 +26,15 @@ import {
     requeryDegrees,
     requeryEvents,
     requeryExams,
+    requeryLocations,
     requeryModules,
     setStaffDirectory,
     toBuildingOptions,
+    toDegreeOptions,
     toDegreeTypeOptions,
     toEventTypeOptions,
     toExamTypeOptions,
     toFacultyOptions,
-    toLanguageOptions,
     toSemesterOptions,
     toStaffOptions,
     wireFilterGroup,
@@ -146,6 +145,7 @@ const filterOptionLoads = [
             setStaffDirectory(staff.items);
             appendCheckboxOptions("filter-instructors", toStaffOptions(staff.items));
             appendCheckboxOptions("filter-staff", toStaffOptions(staff.items));
+            appendCheckboxOptions("filter-event-staff", toStaffOptions(staff.items));
         })
         .catch((error) => {
             reportError("Filteroptionen konnten nicht geladen werden.", error);
@@ -167,22 +167,14 @@ const filterOptionLoads = [
     getEventTypes()
         .then((eventTypes) => {
             appendCheckboxOptions("filter-type", toEventTypeOptions(eventTypes.items));
+            appendCheckboxOptions("filter-event-types", toEventTypeOptions(eventTypes.items));
         })
         .catch((error) => {
             reportError("Filteroptionen konnten nicht geladen werden.", error);
         }),
     getBuildings()
         .then((buildings) => {
-            const options = toBuildingOptions(buildings.items);
-            appendCheckboxOptions("filter-buildings", options);
-            appendSelectOptions("filter-event-buildings", options);
-        })
-        .catch((error) => {
-            reportError("Filteroptionen konnten nicht geladen werden.", error);
-        }),
-    getModuleLanguages()
-        .then((languages) => {
-            appendCheckboxOptions("filter-language", toLanguageOptions(languages.items));
+            appendCheckboxOptions("filter-event-buildings", toBuildingOptions(buildings.items));
         })
         .catch((error) => {
             reportError("Filteroptionen konnten nicht geladen werden.", error);
@@ -197,6 +189,7 @@ const filterOptionLoads = [
     getDegrees()
         .then((degrees) => {
             appendCheckboxOptions("filter-degree-types", toDegreeTypeOptions(degrees.items));
+            appendCheckboxOptions("filter-degree", toDegreeOptions(degrees.items));
         })
         .catch((error) => {
             reportError("Filteroptionen konnten nicht geladen werden.", error);
@@ -224,3 +217,4 @@ wireFilterGroup("filter-group-course", requeryCourses);
 wireFilterGroup("filter-group-event", requeryEvents);
 wireFilterGroup("filter-group-exam", requeryExams);
 wireFilterGroup("filter-group-degree", requeryDegrees);
+wireFilterGroup("filter-group-locations", requeryLocations);

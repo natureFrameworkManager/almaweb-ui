@@ -1,6 +1,6 @@
 {
     "$id": "datasave.json",
-    "version": 1,
+    "version": 2,
     "app": "almaweb-ui",
     "_readme": [
         "Canonical data-save document for the almaweb-ui state layer.",
@@ -27,7 +27,7 @@
         "strategy": "base64url(JSON.stringify(state))",
         "omitDefaults": true,
         "arrayFormat": "comma-joined numeric/string ids",
-        "_note": "Always keep ?v so older links can be migrated. Form (a): ?v=1&d=<base64url of full state>. Form (b): ?v=1 plus short keys from the dictionary below for a readable link.",
+        "_note": "Always keep ?v so older links can be migrated. Form (a): ?v=2&d=<base64url of full state>. Form (b): ?v=2 plus short keys from the dictionary below for a readable link.",
         "dictionary": {
             "top": {
                 "theme": "t",
@@ -56,13 +56,20 @@
                 "course": "co",
                 "event": "ev",
                 "exam": "ex",
+                "location": "lo",
+                "degree": "de",
                 "name": "n",
                 "number": "no",
                 "faculty": "fa",
+                "degrees": "dg",
                 "responsiblePerson": "rp",
                 "credits": "cr",
                 "duration": "du",
-                "languages": "la",
+                "hasCourses": "hc",
+                "hasEvents": "he",
+                "hasStaff": "hs",
+                "path": "pa",
+                "pathPrefix": "pp",
                 "types": "ty",
                 "instructors": "in",
                 "weeklyHours": "wh",
@@ -70,9 +77,12 @@
                 "endTime": "et",
                 "dates": "dt",
                 "buildings": "bu",
-                "required": "rq",
                 "staff": "sf",
+                "required": "rq",
+                "accessible": "ac",
+                "subject": "su",
                 "semester": "se",
+                "excluded": "xc",
                 "min": "i",
                 "max": "a"
             },
@@ -124,10 +134,15 @@
                 "name": "",
                 "number": "",
                 "faculty": [],
+                "degrees": [],
                 "responsiblePerson": "",
                 "credits": { "min": "", "max": "" },
                 "duration": { "min": "", "max": "" },
-                "languages": []
+                "hasCourses": "neutral",
+                "hasEvents": "neutral",
+                "hasStaff": "neutral",
+                "path": "",
+                "pathPrefix": ""
             },
             "course": {
                 "name": "",
@@ -140,17 +155,28 @@
                 "startTime": { "min": "", "max": "" },
                 "endTime": { "min": "", "max": "" },
                 "dates": { "min": "", "max": "" },
-                "buildings": ""
+                "buildings": [],
+                "staff": [],
+                "types": []
             },
             "exam": {
+                "name": "",
                 "types": [],
                 "startTime": { "min": "", "max": "" },
                 "endTime": { "min": "", "max": "" },
                 "dates": { "min": "", "max": "" },
-                "buildings": [],
                 "required": "neutral",
                 "staff": []
-            }
+            },
+            "location": {
+                "accessible": "neutral"
+            },
+            "degree": {
+                "name": "",
+                "subject": "",
+                "degrees": []
+            },
+            "excluded": {}
         },
         "slots": {
             "active": "slot-1",

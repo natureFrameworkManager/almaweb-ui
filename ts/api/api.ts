@@ -120,7 +120,7 @@ function appendStringList(
 }
 
 /**
- * Fetch module data from the local fixture.
+ * Fetch module data from the API.
  * @param name - Optional module name filter.
  * @param number - Optional module number filter.
  * @param faculty - Optional faculty ID filter.
@@ -129,8 +129,13 @@ function appendStringList(
  * @param lpMax - Optional maximum credit points filter.
  * @param durationMin - Optional minimum duration filter.
  * @param durationMax - Optional maximum duration filter.
- * @param language - Optional language filter.
  * @param semester - Optional semester ID filter.
+ * @param degree - Optional degree ID filter.
+ * @param hasCourses - Optional filter for modules that have/do not have courses.
+ * @param hasEvents - Optional filter for modules that have/do not have events.
+ * @param hasStaff - Optional filter for modules that have/do not have staff.
+ * @param path - Optional navigation path segment filter.
+ * @param pathPrefix - Optional exact navigation path prefix filter.
  * @param page - Optional one-based page number.
  * @param pageSize - Optional number of items per page.
  * @param sort - Optional single sort column sent to the API.
@@ -146,8 +151,13 @@ export async function getModules(
     lpMax?: number,
     durationMin?: number,
     durationMax?: number,
-    language?: string | string[],
     semester?: number | number[],
+    degree?: number | number[],
+    hasCourses?: boolean,
+    hasEvents?: boolean,
+    hasStaff?: boolean,
+    path?: string | string[],
+    pathPrefix?: string,
     page?: number,
     pageSize?: number,
     sort?: string,
@@ -190,19 +200,30 @@ export async function getModules(
     if (durationMax !== undefined) {
         queryParams.append("duration_semesters_max", durationMax.toString());
     }
-    if (language) {
-        if (Array.isArray(language)) {
-            language.forEach((l) => queryParams.append("language", l));
-        } else {
-            queryParams.append("language", language);
-        }
-    }
     if (semester) {
         if (Array.isArray(semester)) {
             semester.forEach((s) => queryParams.append("semester_id", s.toString()));
         } else {
             queryParams.append("semester_id", semester.toString());
         }
+    }
+    if (degree !== undefined) {
+        (Array.isArray(degree) ? degree : [degree]).forEach((value) =>
+            queryParams.append("degree_id", value.toString()),
+        );
+    }
+    if (hasCourses !== undefined) {
+        queryParams.append("has_courses", hasCourses.toString());
+    }
+    if (hasEvents !== undefined) {
+        queryParams.append("has_events", hasEvents.toString());
+    }
+    if (hasStaff !== undefined) {
+        queryParams.append("has_staff", hasStaff.toString());
+    }
+    appendStringList(queryParams, "path", path);
+    if (pathPrefix) {
+        queryParams.append("path_prefix", pathPrefix);
     }
     appendSort(queryParams, sort, order);
     appendPaging(queryParams, page, pageSize);
@@ -212,10 +233,11 @@ export async function getModules(
 }
 
 /**
- * Fetch course data from the local fixture.
+ * Fetch course data from the API.
  * @param name - Optional course name filter.
  * @param number - Optional course number filter.
- * @param type - Optional course type filter.
+ * @param type - Optional course type name filter.
+ * @param typeIds - Optional course type (event type) ID filter.
  * @param staff - Optional staff ID filter.
  * @param weekHoursMin - Optional minimum weekly hours filter.
  * @param weekHoursMax - Optional maximum weekly hours filter.
@@ -230,6 +252,7 @@ export async function getCourses(
     name?: string | string[],
     number?: string | string[],
     type?: string | string[],
+    typeIds?: number | number[],
     staff?: number | number[],
     weekHoursMin?: number,
     weekHoursMax?: number,
@@ -255,16 +278,18 @@ export async function getCourses(
         }
     }
     if (type) {
-        if (Array.isArray(type)) {
-            type.forEach((t) => queryParams.append("type", t));
-        } else {
-            queryParams.append("type", type);
-        }
+        appendStringList(queryParams, "type", type);
     }
-    // The instructor filter stays inert: `/courses?staff=<name>` currently returns
-    // HTTP 500 on the live API and `/courses` has no `staff_id` parameter, so the
-    // selected ids are intentionally dropped (see todo.md §1).
-    void staff;
+    if (typeIds !== undefined) {
+        (Array.isArray(typeIds) ? typeIds : [typeIds]).forEach((value) =>
+            queryParams.append("type_id", value.toString()),
+        );
+    }
+    if (staff !== undefined) {
+        (Array.isArray(staff) ? staff : [staff]).forEach((value) =>
+            queryParams.append("staff_id", value.toString()),
+        );
+    }
     if (weekHoursMin !== undefined) {
         queryParams.append("weekly_hours_min", weekHoursMin.toString());
     }
@@ -286,14 +311,17 @@ export async function getCourses(
 }
 
 /**
- * Fetch event data from the local fixture.
+ * Fetch event data from the API.
  * @param startTimeMin - Optional minimum start time filter.
  * @param startTimeMax - Optional maximum start time filter.
  * @param endTimeMin - Optional minimum end time filter.
  * @param endTimeMax - Optional maximum end time filter.
  * @param startDate - Optional start date filter.
  * @param endDate - Optional end date filter.
- * @param building - Optional building filter.
+ * @param building - Optional building ID filter (single value or repeatable).
+ * @param staff - Optional event staff name filter.
+ * @param staffId - Optional event staff ID filter.
+ * @param courseTypeId - Optional course (event) type ID filter.
  * @param semester - Optional semester ID filter.
  * @param page - Optional one-based page number.
  * @param pageSize - Optional number of items per page.
@@ -308,7 +336,10 @@ export async function getEvents(
     endTimeMax?: string,
     startDate?: string,
     endDate?: string,
-    building?: number,
+    building?: number | number[],
+    staff?: string | string[],
+    staffId?: number | number[],
+    courseTypeId?: number | number[],
     semester?: number | number[],
     page?: number,
     pageSize?: number,
@@ -335,7 +366,20 @@ export async function getEvents(
         queryParams.append("date_to", endDate);
     }
     if (building !== undefined) {
-        queryParams.append("building_id", building.toString());
+        (Array.isArray(building) ? building : [building]).forEach((value) =>
+            queryParams.append("building_id", value.toString()),
+        );
+    }
+    appendStringList(queryParams, "staff", staff);
+    if (staffId !== undefined) {
+        (Array.isArray(staffId) ? staffId : [staffId]).forEach((value) =>
+            queryParams.append("staff_id", value.toString()),
+        );
+    }
+    if (courseTypeId !== undefined) {
+        (Array.isArray(courseTypeId) ? courseTypeId : [courseTypeId]).forEach((value) =>
+            queryParams.append("course_type_id", value.toString()),
+        );
     }
     if (semester) {
         if (Array.isArray(semester)) {
@@ -357,11 +401,30 @@ export async function getEvents(
  * Uses the dedicated `/modules/{module_id}/events` endpoint; pagination is left
  * out so the API returns the complete list of linked events.
  * @param moduleId - Module id.
+ * @param dateFrom - Optional inclusive lower date bound (`YYYY-MM-DD`).
+ * @param dateTo - Optional inclusive upper date bound (`YYYY-MM-DD`).
+ * @param weekday - Optional weekday values (0=Monday … 6=Sunday).
  * @returns The module event response data.
  */
-export async function getModuleEvents(moduleId: number): Promise<PagedResponse<Event>> {
+export async function getModuleEvents(
+    moduleId: number,
+    dateFrom?: string,
+    dateTo?: string,
+    weekday?: number[],
+): Promise<PagedResponse<Event>> {
+    const queryParams = new URLSearchParams();
+    if (dateFrom) {
+        queryParams.append("date_from", dateFrom);
+    }
+    if (dateTo) {
+        queryParams.append("date_to", dateTo);
+    }
+    (weekday ?? []).forEach((value) => queryParams.append("weekday", value.toString()));
     return fetchApi(
-        `/modules/${moduleId}/events?include=location&include=location.building&include=staff`,
+        appendQuery(
+            `/modules/${moduleId}/events?include=location&include=location.building&include=staff`,
+            queryParams,
+        ),
     );
 }
 
@@ -388,9 +451,9 @@ export async function getCourseEvents(courseId: number): Promise<PagedResponse<E
  * @param endTimeMax - Optional maximum end time filter.
  * @param startDate - Optional start date filter.
  * @param endDate - Optional end date filter.
- * @param building - Optional building filter.
  * @param required - Optional required filter.
  * @param staff - Optional staff name filter.
+ * @param staffId - Optional staff ID filter.
  * @param semester - Optional semester ID filter.
  * @param page - Optional one-based page number.
  * @param pageSize - Optional number of items per page.
@@ -406,9 +469,9 @@ export async function getExams(
     endTimeMax?: string,
     startDate?: string,
     endDate?: string,
-    building?: string | string[],
     required?: boolean,
     staff?: string | string[],
+    staffId?: number | number[],
     semester?: number | number[],
     page?: number,
     pageSize?: number,
@@ -441,18 +504,16 @@ export async function getExams(
     if (endDate) {
         queryParams.append("exam_date_to", endDate);
     }
-    if (building) {
-        if (Array.isArray(building)) {
-            building.forEach((b) => queryParams.append("building_id", b));
-        } else {
-            queryParams.append("building_id", building);
-        }
-    }
     if (required !== undefined) {
         queryParams.append("required", required.toString());
     }
     if (staff) {
         appendStringList(queryParams, "staff", staff);
+    }
+    if (staffId !== undefined) {
+        (Array.isArray(staffId) ? staffId : [staffId]).forEach((value) =>
+            queryParams.append("staff_id", value.toString()),
+        );
     }
     if (semester) {
         if (Array.isArray(semester)) {
@@ -531,6 +592,7 @@ export async function getDegrees(
 
 /**
  * Fetch location data from the API.
+ * @param accessible - Optional accessibility filter.
  * @param page - Optional one-based page number.
  * @param pageSize - Optional number of items per page.
  * @param sort - Optional single sort column sent to the API.
@@ -538,12 +600,16 @@ export async function getDegrees(
  * @returns The location response data.
  */
 export async function getLocations(
+    accessible?: boolean,
     page?: number,
     pageSize?: number,
     sort?: string,
     order?: SortOrder,
 ): Promise<PagedResponse<Location>> {
     const queryParams = new URLSearchParams();
+    if (accessible !== undefined) {
+        queryParams.append("accessible", accessible.toString());
+    }
     appendSort(queryParams, sort, order);
     appendPaging(queryParams, page, pageSize);
     return fetchApi(

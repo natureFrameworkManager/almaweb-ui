@@ -14,7 +14,9 @@ export function eventToView(event: Event): EntityView {
         { className: "event-time", text: formatTimeRange(event.start_time, event.end_time) },
         {
             className: "event-location",
-            text: `${event.location.name} (${event.location.building.name})`,
+            text: event.location
+                ? `${event.location.name} (${event.location.building?.name ?? ""})`
+                : "",
         },
     ];
     if (staffNames) {
@@ -24,11 +26,11 @@ export function eventToView(event: Event): EntityView {
     const cardInfos: InfoSpec[] = [
         { className: "event-date", text: formatDate(event.event_date) },
         { className: "event-time", text: formatTimeRange(event.start_time, event.end_time) },
-        { className: "event-location", text: event.location.name },
+        { className: "event-location", text: event.location?.name ?? "" },
     ];
 
     return {
-        name: event.name || event.location.name,
+        name: event.name || event.location?.name || "",
         number: event.number,
         listInfos,
         cardInfos,

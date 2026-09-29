@@ -163,7 +163,7 @@ function toEventInput(event: Event): EventInput | null {
     }
     return {
         id: String(event.id),
-        title: event.name || event.location.name,
+        title: event.name || event.location?.name || "",
         start: event.start_time ? `${event.event_date}T${event.start_time}` : event.event_date,
         end: event.end_time ? `${event.event_date}T${event.end_time}` : undefined,
     };

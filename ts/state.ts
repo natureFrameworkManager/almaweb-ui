@@ -7,7 +7,7 @@
  */
 
 /** Version of the share-link state document. */
-export const STATE_VERSION = 1;
+export const STATE_VERSION = 2;
 
 /** Local storage key holding the complete serialised UI state. */
 const STATE_STORAGE_KEY = "almaweb.state";
@@ -67,10 +67,15 @@ export type ModuleFilters = {
     name: string;
     number: string;
     faculty: number[];
+    degrees: number[];
     responsiblePerson: string;
     credits: Range;
     duration: Range;
-    languages: string[];
+    hasCourses: TriState;
+    hasEvents: TriState;
+    hasStaff: TriState;
+    path: string;
+    pathPrefix: string;
 };
 
 /** Filters applied to courses. */
@@ -87,7 +92,9 @@ export type EventFilters = {
     startTime: Range;
     endTime: Range;
     dates: Range;
-    buildings: string;
+    buildings: number[];
+    staff: number[];
+    types: number[];
 };
 
 /** Filters applied to exams. */
@@ -97,9 +104,13 @@ export type ExamFilters = {
     startTime: Range;
     endTime: Range;
     dates: Range;
-    buildings: number[];
     required: TriState;
     staff: number[];
+};
+
+/** Filters applied to locations. */
+export type LocationFilters = {
+    accessible: TriState;
 };
 
 /** Filters applied to degrees. */
@@ -125,6 +136,7 @@ export type Filters = {
     course: CourseFilters;
     event: EventFilters;
     exam: ExamFilters;
+    location: LocationFilters;
     degree: DegreeFilters;
     excluded: FacetExclusions;
 };
@@ -255,10 +267,15 @@ export function defaultState(): UIState {
                 name: "",
                 number: "",
                 faculty: [],
+                degrees: [],
                 responsiblePerson: "",
                 credits: emptyRange(),
                 duration: emptyRange(),
-                languages: [],
+                hasCourses: "neutral",
+                hasEvents: "neutral",
+                hasStaff: "neutral",
+                path: "",
+                pathPrefix: "",
             },
             course: {
                 name: "",
@@ -271,7 +288,9 @@ export function defaultState(): UIState {
                 startTime: emptyRange(),
                 endTime: emptyRange(),
                 dates: emptyRange(),
-                buildings: "",
+                buildings: [],
+                staff: [],
+                types: [],
             },
             exam: {
                 name: "",
@@ -279,10 +298,10 @@ export function defaultState(): UIState {
                 startTime: emptyRange(),
                 endTime: emptyRange(),
                 dates: emptyRange(),
-                buildings: [],
                 required: "neutral",
                 staff: [],
             },
+            location: { accessible: "neutral" },
             degree: {
                 name: "",
                 subject: "",

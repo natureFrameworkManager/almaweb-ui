@@ -93,13 +93,25 @@ function isChecked(elementId: string): boolean {
 }
 
 /**
- * Read the selected value of a select element.
- * @param elementId - Identifier of the select element.
- * @returns The selected value, or an empty string when the element is missing.
+ * Read a single-option facet list as an optional boolean.
+ *
+ * The facet is "selected" (true), "excluded" (false) or neutral (undefined),
+ * mirroring the tri-state interaction of the other facet lists.
+ * @param containerId - Identifier of the checkbox list container.
+ * @returns The boolean facet value, or undefined when it does not filter.
  */
-function getSelectedValue(elementId: string): string {
-    const select = document.getElementById(elementId) as HTMLSelectElement | null;
-    return select ? select.value : "";
+function facetBoolean(containerId: string): boolean | undefined {
+    const inputs = document.querySelectorAll<HTMLInputElement>(
+        `#${containerId} input[type="checkbox"]`,
+    );
+    const option = Array.from(inputs).find((input) => input.value !== "");
+    if (!option) {
+        return undefined;
+    }
+    if (option.indeterminate) {
+        return false;
+    }
+    return option.checked ? true : undefined;
 }
 
 /**
@@ -220,8 +232,13 @@ function fetchModulePage(
         credits.max,
         duration.min,
         duration.max,
-        facetInclude("filter-language"),
         toOptionalNumbers(facetInclude("filter-semester") ?? []),
+        toOptionalNumbers(facetInclude("filter-degree") ?? []),
+        facetBoolean("filter-has-courses"),
+        facetBoolean("filter-has-events"),
+        facetBoolean("filter-has-staff"),
+        toOptionalValue(getInputValue("filter-module-path")),
+        toOptionalValue(getInputValue("filter-module-path-prefix")),
         page,
         pageSize,
         sort,
@@ -240,7 +257,8 @@ function fetchCoursePage(page: number): Promise<PagedResponse<Course>> {
     return getCourses(
         toOptionalValue(getInputValue("search-input-course")),
         toOptionalValue(getInputValue("search-input-course-number")),
-        facetInclude("filter-type"),
+        undefined,
+        toOptionalNumbers(facetInclude("filter-type") ?? []),
         toOptionalNumbers(getCheckedValues("filter-instructors")),
         hours.min,
         hours.max,
@@ -262,7 +280,6 @@ function fetchEventPage(page: number): Promise<PagedResponse<Event>> {
     const startTime = getRangeValues("event-start-time");
     const endTime = getRangeValues("event-end-time");
     const dates = getRangeValues("event-dates");
-    const building = getSelectedValue("filter-event-buildings");
     return getEvents(
         toOptionalValue(startTime.min),
         toOptionalValue(startTime.max),
@@ -270,7 +287,10 @@ function fetchEventPage(page: number): Promise<PagedResponse<Event>> {
         toOptionalValue(endTime.max),
         toOptionalValue(dates.min),
         toOptionalValue(dates.max),
-        building === "" ? undefined : Number(building),
+        toOptionalNumbers(facetInclude("filter-event-buildings") ?? []),
+        undefined,
+        toOptionalNumbers(facetInclude("filter-event-staff") ?? []),
+        toOptionalNumbers(facetInclude("filter-event-types") ?? []),
         toOptionalNumbers(facetInclude("filter-semester") ?? []),
         page,
         COLLECTION_PAGE_SIZE,
@@ -297,6 +317,7 @@ function fetchExamPage(page: number): Promise<PagedResponse<Exam>> {
             ]),
         ].filter((value) => value !== ""),
     );
+    const staffIds = toOptionalNumbers(getCheckedValues("filter-staff")) ?? [];
     return getExams(
         names,
         toOptionalValue(startTime.min),
@@ -305,9 +326,9 @@ function fetchExamPage(page: number): Promise<PagedResponse<Exam>> {
         toOptionalValue(endTime.max),
         toOptionalValue(dates.min),
         toOptionalValue(dates.max),
-        toOptionalValues(getCheckedValues("filter-buildings")),
         isChecked("filter-exam-required") ? true : undefined,
-        resolveStaffNames(toOptionalNumbers(getCheckedValues("filter-staff")) ?? []),
+        resolveStaffNames(staffIds),
+        staffIds.length > 0 ? staffIds : undefined,
         toOptionalNumbers(facetInclude("filter-semester") ?? []),
         page,
         COLLECTION_PAGE_SIZE,
@@ -333,7 +354,13 @@ function fetchStaffPage(page: number): Promise<PagedResponse<Staff>> {
  */
 function fetchLocationPage(page: number): Promise<PagedResponse<Location>> {
     const { sort, order } = backendSort("locations");
-    return getLocations(page, COLLECTION_PAGE_SIZE, sort, order);
+    return getLocations(
+        facetBoolean("filter-locations-accessible"),
+        page,
+        COLLECTION_PAGE_SIZE,
+        sort,
+        order,
+    );
 }
 
 /**
@@ -407,6 +434,11 @@ export function requeryDegrees(): void {
     reloadCollection("degrees");
 }
 
+/** Re-query location data using the current filter values. */
+export function requeryLocations(): void {
+    reloadCollection("locations");
+}
+
 /** Re-query every filtered entity type using the current filter values. */
 export function requeryAll(): void {
     requeryModules();
@@ -414,6 +446,7 @@ export function requeryAll(): void {
     requeryEvents();
     requeryExams();
     requeryDegrees();
+    requeryLocations();
 }
 
 let treeModules: Module[] | null = null;

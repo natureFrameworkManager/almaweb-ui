@@ -38,19 +38,27 @@ Backend issues surfaced (or re-checked) during the filter review. The UI either
 works around, disables, or cannot implement the affected feature. **Keep this
 list separate from the UI/UX sections** — nothing here can be fixed client-side.
 
-Evidence: `openapi.json` v1.0.3; live host `https://api.casparkroll.de/almaweb/v1`
+Evidence: `openapi.json` v1.1.0; live host `https://api.casparkroll.de/almaweb/v1`
 (the host was offline during the last review — see the Appendix for historical probes).
 
-- [ ] **P1 — `/courses` has no working staff filter.**
-  `/courses` exposes only a name-based `staff` filter and the call returned
-  HTTP 500; there is no `staff_id`. `getCourses` therefore drops the selection
-  (`ts/api/api.ts`) and `#filter-instructors` is disabled.
-  → Needs a working `staff`/`staff_id` filter.
+- [x] **P1 — `/courses` staff filter (`/courses` now has `staff_id`).**
+  Resolved in API 1.1.0: `/courses?staff_id=` works (and the name-based `staff`
+  no longer returns 500). `getCourses` now sends `staff_id` and sends the
+  course type facet as `type_id`; `#filter-instructors` is enabled
+  (`ts/api/api.ts`, `ts/filters/query.ts`, `index.html`).
 
-- [ ] **P1 — `/exams` has no `building_id` or `semester_id`.**
-  `/exams` supports `name`, `required`, `staff` (name) and dates only. The exam
-  building control is disabled and the global semester is ignored for exams.
-  → Add both parameters or document them as unsupported.
+- [x] **P1 — `/exams` now has `staff_id` and `semester_id`.**
+  Resolved in API 1.1.0: `getExams` sends `staff_id` and `semester_id`, the
+  global semester filter applies to exams, and the unsupported exam building
+  control was removed (API 1.1.0 explicitly keeps `/exams?building_id=` ignored).
+  The "global semester unsupported" note was dropped from `index.html`.
+
+- [x] **P1 (partial) — `/modules` degree/`has_*`/`path` filters.**
+  API 1.1.0 implements `degree_id`, `has_courses`, `has_events`, `has_staff`,
+  `path` and `path_prefix`; a Studiengang facet, three tri-state `has_*` facets
+  and two path inputs were added to the Modulfilter group.
+  Note: `/modules?language=` is documented `NOT IMPLEMENTED`, so the module
+  language facet was removed rather than shown as broken.
 
 - [ ] **P1 — No facet/count endpoints.**
   Distinct option endpoints exist (`/modules/distinct/fields`,
@@ -343,14 +351,15 @@ mockups but not implemented.
 
 ## Appendix — verification notes
 
-**API spec:** `openapi.json` v1.0.3. Relevant capabilities at review time:
+**API spec:** `openapi.json` v1.1.0. Relevant capabilities at review time:
 
 | Endpoint | Filter parameters of interest |
 | --- | --- |
-| `/modules` | `degree_id`, `faculty_id`, `semester_id`, `staff_id`, `responsible_person`, `language` |
-| `/courses` | `type`, `staff` (name), `semester_id`, `module_id`, `language` |
-| `/events` | `building_id` (scalar), `semester_id`, `module_id`, `course_id`, `weekday` |
-| `/exams` | `name` (repeatable), `staff` (name), `required`, `module_id`, dates |
+| `/modules` | `degree_id`, `faculty_id`, `semester_id`, `staff_id`, `responsible_person`, `has_courses`, `has_events`, `has_staff`, `path`, `path_prefix` |
+| `/courses` | `type` (name), `type_id`, `staff_id`, `semester_id`, `module_id`, `language` |
+| `/events` | `building_id` (repeatable), `staff`, `staff_id`, `course_type_id`, `semester_id`, `module_id`, `course_id`, `weekday` |
+| `/exams` | `name` (repeatable), `staff` (name), `staff_id`, `semester_id`, `required`, `module_id`, dates |
+| `/locations` | `ids`, `names`, `external_ids`, `types`, `accessible`, `building_ids`, `has_events` |
 | `/degrees` | `ids`, `names`, `subjects`, `degrees`, `faculty`, `modules` |
 
 **Historical live-API probes** (host was offline at the last review; kept for
@@ -359,12 +368,13 @@ context, counts via `GET …?page_size=1`):
 | Query | Count | Interpretation |
 | --- | --- | --- |
 | `/exams?page_size=1` | 2663 | baseline |
-| `/exams?page_size=1&building_id=1` | 2663 | `building_id` ignored |
-| `/exams?page_size=1&semester_id=1` | 2663 | `semester_id` ignored |
+| `/exams?page_size=1&building_id=1` | 2663 | `building_id` ignored (still ignored in 1.1.0) |
+| `/exams?page_size=1&semester_id=1` | 2663 | `semester_id` ignored in 1.0.3; **filters since 1.1.0** |
 | `/exams?page_size=1&required=true` | 2461 | `required` works |
-| `/courses?page_size=1&staff_id=7` | 3255 | same as baseline → ignored |
+| `/courses?page_size=1&staff_id=7` | 3255 | ignored in 1.0.3; **filters since 1.1.0** |
 | `/courses?page_size=1&semester_id=1` | 984 | `semester_id` works |
-| `/events?page_size=1&building_id=1&building_id=2` | 3880 | scalar: last value wins |
+| `/events?page_size=1&building_id=1&building_id=2` | 3880 | last value wins in 1.0.3; **OR-ed since 1.1.0** |
 
 > Generated from a codebase + API-spec review; line references point at
-> `index.html` and `ts/**` as of the filter work of 2026-09-28.
+> `index.html` and `ts/**` as of the filter work of 2026-09-28 (re-baselined to
+> API 1.1.0).

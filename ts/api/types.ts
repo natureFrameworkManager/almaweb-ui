@@ -43,7 +43,7 @@ export interface Event {
     start_time: string;
     end_time: string;
     event_date: string;
-    location: Location;
+    location: Location | null;
     staff: Staff[];
     courses?: Course[];
     semesters?: Semester[];
@@ -62,7 +62,7 @@ export interface Exam {
     end_time: string | null;
     required: boolean;
     staff: Staff[];
-    location?: Location;
+    location?: Location | null;
 }
 
 export interface ExamDetail extends Exam {
@@ -93,7 +93,7 @@ export interface Location {
     size: number;
     accessibility: string;
     building_id: number;
-    building: Building;
+    building: Building | null;
     events?: Event[];
 }
 
