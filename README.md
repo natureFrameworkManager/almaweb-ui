@@ -13,7 +13,7 @@ JSON state document.
 | ---------- | ---- |
 | **almaweb-ui** (this repo) | TypeScript/Vite front-end. |
 | **Almaweb Parser & API** (`https://github.com/natureFrameworkManager/almaweb-parser`) | Scrapy crawler + FastAPI/SQLModel backend that scrapes and serves the data. |
-| **planer** (`https://github.com/natureFrameworkManager/planer`) | Earlier timetable app; its data/API is being superseded by the parser API. |
+| **planer** (`https://github.com/natureFrameworkManager/planer`) | Earlier timetable app for the faculty of mathematics and computer science. |
 
 ## Features
 
@@ -91,9 +91,7 @@ parser repo) requires editing this constant.
 ## State, persistence & sharing
 
 Every setting - theme, language, layout, per-pane views, filters, calendar options, and save slots -
-lives in one `UIState` object (`ts/state.ts`, version `STATE_VERSION = 2`). [`datasave.json`](datasave.json)
-is the canonical, human-readable description of that document (shape, defaults, and the share-link
-dictionary).
+lives in one `UIState` object (`ts/state.ts`, version `STATE_VERSION = 2`).
 
 The same object is used in three ways:
 
