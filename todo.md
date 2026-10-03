@@ -1,34 +1,9 @@
 # almaweb-ui — TODO
 
 Open work, missing features, UX/UI bugs and technical problems found while
-reviewing the codebase and comparing it against `openapi.json` (v1.0.3) and the
-design mockups (`mockup/`, `mockup-v2/`).
+reviewing the codebase and comparing it against the API and the design mockups.
 
 **Priority legend:** `P0` blocking · `P1` high · `P2` medium · `P3` low/nice-to-have.
-**Status legend:** `[x]` done · `[ ]` open.
-
----
-
-## 0. Completed — verification of finished items
-
-Checked during the filter review (2026-09-28). All validated with `npm run typecheck`,
-`npm run build`, `prettier --check`, and a jsdom behaviour suite (30 checks).
-
-- [x] **Latest-semester default** — the newest term is preselected (`ts/state-bind.ts`).
-- [x] **Active-filter chip summary** — removable chips above the groups (`ts/filters/panel.ts`).
-- [x] **Per-group reset** — “Zurücksetzen” per filter group.
-- [x] **Collapsed non-primary groups** — only “Globale Filter” is open by default (`index.html`).
-- [x] **In-list search + “Weitere anzeigen”** — for long option lists (> 6 options).
-- [x] **Tri-state facets** — neutral → select → exclude, via complement include-lists (`ts/filters/facets.ts`).
-- [x] **Interaction legend** — Neutral / Auswählen / Ausschließen (`index.html`).
-- [x] **Stable range keys** — ranges keyed by `data-range` instead of label text.
-- [x] **Unsupported controls disabled + annotated** — `data-unsupported`.
-- [x] **Exam “Prüfungsarten” wired** — to `/exams?name=` (values are exam names).
-- [x] **`getEvents` building type** — narrowed to `building?: number`.
-- [x] **Course-instructor / exam-building controls hidden from “active”** — now disabled/annotated.
-
-Code references: `ts/filters/panel.ts`, `ts/filters/facets.ts`, `ts/filters/query.ts`,
-`ts/state-bind.ts`, `ts/state.ts`.
 
 ---
 
@@ -38,27 +13,7 @@ Backend issues surfaced (or re-checked) during the filter review. The UI either
 works around, disables, or cannot implement the affected feature. **Keep this
 list separate from the UI/UX sections** — nothing here can be fixed client-side.
 
-Evidence: `openapi.json` v1.1.0; live host `https://api.casparkroll.de/almaweb/v1`
-(the host was offline during the last review — see the Appendix for historical probes).
-
-- [x] **P1 — `/courses` staff filter (`/courses` now has `staff_id`).**
-  Resolved in API 1.1.0: `/courses?staff_id=` works (and the name-based `staff`
-  no longer returns 500). `getCourses` now sends `staff_id` and sends the
-  course type facet as `type_id`; `#filter-instructors` is enabled
-  (`ts/api/api.ts`, `ts/filters/query.ts`, `index.html`).
-
-- [x] **P1 — `/exams` now has `staff_id` and `semester_id`.**
-  Resolved in API 1.1.0: `getExams` sends `staff_id` and `semester_id`, the
-  global semester filter applies to exams, and the unsupported exam building
-  control was removed (API 1.1.0 explicitly keeps `/exams?building_id=` ignored).
-  The "global semester unsupported" note was dropped from `index.html`.
-
-- [x] **P1 (partial) — `/modules` degree/`has_*`/`path` filters.**
-  API 1.1.0 implements `degree_id`, `has_courses`, `has_events`, `has_staff`,
-  `path` and `path_prefix`; a Studiengang facet, three tri-state `has_*` facets
-  and two path inputs were added to the Modulfilter group.
-  Note: `/modules?language=` is documented `NOT IMPLEMENTED`, so the module
-  language facet was removed rather than shown as broken.
+Evidence: live host `https://api.casparkroll.de/almaweb/v1`.
 
 - [ ] **P1 — No facet/count endpoints.**
   Distinct option endpoints exist (`/modules/distinct/fields`,
@@ -67,17 +22,13 @@ Evidence: `openapi.json` v1.1.0; live host `https://api.casparkroll.de/almaweb/v
   → Add `counts=true` or a `/facets` endpoint.
 
 - [ ] **P2 — No list-level degree relation.**
-  `/modules` now accepts `degree_id` (1.0.3), but `/courses` has no `degree_id`
-  and the `/degrees` list response exposes no semesters relation. A
-  degree → semester cascade and a course/exam degree scope are impossible.
+  `/modules` accepts `degree_id`, but `/courses` has no `degree_id` and the
+  `/degrees` list response exposes no semesters relation. A degree → semester
+  cascade and a course/exam degree scope are impossible.
 
 - [ ] **P2 — `/events` has no `name`/`number` parameter.**
   Events cannot be searched by name/number, only via `course_name`,
   `module_name` or `location`.
-
-- [ ] **P2 — Bundled `openapi.json` is not generated automatically.**
-  The committed spec is now v1.0.3 but already lags the server in places and
-  there is no CI check. → Regenerate from the server and verify in CI.
 
 - [ ] **P2 — Only one `sort` column is supported.**
   Every endpoint's `sort` is scalar, so the client sends the primary level and
@@ -88,13 +39,6 @@ Evidence: `openapi.json` v1.1.0; live host `https://api.casparkroll.de/almaweb/v
   `getModuleEvents` / `getCourseEvents` omit `page`/`page_size` to receive the
   complete list (`ts/api/api.ts`). A server change would silently drop calendar
   events.
-
-- [x] **P3 — Exam “Prüfungsarten” was unimplemented.**
-  Resolved client-side: `#filter-examtypes` (values are exam **names**) is now
-  wired to the supported, repeatable `/exams?name=` filter.
-
-- [x] **P3 — `getEvents` building type was wrong.**
-  The API is scalar; the client signature was narrowed to `building?: number`.
 
 ---
 
@@ -107,30 +51,27 @@ mockups but not implemented.
   `#export-button` (`index.html`) has no click handler. The mockup designs an
   export dialog with **iCalendar (.ics)**, **CSV** and **JSON**; the API exposes
   `format=ical` and many `ical_*` params for `/events`.
-  → Wire the button to an export dialog / reuse the API’s iCal output.
+  → Wire the button to an export dialog / reuse the API's iCal output.
 
 - [ ] **P1 — English UI is not implemented (i18n).**
   `#language-switcher` persists `state.language` (`de`/`en`) but every string is
   hard-coded German; there is no translation layer. Switching to EN has no
   effect. → Add an i18n layer or remove the switcher until it works.
 
-- [ ] **P1 — “Compare save slots” view is a stub.**
+- [ ] **P1 — "Compare save slots" view is a stub.**
   `<main id="compare">` is a placeholder; compare mode shows only a heading.
   → Implement slot comparison (LP totals, conflicts, shared entries).
 
-- [ ] **P2 — “Datenstand” is always “unbekannt”.**
+- [ ] **P2 — "Datenstand" is always "unbekannt".**
   `#last-updated-timestamp` is hard-coded and the updating feature was removed.
   The whole `#last-updated-con` block is effectively dead UI.
   → Populate from the API or remove the block.
 
-- [x] **P2 — Active filter chips are missing.**
-  Implemented: `#filter-summary` renders removable chips for every active filter.
-
 - [ ] **P2 — Table view is missing.**
-  The mockups list a “Tabelle” view; only `list`, `cards`, `calendar`, `tree`
+  The mockups list a "Tabelle" view; only `list`, `cards`, `calendar`, `tree`
   exist (`ts/state.ts`).
 
-- [ ] **P3 — “Über alma.web” (About) page is missing.**
+- [ ] **P3 — "Über alma.web" (About) page is missing.**
   Present in the mockup, not in the app.
 
 - [ ] **P3 — Save-slot requirements are only partly surfaced.**
@@ -145,7 +86,7 @@ mockups but not implemented.
 
 ## 3. UX / UI bugs
 
-- [ ] **P1 — Dead “Export” button.**
+- [ ] **P1 — Dead "Export" button.**
   Clicking Export does nothing (see §2). Audit all header buttons for handlers.
 
 - [ ] **P1 — Language switcher silently does nothing.**
@@ -161,32 +102,29 @@ mockups but not implemented.
   handlers (`ts/switcher.ts`, `index.html`) — no `role`, `tabindex`, keyboard
   activation or `aria-selected`.
 
-- [ ] **P2 — Exam “Prüfungsarten” label does not match its data.**
+- [ ] **P2 — Exam "Prüfungsarten" label does not match its data.**
   `#filter-examtypes` is populated from `/exams/distinct/fields?field=name`, so
-  its entries are exam **names** (“Klausur”, “Portfolioprüfung”), not types.
-  → Rename to “Prüfungsname” (or derive real exam types) so the filter is honest.
+  its entries are exam **names** ("Klausur", "Portfolioprüfung"), not types.
+  → Rename to "Prüfungsname" (or derive real exam types) so the filter is honest.
 
 - [ ] **P2 — Tri-state interaction is inconsistent across facet lists.**
-  Only semester, faculty, module language, course type and degree type cycle
-  neutral → select → exclude. Instructors, buildings, exam types and exam staff
-  stay binary, so identical-looking checkboxes behave differently.
+  Only some facets cycle neutral → select → exclude (semester, faculty, degree,
+  course type, degree type, event buildings, event staff, event types, `has_*`,
+  accessible). Instructors, the global staff list and exam types stay binary, so
+  identical-looking checkboxes behave differently.
   → Extend tri-state to all facets or make the difference explicit.
 
 - [ ] **P2 — Excluding every option shows everything.**
-  The tri-state “exclude” is sent as the complement include-list; when all
+  The tri-state "exclude" is sent as the complement include-list; when all
   options of a facet are excluded the complement is empty and no filter is sent,
   so the result set is unfiltered instead of empty (`ts/filters/facets.ts`).
-  → Represent “exclude all” as an impossible-value include-list.
+  → Represent "exclude all" as an impossible-value include-list.
 
 - [ ] **P2 — Disabled facets can still emit captured state.**
   `captureFilterState` reads checked/hidden inputs even when their container is
   marked `data-unsupported` and disabled, so a restored share link can show
   chips for a filter that cannot work (`ts/state-bind.ts`).
   → Ignore unavailable controls when capturing/applying state.
-
-- [ ] **P2 — The global semester looks like it filters exams.**
-  `/exams` ignores `semester_id`; only a static note in the exam group explains
-  it. → Surface the limitation next to the active semester chip or per pane.
 
 - [ ] **P2 — Screen readers are not told about the tri-state.**
   The excluded state uses the native `indeterminate` flag only; there is no
@@ -200,7 +138,7 @@ mockups but not implemented.
 
 - [ ] **P3 — Active-filter summary can grow unbounded.**
   Every checked facet value becomes a chip; with many selections the bar pushes
-  the groups down. → Collapse after N chips with a “+x more” expander.
+  the groups down. → Collapse after N chips with a "+x more" expander.
 
 - [ ] **P3 — `<item>` custom element.**
   `#display-changer1/2` uses a non-standard `<item>` element; it renders only
@@ -218,23 +156,16 @@ mockups but not implemented.
 ## 4. UX / UI improvements
 
 - [ ] **P2 — Add loading placeholders for the calendar.**
-  Collection views have skeletons; the calendar’s `#calendar-loading1/2`
+  Collection views have skeletons; the calendar's `#calendar-loading1/2`
   empty/loading handling is minimal.
 
-- [x] **P2 — Surface active sort/filter state more clearly.**
-  Active-filter chip row with per-chip remove implemented; the sort summary is
-  still text only.
-
 - [ ] **P2 — Improve empty-state messaging.**
-  Explain *why* a pane is empty (e.g. “no results for the current filters”) and
+  Explain *why* a pane is empty (e.g. "no results for the current filters") and
   offer a reset action.
 
 - [ ] **P2 — Keyboard and focus management for dialogs.**
   Popovers (`detail-dialog`, `save-slot-dialog`, `sort-dialog`, …) should trap
   focus and restore it to the trigger on close.
-
-- [x] **P3 — Add a “reset filters” affordance inside each filter group.**
-  Implemented a per-group “Zurücksetzen” button.
 
 - [ ] **P3 — Persist filter-sheet open/closed state.**
   The sheet open state resets on reload; remember it on small screens.
@@ -252,10 +183,10 @@ mockups but not implemented.
   support from the API.
 
 - [ ] **P2 — Degree scope over modules.** *(partially unblocked)*
-  `/modules` now accepts `degree_id` (1.0.3), so a module-only degree scope is
-  possible; the cascade and course/exam scope still need API work (§1).
+  `/modules` accepts `degree_id`, so a module-only degree scope is possible; the
+  cascade and course/exam scope still need API work (§1).
 
-- [ ] **P2 — “Clear all filters” action in the summary bar.**
+- [ ] **P2 — "Clear all filters" action in the summary bar.**
   Per-chip remove and per-group reset exist, but there is no single clear-all
   next to the chips (only the global reset dialog).
 
@@ -263,7 +194,7 @@ mockups but not implemented.
   If a distinct-option request fails, the list stays empty with no feedback.
   → Show an inline error/retry per facet.
 
-- [ ] **P3 — “Only this” quick action on an option.**
+- [ ] **P3 — "Only this" quick action on an option.**
   Long-press/secondary action to select one option and exclude the rest.
 
 - [ ] **P3 — Persist open/closed state of filter groups.**
@@ -276,20 +207,15 @@ mockups but not implemented.
 
 ## 5. Code quality / technical debt
 
-- [ ] **P1 — No README / contributor docs.**
-  Add setup, scripts (`dev`, `build`, `typecheck`, `lint`, `format`), API host
-  configuration and an architecture overview.
-
 - [ ] **P2 — Lint warnings are widespread.**
-  `npx eslint ts/` reports ~66 warnings (mostly `max-lines-per-function` /
-  `max-statements` / `complexity`), including the new `ts/filters/panel.ts`.
+  `npx eslint ts/` reports ~70 problems (mostly `max-lines-per-function` /
+  `max-statements` / `complexity`) plus one error (the unused `fetchLocal`).
   Not blocking, but they hide real issues.
 
 - [ ] **P2 — Dead code.**
   - `fetchLocal` (`ts/api/api.ts`) is unused (only remaining lint error).
   - `resetTree` / `goBackLevel` (`ts/tree.ts`) are unused.
   - `#export-button` / `#last-updated-con` UI is unwired.
-  - `datasave.json` in the repo root looks like a leftover sample.
 
 - [ ] **P2 — Large committed fixtures.**
   `ts/api/offline-data/*.json` are very large (`events.json` ~60 MB,
@@ -298,28 +224,16 @@ mockups but not implemented.
 
 - [ ] **P2 — Duplicated sort metadata.**
   Sort fields in `ts/sort.ts` mirror the API `sort` enums with no test.
-  → Generate from `openapi.json` or test to prevent drift.
+  → Generate from the API schema or test to prevent drift.
 
 - [ ] **P2 — Filter state is hand-wired to the DOM.**
   Each facet needs matching code in `ts/state.ts` (shape), `ts/state-bind.ts`
-  (read/write) and `ts/filters/query.ts` (param mapping). The new `excluded`
-  field had to be threaded through all three. → Introduce a small declarative
-  filter registry so a facet is defined once.
-
-- [ ] **P2 — `STATE_VERSION` was not bumped for `excluded`.**
-  `ts/state.ts` stayed at version `1` after `Filters.excluded` was added. It is
-  backward compatible (missing keys fall back to defaults), but bump it and
-  document migrations before the next shape change.
-
-- [x] **P2 — Range filters were looked up by visible label text.**
-  Ranges now carry a stable `data-range` key (`index.html`,
-  `ts/filters/query.ts`, `ts/state-bind.ts`).
-
-- [x] **P3 — `getEvents` building type is wrong.**
-  Narrowed to `building?: number`.
+  (read/write) and `ts/filters/query.ts` (param mapping). The `excluded` field
+  had to be threaded through all three. → Introduce a small declarative filter
+  registry so a facet is defined once.
 
 - [ ] **P3 — Hard-coded German strings scattered across modules.**
-  Blocking real i18n (see §2). Includes the new legend, unsupported notes and
+  Blocking real i18n (see §2). Includes the legend, unsupported notes and
   chip labels. → Centralise when adding i18n.
 
 - [ ] **P3 — Per-group reset triggers a full re-query.**
@@ -351,7 +265,8 @@ mockups but not implemented.
 
 ## Appendix — verification notes
 
-**API spec:** `openapi.json` v1.1.0. Relevant capabilities at review time:
+**API spec:** AlmaWeb API v1.1.0 (host `https://api.casparkroll.de/almaweb/v1`).
+Relevant capabilities at review time:
 
 | Endpoint | Filter parameters of interest |
 | --- | --- |
@@ -378,3 +293,4 @@ context, counts via `GET …?page_size=1`):
 > Generated from a codebase + API-spec review; line references point at
 > `index.html` and `ts/**` as of the filter work of 2026-09-28 (re-baselined to
 > API 1.1.0).
+
