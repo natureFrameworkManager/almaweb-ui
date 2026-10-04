@@ -1,0 +1,58 @@
+# Plans for v1
+- Find modules faster
+    - By name, number
+- Get a better overview for outstanding modules for the next semester
+- Find old structure from almaweb
+    - Tree
+    - List
+        - 3 columns (info 3 rows, type, startsemester)
+        - 3 rows (title, staff, time/semester)
+        - grouped by course types (prefixes without a,b,c...)
+    - Search
+        - Semester (Vorlesungsverzeichnis)
+        - Treelevel (Abschnitt)
+        - Faculty/Institutes (Orga-Einheit)
+        - Coursetype
+        - Modulenumber/-name
+        - Eventname/-number/-“kürzel(?)“
+        - Staff (Dozent) forename and name
+        - Freetext
+- Include data from multiple sources
+    - Planer
+    - Other faculties
+    - manual data entry
+- Include degree plans
+    - Modules
+    - Semester
+    - Ablaufplan
+    - Prüfungsordnung
+- Compare plans 
+- Export ical
+    - Generate updated link for calendar
+- Generate print 
+    - weekly plan
+    - semester plan
+- Check if module exam exists
+- Get location for next event
+- Give direkt links to other related data
+- Create plan for module enrollment
+- Use space on large screens and make diffrent mobile layout
+- Block own dates to display in calendar
+- Add SUBBTLE warnings on overlaps
+
+## Notes
+- Add possibility to add lunch time date
+- Add generic event that repeat every day (also diffrent for weekdays)
+- Add if events on this day condition  
+
+## Details
+- Today view for mobile
+    - Possible link to mensa plan
+- Show new data entries for saved items
+- Make diffrent view with a selector and icons instead of full nav
+- Consider the same for data types
+- Show content on mobile even with filters
+- Use full screen to display calendar on large screen and allow display on hover (setting to turn off)
+- Show module degree plan the same way
+- Ical preview mode on export
+- Highlight manual user entries
