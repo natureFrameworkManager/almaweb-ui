@@ -391,7 +391,7 @@ export async function getEvents(
     appendSort(queryParams, sort, order);
     appendPaging(queryParams, page, pageSize);
     return fetchApi(
-        `/events?fields=id&fields=number&fields=name&fields=start_time&fields=end_time&fields=event_date&fields=location&fields=location.building&fields=staff&${queryParams.toString()}`,
+        `/events?fields=id&fields=number&fields=name&fields=start_time&fields=end_time&fields=event_date&fields=location&fields=location.building&fields=staff&fields=courses.name&fields=courses.type.name&${queryParams.toString()}`,
     );
 }
 
@@ -422,7 +422,7 @@ export async function getModuleEvents(
     (weekday ?? []).forEach((value) => queryParams.append("weekday", value.toString()));
     return fetchApi(
         appendQuery(
-            `/modules/${moduleId}/events?include=location&include=location.building&include=staff`,
+            `/modules/${moduleId}/events?include=location&include=location.building&include=staff&fields=courses.name&fields=courses.type.name`,
             queryParams,
         ),
     );
@@ -438,7 +438,7 @@ export async function getModuleEvents(
  */
 export async function getCourseEvents(courseId: number): Promise<PagedResponse<Event>> {
     return fetchApi(
-        `/courses/${courseId}/events?include=location&include=location.building&include=staff`,
+        `/courses/${courseId}/events?include=location&include=location.building&include=staff&fields=courses.name&fields=courses.type.name`,
     );
 }
 

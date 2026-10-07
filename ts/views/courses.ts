@@ -11,7 +11,7 @@ export function courseToView(course: Course): EntityView {
     const baseInfos = (): InfoSpec[] => {
         const infos: InfoSpec[] = [{ className: "course-type", text: course.type.name }];
         if (course.weekday) {
-            infos.push({ className: "course-weekday", text: course.weekday });
+            infos.push({ className: "course-weekday", text: `${course.weekday} Wochentage` });
         }
         infos.push({ className: "course-weekly-hours", text: `${course.weekly_hours} SWS` });
         return infos;

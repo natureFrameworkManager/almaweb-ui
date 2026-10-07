@@ -369,8 +369,8 @@ export function registerDetailSpecs(): void {
         kind: "event",
         heading: "Veranstaltungs-Details",
         fetch: getEventDetail,
-        name: (detail) => detail.name || detail.location?.name || "",
-        number: (detail) => detail.number,
+        name: (detail) => detail.name || (detail.courses !== undefined ? (detail.courses.map((course) => `${course.type.name  }: ${  course.name}`).join(", ")) : false) || detail.location?.name || "",
+        number: (detail) => `Termin ${detail.number}`,
         saveKind: "event",
         tabs: eventTabs,
     });

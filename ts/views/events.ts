@@ -30,8 +30,8 @@ export function eventToView(event: Event): EntityView {
     ];
 
     return {
-        name: event.name || event.location?.name || "",
-        number: event.number,
+        name: event.name || (event.courses !== undefined ? (event.courses.map((course) => `${course.type.name  }: ${  course.name}`).join(", ")) : false) || event.location?.name || "",
+        number: `Termin ${event.number}`,
         listInfos,
         cardInfos,
         detailsId: String(event.id),
