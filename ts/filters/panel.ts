@@ -12,7 +12,7 @@
  */
 
 /** Number of options shown before a long list is collapsed behind "Weitere". */
-const OPTION_VISIBLE_LIMIT = 6;
+const OPTION_VISIBLE_LIMIT = Infinity;
 
 /** Delay applied before the summary is rebuilt after a filter change. */
 const SUMMARY_DEBOUNCE_MS = 150;
