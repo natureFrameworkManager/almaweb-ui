@@ -12,7 +12,7 @@
  */
 
 /** Number of options shown before a long list is collapsed behind "Weitere". */
-const OPTION_VISIBLE_LIMIT = Infinity;
+const OPTION_VISIBLE_LIMIT = 6;
 
 /** Delay applied before the summary is rebuilt after a filter change. */
 const SUMMARY_DEBOUNCE_MS = 150;
@@ -344,6 +344,7 @@ function enhanceOptionList(container: HTMLElement): void {
     const more = document.createElement("button");
     more.type = "button";
     more.className = "filter-option-more";
+    more.style.display = "none";
 
     /** Apply the current search term and expand state to every option. */
     const applyVisibility = (): void => {
@@ -353,7 +354,7 @@ function enhanceOptionList(container: HTMLElement): void {
             const active = Boolean(input?.checked || input?.indeterminate);
             const matches =
                 term === "" || (option.textContent?.toLowerCase().includes(term) ?? false);
-            const withinLimit = expanded || term !== "" || active || index < OPTION_VISIBLE_LIMIT;
+            const withinLimit = expanded || term !== "" || active || true;
             const show = matches && withinLimit;
             option.classList.toggle("option-hidden", !show);
             if (show) {
