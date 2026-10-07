@@ -9,3 +9,15 @@ body[data-effective-view-mode="split"] {
     @apply grid-rows-[max-content_minmax(0,1fr)_minmax(0,1fr)];
     @apply lg:grid-rows-[max-content_minmax(0,1fr)];
 }
+
+::-webkit-scrollbar {
+    @apply w-1.25 h-1.25;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply rounded-[3px] bg-border;
+}
