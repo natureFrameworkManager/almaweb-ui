@@ -48,6 +48,12 @@
 .input-container div.checkbox-list label.checkbox-item.option-hidden {
     @apply hidden;
 }
+.input-container:has(div.checkbox-list) input[type="search"] {
+    @apply border-b-0 rounded-b-none mb-0!;
+}
+.input-container:has(input[type="search"]) div.checkbox-list {
+    @apply rounded-t-none;
+}
 .input-container:has(input[type="checkbox"]):not(:has(div.checkbox-list)) {
     @apply flex flex-row items-center gap-x-3 ps-3;
 }
