@@ -49,7 +49,7 @@
     @apply hidden;
 }
 .input-container:has(div.checkbox-list) input[type="search"] {
-    @apply border-b-0 rounded-b-none mb-0!;
+    @apply mb-0! rounded-b-none border-b-0;
 }
 .input-container:has(input[type="search"]) div.checkbox-list {
     @apply rounded-t-none;

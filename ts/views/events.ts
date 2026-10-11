@@ -30,7 +30,13 @@ export function eventToView(event: Event): EntityView {
     ];
 
     return {
-        name: event.name || (event.courses !== undefined ? (event.courses.map((course) => `${course.type.name  }: ${  course.name}`).join(", ")) : false) || event.location?.name || "",
+        name:
+            event.name ||
+            (event.courses !== undefined
+                ? event.courses.map((course) => `${course.type.name}: ${course.name}`).join(", ")
+                : false) ||
+            event.location?.name ||
+            "",
         number: `Termin ${event.number}`,
         listInfos,
         cardInfos,

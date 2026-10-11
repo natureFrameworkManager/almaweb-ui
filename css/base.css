@@ -11,7 +11,7 @@ body[data-effective-view-mode="split"] {
 }
 
 ::-webkit-scrollbar {
-    @apply w-1.25 h-1.25;
+    @apply h-1.25 w-1.25;
 }
 
 ::-webkit-scrollbar-track {

@@ -53,7 +53,7 @@
 }
 
 @media not print {
-    html.dark, 
+    html.dark,
     [data-color-scheme="dark"] {
         /* primary */
         --fc-monarch-primary: var(--color-primary);
