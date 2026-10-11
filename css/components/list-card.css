@@ -3,27 +3,46 @@ ul.list {
 }
 ul.list li.list-item {
     @apply border-b border-border p-2 last:border-b-0;
-    @apply flex flex-col gap-y-1;
+    @apply grid grid-cols-[min-content_1fr_1fr] grid-rows-1 gap-x-4;
 }
-ul.list li.list-item h1 {
-    @apply text-lg font-bold text-wrap;
+ul.list li.list-item .side-con {
+    @apply flex flex-col items-center gap-y-1 col-1;
 }
-ul.list li.list-item h2 {
-    @apply flex h-full flex-col font-semibold;
+ul.list li.list-item button.save-toggle {
+    @apply text-[20px] px-2 py-2;
 }
-ul.list li.list-item div.info-container {
-    @apply flex flex-row flex-wrap gap-2;
-}
-ul.list li.list-item span.info {
+ul.list li.list-item span.module-credits {
     @apply w-fit rounded-full border border-border px-2 py-1;
     @apply bg-primary/5 text-sm dark:bg-primary/15;
     @apply text-wrap lg:text-nowrap;
+    @apply my-2;
 }
-ul.list li.list-item button {
-    @apply self-end;
+ul.list li.list-item .main-con {
+    @apply col-2;
+    @apply flex flex-col gap-y-2;
 }
-ul.list li.list-item div.btn-con {
-    @apply mt-1 flex flex-row items-center justify-end gap-x-1 self-end;
+ul.list li.list-item .header-con {
+    @apply flex flex-col;
+}
+ul.list li.list-item h1 {
+    @apply text-xl font-bold text-wrap;
+    @apply leading-tight;
+}
+ul.list li.list-item h2 {
+    @apply flex h-full text-lg items-baseline gap-x-2;
+    @apply leading-tight;
+}
+ul.list li.list-item h2 span {
+    @apply text-body-medium;
+}
+ul.list li.list-item div.info-container {
+    @apply grid grid-cols-[200px_auto] gap-2;
+}
+ul.list li.list-item div.info-container span.info {
+    @apply flex items-center gap-x-1.5;
+}
+ul.list li.list-item div.info-container span.info span.material-symbols {
+    @apply text-[20px];
 }
 div.card-grid {
     @apply grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-2 lg:grid-cols-[repeat(auto-fill,minmax(250px,1fr))];
