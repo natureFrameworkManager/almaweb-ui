@@ -10,12 +10,17 @@ body[data-effective-view-mode="split"] {
     @apply lg:grid-rows-[max-content_minmax(0,1fr)];
 }
 
+* {
+    @apply scrollbar-thumb-border;
+    scrollbar-width: 5px;
+}
+
 ::-webkit-scrollbar {
     @apply h-1.25 w-1.25;
 }
 
 ::-webkit-scrollbar-track {
-    @apply bg-transparent;
+    @apply bg-background;
 }
 
 ::-webkit-scrollbar-thumb {
