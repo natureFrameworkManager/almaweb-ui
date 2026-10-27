@@ -6,10 +6,10 @@ ul.list li.list-item {
     @apply grid grid-cols-[min-content_1fr_1fr] grid-rows-1 gap-x-4;
 }
 ul.list li.list-item .side-con {
-    @apply flex flex-col items-center gap-y-1 col-1;
+    @apply col-1 flex flex-col items-center gap-y-1;
 }
 ul.list li.list-item button.save-toggle {
-    @apply text-[20px] px-2 py-2;
+    @apply px-2 py-2 text-[20px];
 }
 ul.list li.list-item span.module-credits {
     @apply w-fit rounded-full border border-border px-2 py-1;
@@ -29,7 +29,7 @@ ul.list li.list-item h1 {
     @apply leading-tight;
 }
 ul.list li.list-item h2 {
-    @apply flex h-full text-lg items-baseline gap-x-2;
+    @apply flex h-full items-baseline gap-x-2 text-lg;
     @apply leading-tight;
 }
 ul.list li.list-item h2 span {
@@ -45,10 +45,10 @@ ul.list li.list-item div.info-container span.info span.material-symbols {
     @apply text-[20px];
 }
 ul.list li.list-item .more-con {
-    @apply col-3 max-h-[165px] grid grid-cols-[max-content_max-content_max-content_max-content_max-content_max-content] gap-x-1 gap-y-1 overflow-y-auto;
+    @apply col-3 grid max-h-[165px] grid-cols-[max-content_max-content_max-content_max-content_max-content_max-content] gap-x-1 gap-y-1 overflow-y-auto;
 }
 ul.list li.list-item .more-con .course-title {
-    @apply col-1 me-3 sticky top-0 bg-background;
+    @apply sticky top-0 col-1 me-3 bg-background;
 }
 ul.list li.list-item .more-con .course-day {
     @apply col-2;

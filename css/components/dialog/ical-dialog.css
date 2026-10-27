@@ -3,7 +3,7 @@
 }
 .ical-dialog .dialog-body {
     @apply grid! grid-cols-[300px_auto_280px] grid-rows-2;
-    @apply p-0! gap-y-0!;
+    @apply gap-y-0! p-0!;
 }
 
 .ical-dialog #ical-module-side-bar {
@@ -12,10 +12,10 @@
     @apply border-r border-border;
 }
 .ical-dialog #ical-module-side-bar #ical-module-list-con {
-    @apply flex-1 overflow-auto py-1 px-2;
+    @apply flex-1 overflow-auto px-2 py-1;
 }
 .ical-dialog #ical-module-side-bar #ical-module-list-con h2 {
-    @apply text-[11px] font-semibold mb-3;
+    @apply mb-3 text-[11px] font-semibold;
 }
 .ical-dialog #ical-module-side-bar #ical-module-list {
     @apply flex flex-col overflow-x-hidden overflow-y-auto;
@@ -24,41 +24,84 @@
     @apply flex flex-col gap-y-2;
 }
 .ical-dialog #ical-module-side-bar #ical-module-list div.ical-module-item:not(:last-child) {
-    @apply border-b border-border pb-2 mb-3
+    @apply mb-3 border-b border-border pb-2;
 }
-.ical-dialog #ical-module-side-bar #ical-module-list div.ical-module-item div.ical-module-item-children {
+.ical-dialog
+    #ical-module-side-bar
+    #ical-module-list
+    div.ical-module-item
+    div.ical-module-item-children {
     @apply flex flex-col gap-y-1;
 }
 .ical-dialog #ical-module-side-bar #ical-module-list div.ical-module-item span {
     @apply text-nowrap;
 }
-.ical-dialog #ical-module-side-bar #ical-module-list div.ical-module-item div.ical-module-item-parent, 
-.ical-dialog #ical-module-side-bar #ical-module-list div.ical-module-item div.ical-module-item-child {
-    @apply grid grid-cols-[min-content_min-content_min-content_min-content_auto] grid-rows-2 gap-x-2 items-center;
+.ical-dialog
+    #ical-module-side-bar
+    #ical-module-list
+    div.ical-module-item
+    div.ical-module-item-parent,
+.ical-dialog
+    #ical-module-side-bar
+    #ical-module-list
+    div.ical-module-item
+    div.ical-module-item-child {
+    @apply grid grid-cols-[min-content_min-content_min-content_min-content_auto] grid-rows-2 items-center gap-x-2;
 }
-.ical-dialog #ical-module-side-bar #ical-module-list div.ical-module-item div.ical-module-item-child {
+.ical-dialog
+    #ical-module-side-bar
+    #ical-module-list
+    div.ical-module-item
+    div.ical-module-item-child {
     @apply ps-3;
 }
 .ical-dialog #ical-module-side-bar #ical-module-list div.ical-module-item input {
-    @apply w-fit h-fit col-1 row-span-2;
+    @apply col-1 row-span-2 h-fit w-fit;
 }
-.ical-dialog #ical-module-side-bar #ical-module-list div.ical-module-item span.ical-module-item-title {
+.ical-dialog
+    #ical-module-side-bar
+    #ical-module-list
+    div.ical-module-item
+    span.ical-module-item-title {
     @apply col-start-2 col-end-5 row-1;
 }
-.ical-dialog #ical-module-side-bar #ical-module-list div.ical-module-item span.ical-module-item-number {
+.ical-dialog
+    #ical-module-side-bar
+    #ical-module-list
+    div.ical-module-item
+    span.ical-module-item-number {
     @apply col-2 row-2;
 }
-.ical-dialog #ical-module-side-bar #ical-module-list div.ical-module-item span.ical-module-item-course-number {
+.ical-dialog
+    #ical-module-side-bar
+    #ical-module-list
+    div.ical-module-item
+    span.ical-module-item-course-number {
     @apply col-3 row-2;
 }
-.ical-dialog #ical-module-side-bar #ical-module-list div.ical-module-item div.ical-module-item-parent span.ical-module-item-event-number {
+.ical-dialog
+    #ical-module-side-bar
+    #ical-module-list
+    div.ical-module-item
+    div.ical-module-item-parent
+    span.ical-module-item-event-number {
     @apply col-4 row-2;
 }
-.ical-dialog #ical-module-side-bar #ical-module-list div.ical-module-item div.ical-module-item-child span.ical-module-item-event-number {
+.ical-dialog
+    #ical-module-side-bar
+    #ical-module-list
+    div.ical-module-item
+    div.ical-module-item-child
+    span.ical-module-item-event-number {
     @apply col-3 row-2;
 }
-.ical-dialog #ical-module-side-bar #ical-module-list div.ical-module-item div.ical-module-item-children hr {
-    @apply ms-3 my-1 border-t border-border;
+.ical-dialog
+    #ical-module-side-bar
+    #ical-module-list
+    div.ical-module-item
+    div.ical-module-item-children
+    hr {
+    @apply my-1 ms-3 border-t border-border;
 }
 .ical-dialog #ical-module-side-bar #ical-additional-modules {
     @apply bottom-0;
@@ -66,17 +109,26 @@
 }
 .ical-dialog #ical-module-side-bar #ical-additional-modules div#ical-found-module-list {
     @apply flex flex-col gap-y-1 px-1 py-2;
-    @apply min-h-0 max-h-[100px] overflow-y-auto;
+    @apply max-h-[100px] min-h-0 overflow-y-auto;
 }
-.ical-dialog #ical-module-side-bar #ical-additional-modules div#ical-found-module-list div.ical-found-module-list-item {
+.ical-dialog
+    #ical-module-side-bar
+    #ical-additional-modules
+    div#ical-found-module-list
+    div.ical-found-module-list-item {
     @apply flex gap-x-2;
 }
-.ical-dialog #ical-module-side-bar #ical-additional-modules div#ical-found-module-list div.ical-found-module-list-item input {
-    @apply w-fit
+.ical-dialog
+    #ical-module-side-bar
+    #ical-additional-modules
+    div#ical-found-module-list
+    div.ical-found-module-list-item
+    input {
+    @apply w-fit;
 }
 .ical-dialog #ical-module-side-bar #ical-additional-modules input {
     @apply border-t border-border;
-    @apply w-full py-1 px-2;
+    @apply w-full px-2 py-1;
 }
 
 .ical-dialog #ical-module-main {
@@ -85,10 +137,10 @@
     @apply overflow-y-auto;
 }
 .ical-dialog #ical-module-main div.input-container:not(:has(input[type="checkbox"])) {
-    @apply flex-col!
+    @apply flex-col!;
 }
 .ical-dialog #ical-module-main div.input-container-line {
-    @apply flex gap-x-3
+    @apply flex gap-x-3;
 }
 .ical-dialog #ical-module-main div.input-container-line div.input-container {
     @apply flex-1;
@@ -112,29 +164,44 @@
     @apply flex flex-col gap-y-1;
 }
 .ical-dialog #ical-module-main #ical-notifications-con label {
-    @apply text-[12px] ps-2;
+    @apply ps-2 text-[12px];
 }
 .ical-dialog #ical-module-main #ical-notifications-con .notification-list {
     @apply grid grid-cols-[max-content_auto] gap-y-2;
 }
 .ical-dialog #ical-module-main #ical-notifications-con .notification-list .notification-item {
-    @apply flex gap-x-2 col-1;
+    @apply col-1 flex gap-x-2;
 }
-.ical-dialog #ical-module-main #ical-notifications-con .notification-list .notification-item button {
+.ical-dialog
+    #ical-module-main
+    #ical-notifications-con
+    .notification-list
+    .notification-item
+    button {
     @apply w-fit;
 }
 .ical-dialog #ical-module-main #ical-notifications-con .notification-list .notification-item input,
-.ical-dialog #ical-module-main #ical-notifications-con .notification-list .notification-item select{
-    @apply border border-border rounded px-2;
+.ical-dialog
+    #ical-module-main
+    #ical-notifications-con
+    .notification-list
+    .notification-item
+    select {
+    @apply rounded border border-border px-2;
 }
 .ical-dialog #ical-module-main #ical-notifications-con .notification-list .notification-item input {
-    @apply w-[60px]
+    @apply w-[60px];
 }
-.ical-dialog #ical-module-main #ical-notifications-con .notification-list .notification-item select {
-    @apply w-[120px]
+.ical-dialog
+    #ical-module-main
+    #ical-notifications-con
+    .notification-list
+    .notification-item
+    select {
+    @apply w-[120px];
 }
 .ical-dialog #ical-module-main #ical-notifications-con .notification-list > button {
-    @apply w-[100px] ms-2;
+    @apply ms-2 w-[100px];
 }
 .ical-dialog #ical-module-main .ical-override-title-con {
     @apply flex flex-col gap-y-2;
@@ -161,7 +228,7 @@
     @apply flex flex-col gap-y-1 p-1 pt-2;
 }
 .ical-dialog #ical-link div#ical-link-content {
-    @apply flex flex-col gap-y-1 h-full;
+    @apply flex h-full flex-col gap-y-1;
 }
 .ical-dialog #ical-link div#ical-link-content h3 {
     @apply text-[11px] font-semibold;
