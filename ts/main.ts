@@ -5,7 +5,7 @@ import "fullcalendar/themes/monarch/palettes/purple.css";
 import "fullcalendar/themes/monarch/theme.css";
 
 import "./theme.ts";
-import "./layout.ts";
+import { attachViewChanger, attachDatatypeChanger, attachViewModeSwitcher } from "./layout.ts";
 
 import "./state/data.ts";
 import "./state/save.ts";
@@ -29,3 +29,8 @@ import "./detail/dialog.ts";
 import "./export/ical.ts";
 import "./export/print.ts";
 import "./export/share.ts";
+
+// Layout changes
+attachViewChanger();
+attachDatatypeChanger();
+attachViewModeSwitcher();
