@@ -41,20 +41,6 @@ async function fetchApi(endpoint: string, options?: RequestInit) {
 }
 
 /**
- * Fetch JSON data from a local fixture.
- * @param endpoint - Fixture path.
- * @param options - Optional fetch options.
- * @returns The decoded JSON response.
- */
-async function fetchLocal(endpoint: string, options?: RequestInit) {
-    const response = await fetch(`${endpoint}`, options);
-    if (!response.ok) {
-        throw new Error(`Failed to fetch local ${endpoint}: ${response.statusText}`);
-    }
-    return response.json();
-}
-
-/**
  * Append pagination parameters to a query.
  * @param queryParams - Query parameters to extend.
  * @param page - Optional one-based page number.
