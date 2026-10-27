@@ -48,7 +48,7 @@ ul.list li.list-item .more-con {
     @apply col-3 grid max-h-[165px] grid-cols-[max-content_max-content_max-content_max-content_max-content_max-content] gap-x-1 gap-y-1 overflow-y-auto;
 }
 ul.list li.list-item .more-con .course-title {
-    @apply sticky top-0 col-1 me-3 bg-background;
+    @apply sticky top-0 left-0 col-1 me-3 bg-background;
 }
 ul.list li.list-item .more-con .course-day {
     @apply col-2;
