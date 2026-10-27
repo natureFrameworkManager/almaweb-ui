@@ -9,14 +9,14 @@ export type ListDataItem = {
     frequency: string;
     courses: Course[];
     exams: Exam[];
-}
+};
 
 type Course = {
     id: number;
     name: string;
     type: string;
     events: Event[];
-}
+};
 
 type Event = {
     id: number;
@@ -26,12 +26,12 @@ type Event = {
     location: string;
     instructor: string;
     daterange: string;
-}
+};
 
 type Exam = {
     id: number;
     type: string;
-}
+};
 
 function listItemHTML(item: ListDataItem): string {
     return `<li class="list-item">
@@ -61,14 +61,14 @@ function listItemHTML(item: ListDataItem): string {
                 >
                 <span class="info module-course-types"
                     ><span class="material-symbols">person_raised_hand</span
-                    >${item.courses.map(course => course.type).join(", ")}</span
+                    >${item.courses.map((course) => course.type).join(", ")}</span
                 >
                 <span class="info module-frequency"
                     ><span class="material-symbols">repeat</span>${item.frequency}</span
                 >
                 <span class="info module-exam-types">
                     <span class="material-symbols">history_edu</span>
-                    ${item.exams.map(exam => exam.type).join(", ")}
+                    ${item.exams.map((exam) => exam.type).join(", ")}
                 </span>
             </div>
             <button
@@ -82,16 +82,24 @@ function listItemHTML(item: ListDataItem): string {
             </button>
         </div>
         <div class="more-con">
-            ${item.courses.map(course => `
-                <span class="course-title" style="grid-row: span ${course.events.length+1}">${course.name}</span>
-                ${course.events.map(event => `
+            ${item.courses
+                .map(
+                    (course) => `
+                <span class="course-title" style="grid-row: span ${course.events.length + 1}">${course.name}</span>
+                ${course.events
+                    .map(
+                        (event) => `
                     <span class="course-day">${event.day}</span>
                     <span class="course-time">${event.startTime}-${event.endTime}</span>
                     <span class="course-staff">${event.instructor}</span>
                     <span class="course-location">${event.location}</span>
                     <span class="course-daterange">${event.daterange}</span>
-                `).join("")}
-            `).join("")}
+                `,
+                    )
+                    .join("")}
+            `,
+                )
+                .join("")}
         </div>
     </li>`;
 }

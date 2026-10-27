@@ -58,7 +58,9 @@ document.querySelector("#module-list1")?.addEventListener("scroll", (event) => {
     console.log("Scroll progress:", progress);
 });
 
-console.log(`Baseline progress: ${getElementScrollProgress(document.querySelector("#module-list1") as HTMLElement)}`);
+console.log(
+    `Baseline progress: ${getElementScrollProgress(document.querySelector("#module-list1") as HTMLElement)}`,
+);
 
 const sampleData: ListDataItem[] = [
     {
@@ -83,7 +85,7 @@ const sampleData: ListDataItem[] = [
                         endTime: "12:00",
                         location: "Room 101",
                         instructor: "Dr. Max Mustermann",
-                        daterange: "01.04.2024-30.06.2024"
+                        daterange: "01.04.2024-30.06.2024",
                     },
                     {
                         id: 2,
@@ -92,7 +94,7 @@ const sampleData: ListDataItem[] = [
                         endTime: "16:00",
                         location: "Room 102",
                         instructor: "Dr. Max Mustermann",
-                        daterange: "01.04.2024-30.06.2024"
+                        daterange: "01.04.2024-30.06.2024",
                     },
                     {
                         id: 3,
@@ -101,7 +103,7 @@ const sampleData: ListDataItem[] = [
                         endTime: "10:00",
                         location: "Room 103",
                         instructor: "Dr. Max Mustermann",
-                        daterange: "01.04.2024-30.06.2024"
+                        daterange: "01.04.2024-30.06.2024",
                     },
                     {
                         id: 4,
@@ -110,9 +112,9 @@ const sampleData: ListDataItem[] = [
                         endTime: "12:00",
                         location: "Room 104",
                         instructor: "Dr. Max Mustermann",
-                        daterange: "01.04.2024-30.06.2024"
-                    }
-                ]
+                        daterange: "01.04.2024-30.06.2024",
+                    },
+                ],
             },
             {
                 id: 2,
@@ -126,17 +128,17 @@ const sampleData: ListDataItem[] = [
                         endTime: "11:00",
                         location: "Room 105",
                         instructor: "Dr. Max Mustermann",
-                        daterange: "01.04.2024-30.06.2024"
-                    }
-                ]
-            }
+                        daterange: "01.04.2024-30.06.2024",
+                    },
+                ],
+            },
         ],
         exams: [
             {
                 id: 1,
-                type: "Mündliche Prüfung (20 Min)"
-            }
-        ]
-    }
+                type: "Mündliche Prüfung (20 Min)",
+            },
+        ],
+    },
 ];
 displayList(sampleData, "#module-list1");
