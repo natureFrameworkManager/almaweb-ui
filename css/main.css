@@ -4,27 +4,29 @@
 
 @import "./theme.css";
 
-@import "./components/switcher.css";
-@import "./components/buttons.css";
-@import "./components/inputs.css";
-
 @import "./base.css";
 
 @import "./layout/header.css";
 @import "./layout/filters.css";
 @import "./layout/panes.css";
 
-@import "./components/list-card-header.css";
-@import "./components/type-switcher.css";
-@import "./components/list-card.css";
-@import "./components/tree.css";
+@import "./components/base/switcher.css";
+@import "./components/base/buttons.css";
+@import "./components/base/inputs.css";
 
-@import "./components/dialog.css";
-@import "./components/save-slot-dialog.css";
-@import "./components/detail-dialog.css";
-@import "./components/confirm-dialog.css";
-@import "./components/reset-dialog.css";
-@import "./components/sort-dialog.css";
-@import "./components/ical-dialog.css";
+@import "./components/lists/list-card-header.css";
+@import "./components/lists/list.css";
+@import "./components/lists/card.css";
+
+@import "./components/dialog/dialog.css";
+@import "./components/dialog/save-slot-dialog.css";
+@import "./components/dialog/detail-dialog.css";
+@import "./components/dialog/confirm-dialog.css";
+@import "./components/dialog/reset-dialog.css";
+@import "./components/dialog/sort-dialog.css";
+@import "./components/dialog/ical-dialog.css";
+
+@import "./components/type-switcher.css";
+@import "./components/tree.css";
 
 @import "./components/feedback.css";
