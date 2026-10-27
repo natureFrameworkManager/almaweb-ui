@@ -38,32 +38,32 @@ body[data-pane1-view="tree"] main#tree1 {
 }
 
 /* A single pane uses the full content width next to the sidebar. */
-body[data-effective-view-mode="single"] main#list-card-view1,
-body[data-effective-view-mode="single"] main#calendar1,
-body[data-effective-view-mode="single"] main#tree1 {
+body[data-view-mode="single"] main#list-card-view1,
+body[data-view-mode="single"] main#calendar1,
+body[data-view-mode="single"] main#tree1 {
     @apply lg:col-start-2 lg:col-end-4;
 }
 
 /* The secondary pane is rendered in the split layout; below `lg` it stacks
    below the first pane, from `lg` it sits in the second content column. */
-body[data-effective-view-mode="split"][data-pane2-view="list"] main#list-card-view2,
-body[data-effective-view-mode="split"][data-pane2-view="cards"] main#list-card-view2,
-body[data-effective-view-mode="split"][data-pane2-view="calendar"] main#calendar2,
-body[data-effective-view-mode="split"][data-pane2-view="tree"] main#tree2 {
+body[data-view-mode="split"][data-pane2-view="list"] main#list-card-view2,
+body[data-view-mode="split"][data-pane2-view="cards"] main#list-card-view2,
+body[data-view-mode="split"][data-pane2-view="calendar"] main#calendar2,
+body[data-view-mode="split"][data-pane2-view="tree"] main#tree2 {
     display: flex;
     @apply col-1 row-3 lg:col-3 lg:row-2;
 }
 
 /* The compare layout replaces both panes and is available at every width. */
-body[data-effective-view-mode="compare"] main#compare {
+body[data-view-mode="compare"] main#compare {
     display: block;
     @apply col-1 row-2 lg:col-start-2 lg:col-end-4;
 }
-body[data-effective-view-mode="compare"] main#list-card-view1,
-body[data-effective-view-mode="compare"] main#calendar1,
-body[data-effective-view-mode="compare"] main#tree1,
-body[data-effective-view-mode="compare"] main#list-card-view2,
-body[data-effective-view-mode="compare"] main#calendar2,
-body[data-effective-view-mode="compare"] main#tree2 {
+body[data-view-mode="compare"] main#list-card-view1,
+body[data-view-mode="compare"] main#calendar1,
+body[data-view-mode="compare"] main#tree1,
+body[data-view-mode="compare"] main#list-card-view2,
+body[data-view-mode="compare"] main#calendar2,
+body[data-view-mode="compare"] main#tree2 {
     display: none;
 }

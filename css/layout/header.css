@@ -56,12 +56,12 @@ header#top-header nav#display-changer2 {
 }
 
 /* The comparison layout has no per-pane changers. */
-body[data-effective-view-mode="compare"] header#top-header nav#display-changer1 {
+body[data-view-mode="compare"] header#top-header nav#display-changer1 {
     display: none;
 }
 
 /* The secondary pane is only switchable while it is shown. */
-body[data-effective-view-mode="split"] header#top-header nav#display-changer2 {
+body[data-view-mode="split"] header#top-header nav#display-changer2 {
     @apply flex;
 }
 

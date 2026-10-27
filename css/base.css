@@ -5,7 +5,7 @@ body {
 }
 
 /* Split layout stacks the two panes vertically on small screens. */
-body[data-effective-view-mode="split"] {
+body[data-view-mode="split"] {
     @apply grid-rows-[max-content_minmax(0,1fr)_minmax(0,1fr)];
     @apply lg:grid-rows-[max-content_minmax(0,1fr)];
 }
