@@ -1,3 +1,5 @@
+import { openModuleDetail } from "../detail/dialog.ts";
+
 export type ListDataItem = {
     id: number;
     type: string;
@@ -61,14 +63,14 @@ function listItemHTML(item: ListDataItem): string {
                 >
                 <span class="info module-course-types"
                     ><span class="material-symbols">person_raised_hand</span
-                    >${item.courses.map((course) => course.type).join(", ")}</span
+                    >${[...new Set(item.courses.map((course) => course.type))].sort().join(", ") || "-"}</span
                 >
                 <span class="info module-frequency"
                     ><span class="material-symbols">repeat</span>${item.frequency}</span
                 >
                 <span class="info module-exam-types">
                     <span class="material-symbols">history_edu</span>
-                    ${item.exams.map((exam) => exam.type).join(", ")}
+                    ${[...new Set(item.exams.map((exam) => exam.type.replace(/^\s*[0-9]*\s*/g, "").replace(/\(Wdh\.?\)/g, "").trim()))].sort().join(", ") || "-"}
                 </span>
             </div>
             <button
@@ -112,4 +114,19 @@ export function displayList(data: ListDataItem[], selector: string, append: bool
     } else {
         container.innerHTML = data.map(listItemHTML).join("");
     }
+    setDialogListener();
+}
+
+function setDialogListener() {
+    document.querySelectorAll(".detail-btn").forEach((button) => {
+        // Remove any existing click listeners to avoid duplicate handlers
+        button.removeEventListener("click", () => {});
+        button.addEventListener("click", (event) => {
+            const target = event.currentTarget as HTMLElement;
+            const moduleId = target.dataset.detailsId;
+            if (moduleId) {
+                openModuleDetail(moduleId);
+            }
+        });
+    });
 }

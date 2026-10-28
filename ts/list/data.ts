@@ -17,8 +17,8 @@ function transformModuleToListItem(module: Module): ListDataItem {
         credits: module.credits,
         durationSemester: module.duration_semesters,
         frequency: module.frequency,
-        courses: [],
-        exams: []
+        courses: module.courses.map(course => ({ id: 0, name: "", type: course.type.name, events: [] })) || [],
+        exams: module.exams.map(exam => ({ id: 0, name: "", type: exam.name})) || []
     };
 }
 
