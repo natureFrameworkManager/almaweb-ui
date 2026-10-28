@@ -104,8 +104,12 @@ function listItemHTML(item: ListDataItem): string {
     </li>`;
 }
 
-export function displayList(data: ListDataItem[], selector: string) {
+export function displayList(data: ListDataItem[], selector: string, append: boolean = false) {
     const container = document.querySelector(selector);
     if (!container) return;
-    container.innerHTML = data.map(listItemHTML).join("");
+    if (append) {
+        container.innerHTML += data.map(listItemHTML).join("");
+    } else {
+        container.innerHTML = data.map(listItemHTML).join("");
+    }
 }
