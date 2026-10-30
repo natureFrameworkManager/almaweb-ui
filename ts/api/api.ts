@@ -124,8 +124,11 @@ type LocationOptions = GeneralOptions & {
  * @param options - Options object to convert.
  * @returns URLSearchParams instance containing the encoded options.
  */
-function createQueryParams<Type>(options: Type): URLSearchParams {
+function createQueryParams<Type>(options?: Type): URLSearchParams {
     const queryParams = new URLSearchParams();
+    if (!options) {
+        return queryParams;
+    }
     Object.entries(options as Record<string, unknown>).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
             const expandedKey = key.replace(/[A-Z]/g, (match) => `_${match.toLowerCase()}`);
@@ -160,7 +163,7 @@ function appendQuery(url: string, queryParams: URLSearchParams): string {
  * @param options - Module query options.
  * @returns The module response data.
  */
-export async function getModules(options: ModuleOptions): Promise<PagedResponse<Module>> {
+export async function getModules(options?: ModuleOptions): Promise<PagedResponse<Module>> {
     const queryParams = createQueryParams<ModuleOptions>(options);
     return fetchApi(
         `/modules?include=faculty&include=courses&include=exams&fields=id&fields=name&fields=number&fields=language&fields=duration_semesters&fields=credits&fields=frequency&fields=path&fields=faculty.name&fields=courses.type&fields=exams.name&${queryParams.toString()}`,
@@ -172,7 +175,7 @@ export async function getModules(options: ModuleOptions): Promise<PagedResponse<
  * @param options - Course query options.
  * @returns The course response data.
  */
-export async function getCourses(options: CourseOptions): Promise<PagedResponse<Course>> {
+export async function getCourses(options?: CourseOptions): Promise<PagedResponse<Course>> {
     const queryParams = createQueryParams<CourseOptions>(options);
     return fetchApi(
         `/courses?fields=id&fields=name&fields=number&fields=weekday&fields=weekly_hours&fields=language&fields=staff&fields=type.name&${queryParams.toString()}`,
@@ -184,7 +187,7 @@ export async function getCourses(options: CourseOptions): Promise<PagedResponse<
  * @param options - Event query options.
  * @returns The event response data.
  */
-export async function getEvents(options: EventOptions): Promise<PagedResponse<Event>> {
+export async function getEvents(options?: EventOptions): Promise<PagedResponse<Event>> {
     const queryParams = createQueryParams<EventOptions>(options);
     return fetchApi(
         `/events?fields=id&fields=number&fields=name&fields=start_time&fields=end_time&fields=event_date&fields=location&fields=location.building&fields=staff&fields=courses.name&fields=courses.type.name&${queryParams.toString()}`,
@@ -236,7 +239,7 @@ export async function getCourseEvents(courseId: number): Promise<PagedResponse<E
  * @param options - The exam query options.
  * @returns The exam response data.
  */
-export async function getExams(options: ExamOptions): Promise<PagedResponse<Exam>> {
+export async function getExams(options?: ExamOptions): Promise<PagedResponse<Exam>> {
     const queryParams = createQueryParams<ExamOptions>(options);
     return fetchApi(
         `/exams?fields=id&fields=name&fields=exam_date&fields=start_time&fields=end_time&fields=required&fields=staff&${queryParams.toString()}`,
@@ -248,7 +251,7 @@ export async function getExams(options: ExamOptions): Promise<PagedResponse<Exam
  * @param options - The general query options including pagination and sorting.
  * @returns The staff response data.
  */
-export async function getStaff(options: GeneralOptions): Promise<PagedResponse<Staff>> {
+export async function getStaff(options?: GeneralOptions): Promise<PagedResponse<Staff>> {
     const queryParams = createQueryParams(options);
     return fetchApi(appendQuery("/staff?fields=id&fields=name", queryParams));
 }
@@ -258,7 +261,7 @@ export async function getStaff(options: GeneralOptions): Promise<PagedResponse<S
  * @param options - The degree query options including name, subject, degree type, faculty, pagination, and sorting.
  * @returns The degree response data.
  */
-export async function getDegrees(options: DegreesOptions): Promise<PagedResponse<Degree>> {
+export async function getDegrees(options?: DegreesOptions): Promise<PagedResponse<Degree>> {
     const queryParams = createQueryParams(options);
     return fetchApi(
         appendQuery(
@@ -273,7 +276,7 @@ export async function getDegrees(options: DegreesOptions): Promise<PagedResponse
  * @param options - The location query options including accessibility, pagination, and sorting.
  * @returns The location response data.
  */
-export async function getLocations(options: LocationOptions): Promise<PagedResponse<Location>> {
+export async function getLocations(options?: LocationOptions): Promise<PagedResponse<Location>> {
     const queryParams = createQueryParams(options);
     return fetchApi(
         appendQuery(
@@ -288,7 +291,7 @@ export async function getLocations(options: LocationOptions): Promise<PagedRespo
  * @param options - The pagination options including page and page size.
  * @returns The building response data.
  */
-export async function getBuildings(options: PageOptions): Promise<PagedResponse<Building>> {
+export async function getBuildings(options?: PageOptions): Promise<PagedResponse<Building>> {
     const queryParams = createQueryParams(options);
     return fetchApi(appendQuery("/buildings", queryParams));
 }
@@ -298,7 +301,7 @@ export async function getBuildings(options: PageOptions): Promise<PagedResponse<
  * @param options - The pagination options including page and page size.
  * @returns The semester response data.
  */
-export async function getSemesters(options: PageOptions): Promise<PagedResponse<Semester>> {
+export async function getSemesters(options?: PageOptions): Promise<PagedResponse<Semester>> {
     const queryParams = createQueryParams(options);
     return fetchApi(appendQuery("/semesters", queryParams));
 }
@@ -308,7 +311,7 @@ export async function getSemesters(options: PageOptions): Promise<PagedResponse<
  * @param options - The pagination options including page and page size.
  * @returns The faculty response data.
  */
-export async function getFaculties(options: PageOptions): Promise<PagedResponse<Faculty>> {
+export async function getFaculties(options?: PageOptions): Promise<PagedResponse<Faculty>> {
     const queryParams = createQueryParams(options);
     return fetchApi(appendQuery("/faculties", queryParams));
 }
@@ -318,7 +321,7 @@ export async function getFaculties(options: PageOptions): Promise<PagedResponse<
  * @param options - The pagination options including page and page size.
  * @returns The event type response data.
  */
-export async function getEventTypes(options: PageOptions): Promise<PagedResponse<EventType>> {
+export async function getEventTypes(options?: PageOptions): Promise<PagedResponse<EventType>> {
     const queryParams = createQueryParams(options);
     return fetchApi(appendQuery("/catalog/event-types", queryParams));
 }
@@ -340,7 +343,7 @@ export async function getModuleLanguages(
  * @param options - The pagination options including page and page size.
  * @returns The distinct exam type response data.
  */
-export async function getExamTypes(options: PageOptions): Promise<PagedResponse<{ name: string }>> {
+export async function getExamTypes(options?: PageOptions): Promise<PagedResponse<{ name: string }>> {
     const queryParams = createQueryParams(options);
     return fetchApi(appendQuery("/exams/distinct/fields?field=name", queryParams));
 }
