@@ -35,6 +35,11 @@ type Exam = {
     type: string;
 };
 
+/**
+ * Generates the HTML structure for a single list item based on the provided data.
+ * @param item - The list data item to generate HTML for
+ * @returns The HTML string representing the list item
+ */
 function listItemHTML(item: ListDataItem): string {
     return `<li class="list-item">
         <div class="side-con">
@@ -70,7 +75,20 @@ function listItemHTML(item: ListDataItem): string {
                 >
                 <span class="info module-exam-types">
                     <span class="material-symbols">history_edu</span>
-                    ${[...new Set(item.exams.map((exam) => exam.type.replace(/^\s*[0-9]*\s*/g, "").replace(/\(Wdh\.?\)/g, "").trim()))].sort().join(", ") || "-"}
+                    ${
+                        [
+                            ...new Set(
+                                item.exams.map((exam) =>
+                                    exam.type
+                                        .replace(/^\s*[0-9]*\s*/g, "")
+                                        .replace(/\(Wdh\.?\)/g, "")
+                                        .trim(),
+                                ),
+                            ),
+                        ]
+                            .sort()
+                            .join(", ") || "-"
+                    }
                 </span>
             </div>
             <button
@@ -87,28 +105,36 @@ function listItemHTML(item: ListDataItem): string {
             ${item.courses
                 .map(
                     (course) => `
-                <span class="course-title" style="grid-row: span ${course.events.length + 1}">${course.name}</span>
-                ${course.events
-                    .map(
-                        (event) => `
-                    <span class="course-day">${event.day}</span>
-                    <span class="course-time">${event.startTime}-${event.endTime}</span>
-                    <span class="course-staff">${event.instructor}</span>
-                    <span class="course-location">${event.location}</span>
-                    <span class="course-daterange">${event.daterange}</span>
-                `,
-                    )
-                    .join("")}
-            `,
+                        <span class="course-title" style="grid-row: span ${course.events.length + 1}">${course.name}</span>
+                        ${course.events
+                            .map(
+                                (event) => `
+                                    <span class="course-day">${event.day}</span>
+                                    <span class="course-time">${event.startTime}-${event.endTime}</span>
+                                    <span class="course-staff">${event.instructor}</span>
+                                    <span class="course-location">${event.location}</span>
+                                    <span class="course-daterange">${event.daterange}</span>
+                                `,
+                            )
+                            .join("")}
+                    `,
                 )
                 .join("")}
         </div>
     </li>`;
 }
 
+/**
+ * Displays a list of items in the specified container.
+ * @param data - The list of data items to display
+ * @param selector - The CSS selector for the container element
+ * @param append - Whether to append to the existing content or replace it
+ */
 export function displayList(data: ListDataItem[], selector: string, append: boolean = false) {
     const container = document.querySelector(selector);
-    if (!container) return;
+    if (!container) {
+        return;
+    }
     if (append) {
         container.innerHTML += data.map(listItemHTML).join("");
     } else {
@@ -117,6 +143,9 @@ export function displayList(data: ListDataItem[], selector: string, append: bool
     setDialogListener();
 }
 
+/**
+ * Sets up click event listeners for detail buttons to open module details.
+ */
 function setDialogListener() {
     document.querySelectorAll(".detail-btn").forEach((button) => {
         // Remove any existing click listeners to avoid duplicate handlers

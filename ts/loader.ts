@@ -20,7 +20,10 @@ function getElementScrollProgress(element: HTMLElement): number {
  * @param scrollContainerSelector - Container to watch for scroll
  * @param loaderFunction - Update function to load new content and display it
  */
-export async function lazyLoader(scrollContainerSelector: string, loaderFunction: () => Promise<{expanded: boolean, moreData: boolean}>) {
+export async function lazyLoader(
+    scrollContainerSelector: string,
+    loaderFunction: () => Promise<{ expanded: boolean; moreData: boolean }>,
+) {
     const scrollElement: HTMLElement | null = document.querySelector(scrollContainerSelector);
     if (scrollElement === undefined || scrollElement === null) {
         console.error(`Scroll element not found for selector: ${scrollContainerSelector}`);
@@ -37,7 +40,7 @@ export async function lazyLoader(scrollContainerSelector: string, loaderFunction
     }
 
     // Load new content on scroll if progress drops under 75% until again under 50%
-    let waitingPromise: Promise<{expanded: boolean, moreData: boolean}> | null = null;
+    let waitingPromise: Promise<{ expanded: boolean; moreData: boolean }> | null = null;
     scrollElement.addEventListener("scroll", async () => {
         // Check if a request is already in progress
         // If a request is already in progress, wait for it to complete before making a new one

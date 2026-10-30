@@ -43,7 +43,7 @@ async function fetchApi(endpoint: string, options?: RequestInit) {
 type PageOptions = {
     page?: number;
     pageSize?: number;
-}
+};
 type SortOptions = {
     sort?: string;
     order?: SortOrder;
@@ -343,7 +343,9 @@ export async function getModuleLanguages(
  * @param options - The pagination options including page and page size.
  * @returns The distinct exam type response data.
  */
-export async function getExamTypes(options?: PageOptions): Promise<PagedResponse<{ name: string }>> {
+export async function getExamTypes(
+    options?: PageOptions,
+): Promise<PagedResponse<{ name: string }>> {
     const queryParams = createQueryParams(options);
     return fetchApi(appendQuery("/exams/distinct/fields?field=name", queryParams));
 }
